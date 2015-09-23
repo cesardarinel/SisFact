@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">sisFact</string>
+    <string name="title_activity_log_in">LogIn</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="login">Login</string>
+    <string name="ayuda">Ayuda</string>
+    <string name="title_activity_menu_principal">menuPrincipal</string>
+</resources>
