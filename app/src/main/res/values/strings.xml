@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">sisFact</string>
+    <string name="app_name">SisFact</string>
     <string name="title_activity_log_in">LogIn</string>
 
     <string name="hello_world">Hello world!</string>

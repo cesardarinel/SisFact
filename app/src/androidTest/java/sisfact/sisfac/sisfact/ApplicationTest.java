@@ -1,4 +1,4 @@
-package com.sisfact.sisfact;
+package sisfact.sisfac.sisfact;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
