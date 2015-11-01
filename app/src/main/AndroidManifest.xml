@@ -29,10 +29,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MenuPrincipal"
-            android:label="@string/title_activity_menu_principal"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
+        android:name=".MenuPrincipal"
+        android:label="@string/title_activity_menu_principal"
+        android:theme="@style/AppTheme.NoActionBar" >
+
+            <activity
+                android:name="sisfact.sisfac.sisfact.ver.Marca"
+                android:theme="@style/AppTheme.NoActionBar" >
+            </activity>
+    </activity>
+
     </application>
 
 </manifest>
