@@ -22,7 +22,6 @@ public class Productos  extends  Model{
     @Column(name="seccion")
     protected Secciones seccion;
 
-    //???????
     @Column(name="tipo")
     protected String tipo;
 
@@ -61,8 +60,6 @@ public class Productos  extends  Model{
         this.contacto = contacto;
     }
 
-
-
     public String getTipo() {
         return tipo;
     }
@@ -70,8 +67,6 @@ public class Productos  extends  Model{
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
-
-
 
     public void setSeccion(Secciones seccion) {
         this.seccion = seccion;

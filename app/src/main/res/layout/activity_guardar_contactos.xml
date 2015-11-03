@@ -78,7 +78,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Direccion"
-        android:id="@+id/guardar_contacto_textView5" />
+        android:id="@+id/guardar_contacto_textView6" />
 
     <EditText
         android:layout_width="match_parent"

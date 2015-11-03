@@ -13,7 +13,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/guardar_matricula_nombre_marca"
+        android:id="@+id/guardar_marca_nombre_marca"
          />
 
     <Button

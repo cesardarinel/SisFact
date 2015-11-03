@@ -10,20 +10,16 @@ import java.sql.Date;
 public class CuentasPorCobrar extends Model{
 
 	@Column(name="factura")
-	protected
-	Facturas factura;
+	protected Facturas factura;
 
 	@Column(name="pago")
-	protected
-	Float pago;
+	protected Float pago;
 
 	@Column(name="fecha_pagada")
-	protected
-	Date fechaPagada;
+	protected Date fechaPagada;
 
 	@Column(name="es_pagado")
-	protected
-	boolean esPagado;
+	protected boolean esPagado;
 
 	public Facturas getFactura() {
 		return factura;

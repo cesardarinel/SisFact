@@ -3,9 +3,6 @@ package entidades;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
-/**
- * Created by RynaMartinez on 10/28/2015.
- */
 @Table(name = "pantalones")
 public class Pantalones extends Productos {
 
