@@ -28,16 +28,32 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-        android:name=".MenuPrincipal"
-        android:label="@string/title_activity_menu_principal"
-        android:theme="@style/AppTheme.NoActionBar" >
 
-            <activity
-                android:name="sisfact.sisfac.sisfact.ver.Marca"
-                android:theme="@style/AppTheme.NoActionBar" >
-            </activity>
-    </activity>
+        <activity
+            android:name=".MenuPrincipal"
+            android:label="@string/title_activity_menu_principal"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+
+        <activity
+            android:name=".ver.Marca"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+
+        <activity
+            android:name=".guardar.Contacto"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+
+        <activity
+            android:name=".guardar.Marca"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+
+        <activity
+            android:name=".guardar.Seccciones"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
 
     </application>
 

@@ -4,34 +4,34 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.view.View;
 import android.widget.Toast;
 
 import entidades.Marcas;
+import entidades.Secciones;
 import sisfact.sisfac.sisfact.R;
 
 
-public class Marca extends AppCompatActivity implements View.OnClickListener{
+public class Seccciones extends AppCompatActivity implements View.OnClickListener{
 
-    private EditText nombreMarca;
+    private EditText nombreSeccion;
     private Button botonGuardar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ver_marcas);
-        nombreMarca = (EditText) findViewById(R.id.guardar_marca_nombre_marca);
-        botonGuardar = (Button) findViewById(R.id.guardar_marca_btn_guardar);
+        setContentView(R.layout.activity_guardar_secciones);
+        nombreSeccion = (EditText) findViewById(R.id.guardar_seccion_seccion);
+        botonGuardar = (Button) findViewById(R.id.guardar_seccion_btn_guardars);
         botonGuardar.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        Marcas marca = new Marcas();
-        marca.setNombre(nombreMarca.getText().toString());
+        Secciones  secciones = new Secciones();
+        secciones.setSeccion(nombreSeccion.getText().toString());
         try {
-            marca.save();
-            Toast.makeText(this,"Guardado con Exito",Toast.LENGTH_SHORT);
+            secciones.save();
+            Toast.makeText(this, "Guardado con Exito", Toast.LENGTH_SHORT);
             finish();
 
         }

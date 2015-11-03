@@ -10,16 +10,13 @@ import java.util.Date;
 public class Facturas extends Model{
 
 	@Column(name="fecha")
-	protected
-	Date fecha;
+	protected Date fecha;
 
 	@Column(name="firma")
-	protected
-	String firma;
+	protected String firma;
 
 	@Column(name="contacto")
-	protected
-	Contactos contacto;
+	protected Contactos contacto;
 
 	public Date getFecha() {
 		return fecha;

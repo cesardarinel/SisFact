@@ -6,6 +6,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.view.View;
+import android.widget.Toast;
 
 import entidades.Contactos;
 import sisfact.sisfac.sisfact.R;
@@ -61,6 +62,8 @@ public class Contacto extends AppCompatActivity implements View.OnClickListener{
 
         try {
             contacto.save();
+            Toast.makeText(this, "Guardado con Exito", Toast.LENGTH_SHORT);
+            finish();
         }
         catch (Exception e){
             //notificar el error
