@@ -1,26 +1,22 @@
 package sisfact.sisfac.sisfact.ver;
 
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.activeandroid.query.Select;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import entidades.Interface.GenericListView;
-import entidades.Marcas;
 import sisfact.sisfac.sisfact.R;
 
 
 public class Marca extends AppCompatActivity {
 
-    private  ListView listView;
+    protected   ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

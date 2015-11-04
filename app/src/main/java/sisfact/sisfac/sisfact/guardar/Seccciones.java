@@ -6,16 +6,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.view.View;
 import android.widget.Toast;
-
-import entidades.Marcas;
 import entidades.Secciones;
 import sisfact.sisfac.sisfact.R;
 
 
 public class Seccciones extends AppCompatActivity implements View.OnClickListener{
 
-    private EditText nombreSeccion;
-    private Button botonGuardar;
+    protected EditText nombreSeccion;
+    protected Button botonGuardar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,11 +29,12 @@ public class Seccciones extends AppCompatActivity implements View.OnClickListene
         secciones.setSeccion(nombreSeccion.getText().toString());
         try {
             secciones.save();
-            Toast.makeText(this, "Guardado con Exito", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "Guardado con Exito", Toast.LENGTH_SHORT).show();
             finish();
 
         }
         catch (Exception e){
+            //// TODO: 11/4/2015
         }
         //posibement volver al menu
     }

@@ -48,6 +48,7 @@ public class Marcas extends Model implements GenericListView {
     //este metodo es para escribir los datos
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        //Nota en el mismo orden que en el contructor
         dest.writeString(nombre);
     }
     //obligatoria para que llene los objetos del parecel que se vatan a crear
@@ -60,7 +61,7 @@ public class Marcas extends Model implements GenericListView {
 
         @Override
         public Marcas [] newArray(int size) {
-            return new Marcas[size  ];
+            return new Marcas[size ];
         }
     };
 }
