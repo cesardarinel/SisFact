@@ -18,20 +18,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        boton = (Button) findViewById(R.id.boton);
-        boton.setOnClickListener(this);
-        usuario = (EditText) findViewById(R.id.usuario);
-        contrasena = (EditText) findViewById(R.id.contrasena);
+
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.boton) {
-            if (usuario.getText().equals("a") && contrasena.getText().equals("a")) {
+        if (true) {
+
                 Intent menuprin = new Intent(this, MenuPrincipal.class);
                 startActivity(menuprin);
                 this.finish();
-            }
+
 
         }
     }
