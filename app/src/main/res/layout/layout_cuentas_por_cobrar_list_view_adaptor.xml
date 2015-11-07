@@ -28,18 +28,10 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Fecha "
                 android:layout_weight="1"
+                android:gravity="start"
                 android:textColor="#000"
                 android:id="@+id/cuentas_por_cobrar_columna_fecha" />
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Completado"
-                android:layout_gravity="right"
-                android:layout_weight="1"
-                android:textColor="#000"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/cuentas_por_cobrar_columna_pago_completo" />
         </TableRow>
 
     </TableLayout>
@@ -80,10 +72,5 @@
         android:id="@+id/cuentas_por_cobrar_texto_adeudado_valor"
         android:visibility="invisible"
         android:layout_marginTop="10px" />
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/cuentas_por_cobrar_btn_volver"
-        android:text="Vovler"
-        />
+        android:layout_marginTop="10px" />
 </LinearLayout>
