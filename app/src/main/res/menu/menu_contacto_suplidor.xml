@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:title="Modificar Contactos"
         android:id="@+id/modificar_contacto"
+        app:showAsAction="never"
         />
 
     <item
         android:title="Eleminar"
         android:id="@+id/eleminar_contacto"
+        app:showAsAction="never"
         />
 </menu>
