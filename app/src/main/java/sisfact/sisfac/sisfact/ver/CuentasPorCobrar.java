@@ -40,7 +40,6 @@ public class CuentasPorCobrar extends AppCompatActivity implements View.OnClickL
         Facturas fact = getIntent().getParcelableExtra("factura");
         setContentView(R.layout.layout_cuentas_por_cobrar_list_view_adaptor);
 
-        volver = (Button) findViewById(R.id.cuentas_por_cobrar_btn_volver);
         tabla = (TableLayout) findViewById(R.id.cuentas_por_cobrar_tabla);
 
         Pagado = (TextView) findViewById(R.id.cuentas_por_cobrar_texto_pagado);

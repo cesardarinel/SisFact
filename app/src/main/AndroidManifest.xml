@@ -36,22 +36,7 @@
         </activity>
 
         <activity
-            android:name=".ver.Marca"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
-
-        <activity
             android:name=".guardar.Contacto"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
-
-        <activity
-            android:name=".guardar.Marca"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
-
-        <activity
-            android:name=".guardar.Seccciones"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
 
