@@ -73,10 +73,10 @@ public class Contacto extends AppCompatActivity implements View.OnClickListener{
         //posibement volver al menu
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_contacto_suplidor, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.menu_contacto_suplidor, menu);
+//        return true;
+//    }
 }
