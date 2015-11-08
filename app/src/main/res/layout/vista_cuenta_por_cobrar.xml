@@ -43,7 +43,7 @@
     android:text="Total Pagado:"
     android:textColor="#F00"
     android:id="@+id/cuentas_por_cobrar_texto_pagado"
-    android:visibility="invisible"
+    android:visibility="gone"
     android:layout_marginTop="10px" />
     <TextView
         android:layout_width="wrap_content"
@@ -52,13 +52,13 @@
         android:text=""
         android:textColor="#000"
         android:id="@+id/cuentas_por_cobrar_texto_pagado_valor"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:layout_marginTop="10px" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:text="Total Adeudado:"
         android:textColor="#F00"
         android:id="@+id/cuentas_por_cobrar_texto_adeudado"
@@ -70,7 +70,12 @@
         android:text=""
         android:textColor="#000"
         android:id="@+id/cuentas_por_cobrar_texto_adeudado_valor"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:layout_marginTop="10px" />
-        android:layout_marginTop="10px" />
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Agregar"
+        android:id="@+id/plantilla_cuenta_por_cobrar_monto_btn_agregar  "
+        />
 </LinearLayout>
