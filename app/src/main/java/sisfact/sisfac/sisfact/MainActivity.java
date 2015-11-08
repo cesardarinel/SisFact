@@ -16,9 +16,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent menuprin = new Intent(this, vista_factura_lineas.class);
-        startActivity(menuprin);
-        this.finish();
         setContentView(R.layout.activity_main);
         //inicialisamos variables
         factura= (ImageButton )findViewById(R.id.factura);
@@ -42,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         switch (v.getId()) {
             case R.id.factura:
-                nuevaActividad = new Intent(this, MenuPrincipal.class);
+                nuevaActividad = new Intent(this, vista_factura.class);
                 startActivity(nuevaActividad);
 
                 break;
