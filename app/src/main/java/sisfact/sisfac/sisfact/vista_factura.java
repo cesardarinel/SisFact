@@ -11,7 +11,6 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vista_factura);
-
     }
 
     @Override

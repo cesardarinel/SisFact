@@ -4,7 +4,7 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
-@Table(name="productos")
+@Table(name="Productos")
 public class Productos  extends  Model{
 
     @Column(name="nombre")
