@@ -7,4 +7,6 @@
     <string name="login">Login</string>
     <string name="ayuda">Ayuda</string>
     <string name="title_activity_menu_principal">menuPrincipal</string>
+    <string name="title_activity_plantilla_factura">PlantillaFactura</string>
+    <string name="title_activity_vista_factura">vista_factura</string>
 </resources>

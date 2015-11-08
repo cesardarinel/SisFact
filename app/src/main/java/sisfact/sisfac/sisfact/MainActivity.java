@@ -17,6 +17,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent menuprin = new Intent(this, vista_factura_lineas.class);
+        startActivity(menuprin);
+        this.finish();
         setContentView(R.layout.activity_main);
         boton = (Button) findViewById(R.id.boton);
         boton.setOnClickListener(this);
@@ -27,10 +30,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.boton) {
+            Intent menuprin = new Intent(this, vista_factura_lineas.class);
+            startActivity(menuprin);
+            this.finish();
             if (usuario.getText().equals("a") && contrasena.getText().equals("a")) {
-                Intent menuprin = new Intent(this, MenuPrincipal.class);
-                startActivity(menuprin);
-                this.finish();
+
             }
 
         }
