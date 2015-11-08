@@ -10,7 +10,7 @@ import android.widget.ImageButton;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     //botones del menu
-    ImageButton  factura,producto,cliente,suplidor,cpp,reporte;
+    ImageButton  factura,producto,contacto,cpp,reporte;
     Intent nuevaActividad;
 
     @Override
@@ -20,15 +20,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //inicialisamos variables
         factura= (ImageButton )findViewById(R.id.factura);
         producto= (ImageButton )findViewById(R.id.productos);
-        cliente= (ImageButton )findViewById(R.id.cliente);
-        suplidor= (ImageButton )findViewById(R.id.suplidor);
+        contacto= (ImageButton )findViewById(R.id.contacto);
+
         cpp= (ImageButton )findViewById(R.id.cpp);
         reporte= (ImageButton )findViewById(R.id.reporte);
         //----------------setOnClickListener--------------------
         factura.setOnClickListener(this);
         producto.setOnClickListener(this);
-        cliente.setOnClickListener(this);
-        suplidor.setOnClickListener(this);
+        contacto.setOnClickListener(this);
+
         cpp.setOnClickListener(this);
         reporte.setOnClickListener(this);
 
@@ -41,28 +41,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.factura:
                 nuevaActividad = new Intent(this, vista_factura.class);
                 startActivity(nuevaActividad);
-
                 break;
+
             case R.id.productos:
                 nuevaActividad = new Intent(this, MenuPrincipal.class);
                 startActivity(nuevaActividad);
-
                 break;
-            case R.id.cliente:
+
+            case R.id.contacto:
                 nuevaActividad = new Intent(this, MenuPrincipal.class);
                 startActivity(nuevaActividad);
-
                 break;
-            case R.id.suplidor:
-                nuevaActividad = new Intent(this, MenuPrincipal.class);
-                startActivity(nuevaActividad);
 
-                break;
             case R.id.cpp:
                 nuevaActividad = new Intent(this, MenuPrincipal.class);
                 startActivity(nuevaActividad);
-
                 break;
+
             case R.id.reporte:
                 nuevaActividad = new Intent(this, MenuPrincipal.class);
                 startActivity(nuevaActividad);

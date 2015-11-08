@@ -10,11 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme" 
         android:paddingTop="@dimen/activity_vertical_margin"
-
         >
-
-
-
         <!-- Notice this tag which provides the database name -->
         <meta-data
             android:name="AA_DB_NAME"
@@ -25,7 +21,8 @@
             android:name="AA_DB_VERSION"
             android:value="1" />
 
-        <activity android:name=".MainActivity" >
+        <activity android:name=".MainActivity"
+                   android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

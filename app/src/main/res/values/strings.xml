@@ -10,8 +10,9 @@
 
 
     <!--MainMenu texto  -->
-    <string name="Cliente">Cliente</string>
-    <string name="Suplidores">Suplidores</string>
+    <string name="Contacto">Contacto</string>
+    <!--<string name="Cliente">Cliente</string>-->
+    <!--<string name="Suplidores">Suplidores</string>-->
     <string name="Productos">Productos</string>
     <string name="Facturas">Facturas</string>
     <string name="CPP">Cuentas Por Pagar</string>
