@@ -2,8 +2,6 @@ package sisfact.sisfac.sisfact.guardar;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -29,7 +27,7 @@ public class Contacto extends AppCompatActivity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_guardar_contactos);
+        setContentView(R.layout.vista_contactos);
 
         nombreContacto = (EditText) findViewById(R.id.guardar_contacto_nombre);
         apellidoContacto = (EditText) findViewById(R.id.guardar_contacto_apellido);
