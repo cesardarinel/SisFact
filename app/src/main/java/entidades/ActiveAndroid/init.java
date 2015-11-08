@@ -1,5 +1,6 @@
 package entidades.ActiveAndroid;
 
+
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.app.Application;
 

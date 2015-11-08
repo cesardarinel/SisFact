@@ -1,27 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
 
-    <LinearLayout
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+
+        />
+
+
+
+    <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:orientation="vertical">
+        android:gravity="center">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_marginTop="20dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Facturas"
+                    android:layout_weight="0.75"
+                    android:layout_gravity="right" />
 
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" android:hint="@string/ayuda"
-            android:id="@+id/usuario"/>
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" android:hint="@string/ayuda"
-            android:id="@+id/contrasena" />
-        <Button
-            android:layout_width="200px"
-            android:layout_height="100px"
-            android:text="@string/login" android:id="@+id/boton"/>
-    </LinearLayout>
-</RelativeLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+
+                    android:text="@string/Productos"
+                    android:layout_gravity="left" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:id="@+id/factura"
+                    android:src="@drawable/payment7"
+
+                    />
+
+                <ImageButton
+                    android:layout_width="130dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_height="130dp"
+                    android:id="@+id/productos"
+                    android:src="@drawable/tshirt17"
+                   />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_marginTop="20dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Cliente"
+
+                    android:layout_gravity="right" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="130dp"
+
+                    android:text="@string/Suplidores"
+                    android:layout_gravity="left" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageButton
+                    android:layout_width="130dp"
+
+                    android:layout_height="130dp"
+                    android:id="@+id/cliente"
+                    android:src="@drawable/logistics3"
+                   />
+                <ImageButton
+                    android:layout_width="130dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_height="130dp"
+                    android:id="@+id/suplidor"
+                    android:src="@drawable/logistics3"
+                    />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_marginTop="20dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/CPP"
+
+                    android:layout_weight="0.75"
+                    android:layout_gravity="right" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+
+                    android:text="@string/Reportes"
+                    android:layout_gravity="left" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:id="@+id/cpp"
+                    android:src="@drawable/calendar68"
+                    />
+
+                <ImageButton
+                    android:layout_width="130dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_height="130dp"
+                    android:id="@+id/reporte"
+                    android:src="@drawable/stationery"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>
