@@ -30,6 +30,4 @@ dependencies {
     compile 'com.android.support:design:23.0.1'
     compile 'com.google.zxing:core:3.2.0'
     compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
-
-
 }

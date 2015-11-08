@@ -11,9 +11,12 @@
     <ImageView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-
         android:gravity="center"
-        android:baselineAlignBottom="true" />
+
+        />
+
+
+
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -33,8 +36,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="texto"
-
+                    android:text="@string/Facturas"
                     android:layout_weight="0.75"
                     android:layout_gravity="right" />
 
@@ -43,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
 
-                    android:text="texto"
+                    android:text="@string/Productos"
                     android:layout_gravity="left" />
 
             </LinearLayout>
@@ -55,7 +57,8 @@
                 <ImageButton
                     android:layout_width="130dp"
                     android:layout_height="130dp"
-                    android:id="@+id/EnviosSinEntregar"
+                    android:id="@+id/factura"
+                    android:src="@drawable/payment7"
 
                     />
 
@@ -63,7 +66,8 @@
                     android:layout_width="130dp"
                     android:layout_marginLeft="20dp"
                     android:layout_height="130dp"
-                    android:id="@+id/paquetes"
+                    android:id="@+id/productos"
+                    android:src="@drawable/tshirt17"
                    />
 
             </LinearLayout>
@@ -75,7 +79,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="texto"
+                    android:text="@string/Cliente"
 
                     android:layout_gravity="right" />
 
@@ -84,7 +88,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="130dp"
 
-                    android:text="texto"
+                    android:text="@string/Suplidores"
                     android:layout_gravity="left" />
 
             </LinearLayout>
@@ -96,19 +100,22 @@
                     android:layout_width="130dp"
 
                     android:layout_height="130dp"
-                    android:id="@+id/EnviosEntrgados"
+                    android:id="@+id/cliente"
+                    android:src="@drawable/logistics3"
                    />
                 <ImageButton
                     android:layout_width="130dp"
                     android:layout_marginLeft="20dp"
                     android:layout_height="130dp"
-                    android:id="@+id/Setting"
+                    android:id="@+id/suplidor"
+                    android:src="@drawable/logistics3"
                     />
 
 
             </LinearLayout>
+
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_marginTop="20dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -116,24 +123,38 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Exit"
+                    android:text="@string/CPP"
 
                     android:layout_weight="0.75"
                     android:layout_gravity="right" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+
+                    android:text="@string/Reportes"
+                    android:layout_gravity="left" />
+
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-
                 <ImageButton
                     android:layout_width="130dp"
                     android:layout_height="130dp"
-                    android:layout_marginLeft="20dp"
-                    android:id="@+id/Salir"
-
+                    android:id="@+id/cpp"
+                    android:src="@drawable/calendar68"
                     />
+
+                <ImageButton
+                    android:layout_width="130dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_height="130dp"
+                    android:id="@+id/reporte"
+                    android:src="@drawable/stationery"/>
 
             </LinearLayout>
         </LinearLayout>
