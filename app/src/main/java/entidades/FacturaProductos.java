@@ -11,7 +11,7 @@ public class FacturaProductos extends Model {
     @Column(name = "factura")
     protected Facturas factura;
 
-    @Column(name = "producto")
+    @Column(name = "vista_producto")
     protected Productos producto;
 
     @Column(name = "cantidad")

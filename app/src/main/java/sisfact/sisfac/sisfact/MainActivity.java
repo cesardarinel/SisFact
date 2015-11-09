@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import sisfact.sisfac.sisfact.Vistas.Productos;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     //botones del menu
     ImageButton  factura,producto,contacto,cpp,reporte;
@@ -44,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.productos:
-                nuevaActividad = new Intent(this, MenuPrincipal.class);
+                nuevaActividad = new Intent(this,Productos.class);
                 startActivity(nuevaActividad);
                 break;
 

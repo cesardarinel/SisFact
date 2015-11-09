@@ -75,4 +75,23 @@ public class Productos  extends  Model{
     public void setCategoria(Categorias categoria) {
         Categoria = categoria;
     }
+
+    public Secciones getSeccion() {
+        return seccion;
+    }
+
+    public Categorias getCategoria() {
+        return Categoria;
+    }
+
+    public void setFrom(Productos prod){
+        this.setNombre(prod.getNombre());
+        this.setMarca(prod.getMarca());
+        this.setCodigoBarra(prod.getCodigoBarra());
+        this.setContacto(prod.getContacto());
+        this.setSeccion(prod.getSeccion());
+        this.setTipo(prod.getTipo());
+        this.setCategoria(prod.getCategoria());
+    }
+
 }
