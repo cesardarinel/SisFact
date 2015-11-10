@@ -1,4 +1,4 @@
-package sisfact.sisfac.sisfact;
+package sisfact.sisfac.sisfact.Vistas;
 
 import android.app.ListActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import sisfact.sisfac.sisfact.R;
 
 public class vista_factura_lineas extends ListActivity {
 

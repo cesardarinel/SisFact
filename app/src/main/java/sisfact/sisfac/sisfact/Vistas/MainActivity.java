@@ -1,14 +1,12 @@
-package sisfact.sisfac.sisfact;
+package sisfact.sisfac.sisfact.Vistas;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 
-import sisfact.sisfac.sisfact.Vistas.Productos;
+import sisfact.sisfac.sisfact.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     //botones del menu
@@ -51,17 +49,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.contacto:
-                nuevaActividad = new Intent(this, MenuPrincipal.class);
+
+                nuevaActividad = new Intent(this, vista_modulo_generic.class);
+                nuevaActividad.putExtra("Actividad", "contacto");
                 startActivity(nuevaActividad);
                 break;
 
             case R.id.cpp:
-                nuevaActividad = new Intent(this, MenuPrincipal.class);
+                nuevaActividad = new Intent(this, vista_modulo_generic.class);
+                nuevaActividad.putExtra("Actividad", "cpp");
                 startActivity(nuevaActividad);
                 break;
 
             case R.id.reporte:
-                nuevaActividad = new Intent(this, MenuPrincipal.class);
+                nuevaActividad = new Intent(this, vista_modulo_generic.class);
+                nuevaActividad.putExtra("Actividad", "reporte");
                 startActivity(nuevaActividad);
 
             default:

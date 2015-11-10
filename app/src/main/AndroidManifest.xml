@@ -22,7 +22,7 @@
             android:value="1" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".Vistas.MainActivity"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MenuPrincipal"
+            android:name=".Vistas.MenuPrincipal"
             android:label="@string/title_activity_menu_principal"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
@@ -42,11 +42,13 @@
         </activity>
         <activity android:name=".plantillaFactura" >
         </activity>
-        <activity android:name=".vista_factura" >
+        <activity android:name=".Vistas.vista_factura" >
         </activity>
-        <activity android:name=".vista_factura_lineas" >
+        <activity android:name=".Vistas.vista_factura_lineas" >
         </activity>
         <activity android:name=".Vistas.Productos" >
+        </activity>
+        <activity android:name=".Vistas.vista_modulo_generic" >
         </activity>
     </application>
 

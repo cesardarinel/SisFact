@@ -1,9 +1,11 @@
-package sisfact.sisfac.sisfact;
+package sisfact.sisfac.sisfact.Vistas;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+
+import sisfact.sisfac.sisfact.R;
 
 public class vista_factura extends AppCompatActivity implements View.OnClickListener {
 
