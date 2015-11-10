@@ -19,5 +19,10 @@
     <string name="Reportes">Reportes</string>
     <string name="title_activity_vista_modulo_view_generic">vista_modulo_view_generic</string>
 
+    <!--menu generico editar-->
+    <string name="anadir">Añadir</string>
+    <string name="editar">Editar</string>
+    <string name="eliminar">Eliminar</string>
+
 
 </resources>
