@@ -72,8 +72,7 @@ public class Contacto extends AppCompatActivity implements View.OnClickListener{
             contacto.save();
             Toast.makeText(this, "Guardado con Exito", Toast.LENGTH_SHORT).show();
             finish();
-        }
-        catch (Exception e){
+        } catch (Exception e){
             //notificar el error
         }
         //posibement volver al menu

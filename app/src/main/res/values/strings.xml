@@ -19,6 +19,9 @@
     <string name="Reportes">Reportes</string>
     <string name="title_activity_vista_modulo_view_generic">vista_modulo_view_generic</string>
 
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_vista_reporte">Reportes</string>
+
     <!--menu generico editar-->
     <string name="anadir">Añadir</string>
     <string name="editar">Editar</string>

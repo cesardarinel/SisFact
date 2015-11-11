@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.reporte:
+
                 nuevaActividad = new Intent(this, vista_modulo_generic.class);
                 nuevaActividad.putExtra("Actividad", "reporte");
                 startActivity(nuevaActividad);
