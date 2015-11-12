@@ -23,6 +23,7 @@
     <string name="anadir">Añadir</string>
     <string name="editar">Editar</string>
     <string name="eliminar">Eliminar</string>
+    <string name="Cargando">Cargando..............</string>
 
 
 </resources>

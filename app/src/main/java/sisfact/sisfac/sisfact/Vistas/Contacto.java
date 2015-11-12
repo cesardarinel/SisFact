@@ -1,12 +1,18 @@
 package sisfact.sisfac.sisfact.Vistas;
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.activeandroid.query.Select;
+import com.activeandroid.util.SQLiteUtils;
 
 import entidades.Contactos;
 import sisfact.sisfac.sisfact.R;
@@ -23,11 +29,15 @@ public class Contacto extends AppCompatActivity implements View.OnClickListener{
     private CheckBox  esSuplidorContacto;
     private CheckBox  esClienteContacto ;
     protected Button botonGuardar;
+    String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vista_contactos);
+
+        Bundle tipoVista = getIntent().getExtras();
+        id = tipoVista.getString("Actividad");
 
         nombreContacto = (EditText) findViewById(R.id.guardar_contacto_nombre);
         apellidoContacto = (EditText) findViewById(R.id.guardar_contacto_apellido);
@@ -39,14 +49,20 @@ public class Contacto extends AppCompatActivity implements View.OnClickListener{
         esSuplidorContacto = (CheckBox) findViewById(R.id.guardar_contacto_chkbx_es_suplidor);
         esClienteContacto = (CheckBox) findViewById(R.id.guardar_contacto_chkbx_es_cliente);
 
+
         botonGuardar = (Button) findViewById(R.id.guardar_contacto_btn_guardar);
         botonGuardar.setOnClickListener(this);
-
-
+        if(!id.isEmpty())
+        {
+            LLenamos();
+        }
 
     }
 
-    @Override
+
+
+
+        @Override
     public void onClick(View v) {
         Contactos contacto = new Contactos();
 
@@ -70,6 +86,21 @@ public class Contacto extends AppCompatActivity implements View.OnClickListener{
         }
         //posibement volver al menu
     }
+    public void LLenamos(){
+
+
+        Contactos Existente=new Select().from(Contactos.class).where("telefono = ?", id).executeSingle();
+//        (Contactos) SQLiteUtils.rawQuery(Contactos.class,
+//                        "SELECT * from contactos where telefono=?",new String[] { id });
+        nombreContacto.setText(Existente.getNombre());
+        apellidoContacto.setText(Existente.getApellido());
+        telefonoContacto.setText(Existente.getTelefono());
+        celularContacto.setText(Existente.getCelular());
+        correoContacto.setText(Existente.getCorreo());
+        direccionContacto.setText(Existente.getDireccion());
+
+    }
+
 
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {

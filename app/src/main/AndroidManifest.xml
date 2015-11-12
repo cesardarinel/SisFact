@@ -35,14 +35,10 @@
             android:label="@string/title_activity_menu_principal"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
-        <activity
-            android:name=".PlantillaFactura"
-            android:label="@string/title_activity_plantilla_factura"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
-        <activity android:name=".plantillaFactura" >
-        </activity>
+
         <activity android:name=".Vistas.vista_factura" >
+        </activity>
+        <activity android:name=".Vistas.Contacto" >
         </activity>
         <activity android:name=".Vistas.vista_factura_lineas" >
         </activity>
