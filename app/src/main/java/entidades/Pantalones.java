@@ -1,10 +1,14 @@
 package entidades;
 
+import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
 @Table(name = "pantalones")
-public class Pantalones extends Productos {
+public class Pantalones extends Model {
+
+    @Column(name="prodcuto")
+    protected Productos producto;
 
     @Column(name = "largo")
     protected float largo;
@@ -37,5 +41,13 @@ public class Pantalones extends Productos {
 
     public void setSize(String size) {
         this.size = size;
+    }
+
+    public Productos getProducto() {
+        return producto;
+    }
+
+    public void setProducto(Productos producto) {
+        this.producto = producto;
     }
 }

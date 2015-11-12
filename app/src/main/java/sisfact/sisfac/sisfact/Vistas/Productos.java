@@ -2,12 +2,14 @@ package sisfact.sisfac.sisfact.Vistas;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,7 +34,9 @@ import sisfact.sisfac.sisfact.R;
 
 
 public class Productos extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
+    protected String modo = null;
     protected String [] spinner = {"","Zapatos", "Camisa","Pantalon","Ropa Interior"};
+    protected LinearLayout layout;
     //cosas de las vista
     protected Spinner tipoProducto;
     protected EditText nombrePoducto;
@@ -83,15 +87,16 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vista_producto);
 
+        layout = (LinearLayout) findViewById(R.id.plantill_producto_layout);
         tipoProducto = (Spinner) findViewById(R.id.plantilla_producto_spnr_tipo_producto);
         nombrePoducto = (EditText) findViewById(R.id.plantilla_producto_nombre);
         marcaProducto = (Spinner) findViewById(R.id.plantilla_producto_marca);
         ArrayList<String> listaMarca =  new ArrayList<>();
         List<Marcas> todasLasMarca = new Select().from(Marcas.class).execute();
+
         for (Marcas item : todasLasMarca)listaMarca.add(item.getNombre());
         ArrayAdapter<String> marcaArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listaMarca);
         marcaProducto.setAdapter(marcaArrayAdapter);
-
 
         precioProducto = (EditText) findViewById(R.id.plantilla_producto_precio);
         contactoProducto = (AutoCompleteTextView) findViewById(R.id.plantilla_producto_contacto);
@@ -99,6 +104,12 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
         categoriaProducto = (Spinner) findViewById(R.id.plantilla_producto_categoria);
         ArrayList<String> listaCategoria =  new ArrayList<>();
         List<Categorias> todasLasCategorias= new Select().from(Categorias.class).execute();
+        if (todasLasCategorias.size() == 0){
+            Categorias cat = new Categorias();
+            cat.setCategoria("Categoria 1");
+            cat.save();
+            todasLasCategorias.add(cat);
+        }
         for (Categorias item : todasLasCategorias)listaCategoria.add(item.getCategoria());
         ArrayAdapter<String> categoriaArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listaCategoria);
         categoriaProducto.setAdapter(categoriaArrayAdapter);
@@ -157,15 +168,133 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
 
 
 
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spinner);
-        tipoProducto.setAdapter(spinnerArrayAdapter);
+        ArrayAdapter<String> tipoProductoArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spinner);
+        tipoProducto.setAdapter(tipoProductoArrayAdapter);
         tipoProducto.setOnItemSelectedListener(this);
 
         botonGuardar.setOnClickListener(this);
 
+        try{
+            modo = getIntent().getExtras().getString("modo");
+        }catch (Exception e){}
+        if(modo != null && modo.equals("detalles")){
+            Long idProducto = null;
 
+            try{
+                idProducto = Long.valueOf(getIntent().getExtras().getString("id"));
+            }catch(Exception e){}
+
+            if (idProducto == null){
+                Toast.makeText(this,"El producto no es Valido",Toast.LENGTH_LONG).show();
+                finish();
+            }
+            entidades.Productos prod = new Select().from(entidades.Productos.class).where("id = ?",idProducto).executeSingle();
+
+            botonGuardar.setVisibility(View.GONE);
+
+            tipoProducto.setEnabled(false);
+            int tipoProductoPos = tipoProductoArrayAdapter.getPosition(prod.getTipo());
+            tipoProducto.setSelection(tipoProductoPos);
+
+            nombrePoducto.setEnabled(false);
+            nombrePoducto.setText(prod.getNombre());
+
+            marcaProducto.setEnabled(false);
+            int marcaPos = marcaArrayAdapter.getPosition(prod.getMarca().getNombre());
+            marcaProducto.setSelection(marcaPos);
+
+            contactoProducto.setEnabled(false);
+            contactoProducto.setText(prod.getContacto().getTelefono());
+
+
+            seccionProducto.setEnabled(false);
+            seccionProducto.setText(prod.getSeccion().getSeccion());
+
+            categoriaProducto.setEnabled(false);
+            int categoriaPos = categoriaArrayAdapter.getPosition(prod.getCategoria().getCategoria());
+            categoriaProducto.setSelection(categoriaPos);
+
+            HabilitarProducto(prod.getTipo());
+            switch (prod.getTipo()){
+                case "Zapatos":
+                    Zapatos zapatos = new Select()
+                            .from(Zapatos.class)
+                            .where("producto = ?", idProducto)
+                            .executeSingle();
+
+                    zapatosMedida.setEnabled(false);
+                    zapatosMedida.setText(zapatos.getMedida());
+
+                    break;
+                case "Camisa":
+                    Camisas camisas = new Select()
+                            .from(Camisas.class)
+                            .where("producto = ?",idProducto)
+                            .executeSingle();
+
+                    tamanoCamisa.setEnabled(false);
+                    tamanoCamisa.setText(camisas.getTamano());
+
+                    tipoCamisa.setEnabled(false);
+                    int tipoCamisaPos= tipoCamisaArrayAdapter.getPosition(camisas.getTipoCamisa().getTipoCamisa());
+                    tipoCamisa.setSelection(tipoCamisaPos);
+
+                    tipoMangaCamisa.setEnabled(false);
+                    int tipoMangaPos = tipoMangaArrayAdapter.getPosition(camisas.getTipoManga().getTipoManga());
+                    tipoMangaCamisa.setSelection(tipoMangaPos);
+                    break;
+                case "Pantalon":
+                    Pantalones pantalones = new Select()
+                            .from(Pantalones.class)
+                            .where("producto = ?",idProducto)
+                            .executeSingle();
+
+                    largoPantalon.setEnabled(false);
+                    largoPantalon.setText(String.valueOf(pantalones.getLargo()));
+
+                    anchoPantalon.setEnabled(false);
+                    anchoPantalon.setText(String.valueOf(pantalones.getAncho()));
+
+                    sizePantalon.setEnabled(false);
+                    sizePantalon.setText(String.valueOf(pantalones.getSize()));
+
+                    break;
+                case "Ropa Interior":
+                    RopaInterioires ropaInterioires = new Select()
+                            .from(RopaInterioires.class)
+                            .where("producto = ?",idProducto)
+                            .executeSingle();
+
+                    tipoRopaInterior.setEnabled(false);
+                    int tipoRopaInteriorPos = tipoRopaInteiorArrayAdapter.getPosition(ropaInterioires.getTipoRopaInterior().getTipoRopaInterioir());
+                    tipoRopaInterior.setSelection(tipoRopaInteriorPos);
+
+                    medida1RopaInterior.setEnabled(false);
+                    medida1RopaInterior.setText(ropaInterioires.getMedida1());
+
+                    medida2RopaInterior.setEnabled(false);
+                    medida2RopaInterior.setText(ropaInterioires.getMedida2());
+                    break;
+            }
+        }
     }
-    protected void Enable(String Habilitar){
+    protected void HabilitarEdicion(){
+        int total =  layout.getChildCount();
+        for (int i=0;i<total;i++){
+            View v = layout.getChildAt(i);
+            if (v.getVisibility() == View.VISIBLE) v.setEnabled(true);
+        }
+        botonGuardar.setVisibility(View.VISIBLE);
+    }
+    public void Eliminar(){
+        Long idProducto;
+        try{
+            idProducto = Long.valueOf(getIntent().getExtras().getString("id"));
+        }catch(Exception e){}
+        entidades.Productos prod= new Select().from(entidades.Productos.class).where("id = ? ").executeSingle();
+        prod.delete();
+    }
+    protected void HabilitarProducto(String Habilitar){
         //Zapato
         zapatosTextMedida.setVisibility(View.GONE);
         zapatosMedida.setVisibility(View.GONE);
@@ -225,11 +354,12 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
                 medida2RopaInterior.setVisibility(View.VISIBLE);
                 break;
         }
+
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Enable(parent.getItemAtPosition(position).toString());
+        HabilitarProducto(parent.getItemAtPosition(position).toString());
     }
 
     @Override
@@ -243,7 +373,6 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
 
         entidades.Productos productos =  new entidades.Productos();
         productos.setNombre(nombrePoducto.getText().toString());
-
         Marcas marcas =  new Select()
                 .from(Marcas.class)
                 .where("nombre = ?", (String) marcaProducto.getSelectedItem())
@@ -271,17 +400,18 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
                 .where("categoria = ? ", (String) categoriaProducto.getSelectedItem())
                 .executeSingle();
         productos.setCategoria(categorias);
+        productos.save();
         try {
             switch ((String)tipoProducto.getSelectedItem()){
                 case "Zapatos":
                     Zapatos zapatos =  new Zapatos();
-                    zapatos.setFrom(productos);
+                    zapatos.setProducto(productos);
                     zapatos.setMedida(zapatosTextMedida.getText().toString());
                     zapatos.save();
                     break;
                 case "Camisa":
                     Camisas camisas =  new Camisas();
-                    camisas.setFrom(productos);
+                    camisas.setProducto(productos);
                     camisas.setTamano(tamanoCamisa.getText().toString());
                     TipoCamisas tipoCamisas =  new Select()
                             .from(TipoCamisas.class)
@@ -297,15 +427,15 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
                     break;
                 case "Pantalon":
                     Pantalones pantalones =  new Pantalones();
-                    pantalones.setFrom(productos);
-                    pantalones.setLargo(Float.valueOf(largoTextPantalon.getText().toString()));
+                    pantalones.setProducto(productos);
+                    pantalones.setLargo(Float.valueOf(largoPantalon.getText().toString()));
                     pantalones.setAncho(Float.valueOf(anchoPantalon.getText().toString()));
                     pantalones.setSize(sizePantalon.getText().toString());
                     pantalones.save();
                     break;
                 case "Ropa Interior":
                     RopaInterioires ropaInterioires =  new RopaInterioires();
-                    ropaInterioires.setFrom(productos);
+                    ropaInterioires.setProducto(productos);
                     TipoRopaInteriores tipoRopaInteriores =  new Select()
                             .from(TipoRopaInteriores.class)
                             .where("tipo_ropa_interior", (String) tipoRopaInterior.getSelectedItem())
@@ -317,7 +447,7 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
                     break;
             }
         }catch (Exception e){
-            Toast.makeText(this,"error guardando " +tipoProducto,Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"error guardando " + tipoProducto.getSelectedItem().toString(),Toast.LENGTH_LONG).show();
         }
         finish();
     }

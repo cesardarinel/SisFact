@@ -65,7 +65,6 @@ public class Contacto extends AppCompatActivity implements View.OnClickListener{
         @Override
     public void onClick(View v) {
         Contactos contacto = new Contactos();
-
         contacto.setNombre(nombreContacto.getText().toString());
         contacto.setApellido(apellidoContacto.getText().toString());
         contacto.setTelefono(telefonoContacto.getText().toString());

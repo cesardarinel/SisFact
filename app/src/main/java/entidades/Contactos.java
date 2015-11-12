@@ -7,8 +7,6 @@ import com.activeandroid.annotation.Table;
 @Table(name="contactos")
 public class Contactos extends Model{
 
-	@Column(name="id")
-	private String id;
 
 	@Column(name="nombre")
 	private String nombre;

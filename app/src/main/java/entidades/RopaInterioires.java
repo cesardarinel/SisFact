@@ -1,5 +1,6 @@
 package entidades;
 
+import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
@@ -8,7 +9,12 @@ import com.activeandroid.annotation.Table;
  */
 
 @Table(name="ropa_interioir")
-public class RopaInterioires extends  Productos{
+public class RopaInterioires extends Model{
+
+
+    @Column(name="prodcuto")
+    protected Productos producto;
+
     @Column(name="tipo_roba_interior")
     protected TipoRopaInteriores tipoRopaInterior;
 
@@ -41,5 +47,13 @@ public class RopaInterioires extends  Productos{
 
     public void setMedida2(String medida2) {
         this.medida2 = medida2;
+    }
+
+    public Productos getProducto() {
+        return producto;
+    }
+
+    public void setProducto(Productos producto) {
+        this.producto = producto;
     }
 }

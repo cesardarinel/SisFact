@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:title="Modificar Contactos"
+        android:title="Modificar"
         android:id="@+id/modificar_contacto"
         app:showAsAction="never"
         />
 
     <item
-        android:title="Eleminar"
+        android:title="Eliminar"
         android:id="@+id/eleminar_contacto"
         app:showAsAction="never"
         />
