@@ -59,9 +59,6 @@ public class Contacto extends AppCompatActivity implements View.OnClickListener{
 
     }
 
-
-
-
         @Override
     public void onClick(View v) {
         Contactos contacto = new Contactos();
@@ -88,7 +85,7 @@ public class Contacto extends AppCompatActivity implements View.OnClickListener{
     public void LLenamos(){
 
 
-        Contactos Existente=new Select().from(Contactos.class).where("telefono = ?", id).executeSingle();
+        Contactos Existente=new Select().from(Contactos.class).where("id = ?", id).executeSingle();
 //        (Contactos) SQLiteUtils.rawQuery(Contactos.class,
 //                        "SELECT * from contactos where telefono=?",new String[] { id });
         nombreContacto.setText(Existente.getNombre());
@@ -97,6 +94,8 @@ public class Contacto extends AppCompatActivity implements View.OnClickListener{
         celularContacto.setText(Existente.getCelular());
         correoContacto.setText(Existente.getCorreo());
         direccionContacto.setText(Existente.getDireccion());
+        esSuplidorContacto.setChecked(Existente.isEsSuplidor());
+        esClienteContacto.setChecked(Existente.isEsCliente());
 
     }
 

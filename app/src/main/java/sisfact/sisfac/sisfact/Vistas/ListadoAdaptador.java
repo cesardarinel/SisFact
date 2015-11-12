@@ -8,20 +8,18 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import entidades.Contactos;
-import entidades.Listado;
+import entidades.ItemLista;
 import sisfact.sisfac.sisfact.R;
 
 /**
  * Created by cesar on 11/12/2015.
  */
-class ListaAdaptador extends ArrayAdapter<Listado> {
+class ListaAdaptador extends ArrayAdapter<ItemLista> {
     private Context context;
-    private ArrayList<Listado> datos;
+    private ArrayList<ItemLista> datos;
 
-    public ListaAdaptador(Context context, ArrayList<Listado> datos) {
+    public ListaAdaptador(Context context, ArrayList<ItemLista> datos) {
         super(context, R.layout.listado_vista_generic, datos);
         // Guardamos los parámetros en variables de clase.
         this.context = context;

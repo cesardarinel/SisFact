@@ -3,11 +3,12 @@ package entidades;
 /**
  * Created by cesar on 11/12/2015.
  */
-public class Listado {
-        private String Id,Info,Texto1,Texto2;
+public class ItemLista {
+        private String Id;
+        private String Info,Texto1,Texto2;
 
 
-        public Listado (String ID,  String Info,String Texto1,String texto2) {
+        public ItemLista(String ID, String Info, String Texto1, String texto2) {
 
             this.Id = ID;
             this.Info = Info;
@@ -18,7 +19,6 @@ public class Listado {
         public String get_TextoID() {
             return Id;
         }
-
 
         public String get_Info() {
             return Info;

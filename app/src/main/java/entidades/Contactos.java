@@ -7,10 +7,8 @@ import com.activeandroid.annotation.Table;
 @Table(name="contactos")
 public class Contactos extends Model{
 
-
 	@Column(name="nombre")
 	private String nombre;
-
 
 	@Column(name="apellido")
 	private String apellido;
@@ -95,5 +93,10 @@ public class Contactos extends Model{
 
 	public void setEsSuplidor(boolean esSuplidor) {
 		this.esSuplidor = esSuplidor;
+	}
+
+	@Override
+	public String toString(){
+		return this.nombre + " " + this.apellido;
 	}
 }
