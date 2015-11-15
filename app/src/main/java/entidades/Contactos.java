@@ -4,8 +4,12 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
+import java.io.Serializable;
+
 @Table(name="contactos")
-public class Contactos extends Model{
+public class Contactos extends Model implements Serializable{
+
+	private Long internalId;
 
 	@Column(name="nombre")
 	private String nombre;
@@ -98,5 +102,13 @@ public class Contactos extends Model{
 	@Override
 	public String toString(){
 		return this.nombre + " " + this.apellido;
+	}
+
+	public Long getInternalId() {
+		return internalId;
+	}
+
+	public void setInternalId(Long internalId) {
+		this.internalId = internalId;
 	}
 }

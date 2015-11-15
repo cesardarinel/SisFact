@@ -4,10 +4,11 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
+import java.io.Serializable;
 import java.sql.Date;
 
 @Table(name="cuentas_por_cobrar")
-public class CuentasPorCobrar extends Model{
+public class CuentasPorCobrar extends Model implements Serializable{
 
 	@Column(name="factura")
 	protected Facturas factura;

@@ -181,14 +181,17 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
             Long idProducto = null;
 
             try{
-                idProducto = Long.valueOf(getIntent().getExtras().getString("id"));
+                idProducto = getIntent().getExtras().getLong("id");
             }catch(Exception e){}
 
             if (idProducto == null){
                 Toast.makeText(this,"El producto no es Valido",Toast.LENGTH_LONG).show();
                 finish();
             }
-            entidades.Productos prod = new Select().from(entidades.Productos.class).where("id = ?",idProducto).executeSingle();
+            entidades.Productos prod = new Select()
+                    .from(entidades.Productos.class)
+                    .where("id = ?",idProducto)
+                    .executeSingle();
 
             botonGuardar.setVisibility(View.GONE);
 

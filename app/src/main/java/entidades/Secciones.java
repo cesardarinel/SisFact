@@ -4,11 +4,10 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
-/**
- * Created by RynaMartinez on 10/28/2015.
- */
+import java.io.Serializable;
+
 @Table(name="secciones")
-public class Secciones extends Model {
+public class Secciones extends Model implements Serializable{
     @Column(name="seccion")
     private String seccion;
 

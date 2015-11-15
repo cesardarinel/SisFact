@@ -1,63 +1,74 @@
 package sisfact.sisfac.sisfact.Vistas;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
-
-import com.activeandroid.util.SQLiteUtils;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import entidades.Contactos;
 import entidades.ItemLista;
 import sisfact.sisfac.sisfact.R;
+import sisfact.sisfac.sisfact.Vistas.AdaptadorGenerico.FactoryAdaptadorGenerico;
 
-public class vista_modulo_generic extends AppCompatActivity implements AdapterView.OnItemClickListener  {
+public class vista_modulo_generic extends AppCompatActivity implements AdapterView.OnItemClickListener ,AdapterView.OnKeyListener {
 
-    String actividad;
-    ListView listView;
-    ArrayList<ItemLista> dataSet;
-    ListaAdaptador adaptador;
-    ProgressDialog pDialog;
+    String titulo;
+    ListView listado;
+    FactoryAdaptadorGenerico data;
+    Spinner spinner;
+    EditText textoBuscar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vista_modulo_generic);
+        listado = (ListView) findViewById(R.id.listView);
 
-        Bundle parametros = getIntent().getExtras();
-        actividad = parametros.getString("Actividad");
+        textoBuscar = (EditText) findViewById(R.id.vista_generica_txt);
+        textoBuscar.setOnKeyListener(this);
+        Bundle tipoVista = getIntent().getExtras();
+        titulo = tipoVista.getString("Actividad");
+        data = (FactoryAdaptadorGenerico) tipoVista.getSerializable("Datos");
+        if (data == null){
+            Toast.makeText(this,"Los Datos Suministrados son invalidos",Toast.LENGTH_LONG).show();
+            finish();
+        }
+        ArrayAdapter<String> stringArrayAdapter= data.getCamposBuscablesAdator(this);
+        spinner =(Spinner)  findViewById(R.id.spinner);
+        spinner.setAdapter(stringArrayAdapter);
 
-        listView = (ListView) findViewById(R.id.listView);
-        dataSet = new ArrayList<>();
-        adaptador = new ListaAdaptador(this, dataSet);
 
-        listView.setAdapter(adaptador);
-        listView.setOnItemClickListener(this);
-        new GenericListHandler().execute();
+        ListaAdaptador  listaAdaptador = data.getCamposaFiltrar(this,(String)spinner.getSelectedItem(),"");
+        if (listaAdaptador !=  null)  listado.setAdapter(listaAdaptador);
+        listado.setOnItemClickListener(this);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_generico_editar, menu);
+        MenuInflater inflater=getMenuInflater();
+        inflater.inflate(R.menu.menu_generico_editar, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
             case R.id.nuevo:
-                Intent intent = new Intent(this, Contacto.class);
-                intent.putExtra("Actividad","");
-                startActivity(intent);
+                Intent nuevaActividad = data.getIntentClase(this);
+                nuevaActividad.putExtra("Actividad","");
+                startActivity(nuevaActividad);
                 return true;
             case R.id.editar:
                 System.out.println("Se presionó Editar");
@@ -72,56 +83,18 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(this, Contacto.class);
-        String mensaje = dataSet.get(position).get_TextoID();
+    public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
+        Intent intent = data.getIntentClase(this);
+        String mensaje = data.getObjetosListado().get(position).getId();
         intent.putExtra("Actividad", mensaje);
-        entidades.Productos p = new entidades.Productos();
         startActivity(intent);
-        finish();
-
+        this.finish();
     }
 
-
-    private class GenericListHandler extends AsyncTask<Void,Void,String> {
-        private ArrayList data;
-
-        @Override
-        protected String doInBackground(Void... params) {
-
-            String array = null;
-
-            List<Contactos> queryResults = SQLiteUtils.rawQuery(Contactos.class,
-                    "SELECT * from Contactos", null);
-            for ( int i = 0 ; i < queryResults.size(); i++ ) {
-                dataSet.add(new ItemLista(queryResults.get(i).getId().toString(),queryResults.get(i).getTelefono(),queryResults.get(i).getNombre(),queryResults.get(i).getApellido()));
-            }
-            adaptador.notifyDataSetChanged();
-
-            return array;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            pDialog = new ProgressDialog(vista_modulo_generic.this);
-            pDialog.setMessage(getString(R.string.Cargando));
-            pDialog.setCancelable(false);
-            pDialog.show();
-
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-
-            if (pDialog.isShowing())
-            {
-                pDialog.dismiss();
-            }
-        }
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+        ListaAdaptador  listaAdaptador = data.getCamposaFiltrar(this,(String)spinner.getSelectedItem(),textoBuscar.getText().toString());
+        if (listaAdaptador !=  null)  listado.setAdapter(listaAdaptador);
+        return false;
     }
-
 }
-

@@ -3,10 +3,9 @@ package entidades;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 
-/**
- * Created by RynaMartinez on 10/28/2015.
- */
-public class FacturaProductos extends Model {
+import java.io.Serializable;
+
+public class FacturaProductos extends Model implements Serializable{
 
     @Column(name = "factura")
     protected Facturas factura;

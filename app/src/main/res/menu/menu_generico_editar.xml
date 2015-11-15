@@ -5,11 +5,13 @@
         android:title="@string/anadir"
         android:orderInCategory="0"
         android:showAsAction="always"/>
+
     <item android:id="@+id/editar"
         android:icon="@android:drawable/ic_menu_edit"
         android:title="@string/editar"
         android:orderInCategory="0"
         android:showAsAction="always"/>
+
     <item android:id="@+id/eliminar"
         android:icon="@android:drawable/ic_menu_delete"
         android:title="@string/eliminar"

@@ -6,13 +6,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
 
+import com.activeandroid.query.Select;
+import com.google.gson.Gson;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import entidades.Contactos;
 import sisfact.sisfac.sisfact.R;
+import sisfact.sisfac.sisfact.Vistas.AdaptadorGenerico.AdaptadorContacto;
+import sisfact.sisfac.sisfact.Vistas.AdaptadorGenerico.FactoryAdaptadorGenerico;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     //botones del menu
     ImageButton  factura,producto,contacto,cpp,reporte;
     Intent nuevaActividad;
-
+    Gson serializeJson = new Gson();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,9 +59,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.contacto:
-
                 nuevaActividad = new Intent(this, vista_modulo_generic.class);
-                nuevaActividad.putExtra("Actividad", "contacto");
+                nuevaActividad.putExtra("Actividad", "Contactos");
+                FactoryAdaptadorGenerico fact = FactoryAdaptadorGenerico.getAdaptador(FactoryAdaptadorGenerico.Adaptador.Contacto);
+                List<Contactos> contactosArrayList = new Select().from(Contactos.class).execute();
+                for (Contactos con : contactosArrayList) con.setInternalId(con.getId());
+                fact.setObjectosAFiltrar(contactosArrayList);
+                nuevaActividad.putExtra("Datos",fact);
                 startActivity(nuevaActividad);
                 break;
 

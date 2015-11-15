@@ -12,11 +12,11 @@
         android:layout_height="wrap_content"
         android:id="@+id/spinner" />
 
-    <AutoCompleteTextView
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text=""
-        android:id="@+id/autoCompleteTextView" />
+        android:id="@+id/vista_generica_txt" />
 
     <ListView
         android:layout_width="match_parent"

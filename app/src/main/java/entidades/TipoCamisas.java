@@ -3,12 +3,11 @@ package entidades;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import java.io.Serializable;
 
-/**
- * Created by RynaMartinez on 10/28/2015.
- */
+
 @Table(name = "tipo_camisas")
-public class TipoCamisas extends Model {
+public class TipoCamisas extends Model implements Serializable{
     @Column(name = "tipo_camisa")
     private String tipoCamisa;
 
