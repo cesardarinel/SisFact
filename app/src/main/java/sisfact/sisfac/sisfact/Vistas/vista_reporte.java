@@ -1,4 +1,4 @@
-package sisfact.sisfac.sisfact;
+package sisfact.sisfac.sisfact.Vistas;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -14,6 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
+
+import sisfact.sisfac.sisfact.R;
 
 public class vista_reporte extends AppCompatActivity implements View.OnClickListener {
 
