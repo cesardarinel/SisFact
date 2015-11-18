@@ -47,7 +47,7 @@
         <activity android:name=".Vistas.vista_modulo_generic" ></activity>
 
         <activity
-            android:name=".vista_reporte"
+            android:name=".Vistas.vista_reporte"
             android:label="@string/title_activity_vista_reporte" >
         </activity>
     </application>

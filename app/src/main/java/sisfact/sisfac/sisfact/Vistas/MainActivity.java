@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.productos:
-                nuevaActividad = new Intent(this,Productos.class);
+                nuevaActividad = new Intent(this, Productos.class);
                 startActivity(nuevaActividad);
                 break;
 
