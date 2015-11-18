@@ -9,33 +9,17 @@ import java.io.Serializable;
 @Table(name = "pantalones")
 public class Pantalones extends Model implements Serializable {
 
-    @Column(name="prodcuto")
+    @Column(name="producto")
     protected Productos producto;
 
     @Column(name = "largo")
-    protected float largo;
+    protected Float largo;
 
     @Column(name = "ancho")
-    protected float ancho;
+    protected Float ancho;
 
     @Column(name = "size")
     protected String size;
-
-    public float getLargo() {
-        return largo;
-    }
-
-    public void setLargo(float largo) {
-        this.largo = largo;
-    }
-
-    public float getAncho() {
-        return ancho;
-    }
-
-    public void setAncho(float ancho) {
-        this.ancho = ancho;
-    }
 
     public String getSize() {
         return size;
@@ -51,5 +35,22 @@ public class Pantalones extends Model implements Serializable {
 
     public void setProducto(Productos producto) {
         this.producto = producto;
+    }
+
+
+    public Float getLargo() {
+        return largo;
+    }
+
+    public void setLargo(Float largo) {
+        this.largo = largo;
+    }
+
+    public Float getAncho() {
+        return ancho;
+    }
+
+    public void setAncho(Float ancho) {
+        this.ancho = ancho;
     }
 }

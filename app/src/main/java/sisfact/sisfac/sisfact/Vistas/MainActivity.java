@@ -2,6 +2,7 @@ package sisfact.sisfac.sisfact.Vistas;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
@@ -13,7 +14,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import entidades.Contactos;
+import entidades.*;
+import entidades.Productos;
 import sisfact.sisfac.sisfact.R;
 import sisfact.sisfac.sisfact.Vistas.AdaptadorGenerico.AdaptadorContacto;
 import sisfact.sisfac.sisfact.Vistas.AdaptadorGenerico.FactoryAdaptadorGenerico;
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-
+        FactoryAdaptadorGenerico fact;
         switch (v.getId()) {
             case R.id.factura:
                 nuevaActividad = new Intent(this, vista_factura.class);
@@ -54,14 +56,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.productos:
-                nuevaActividad = new Intent(this, Productos.class);
+                nuevaActividad = new Intent(this,vista_modulo_generic.class);
+                fact = FactoryAdaptadorGenerico.getAdaptador(FactoryAdaptadorGenerico.Adaptador.Producto);
+                List<entidades.Productos> productosList = new Select().from(entidades.Productos.class).execute();
+                for (entidades.Productos con : productosList) con.setInternalId(con.getId());
+                fact.setObjectosAFiltrar(productosList);
+                nuevaActividad.putExtra("Datos",fact);
                 startActivity(nuevaActividad);
                 break;
 
             case R.id.contacto:
                 nuevaActividad = new Intent(this, vista_modulo_generic.class);
                 nuevaActividad.putExtra("Actividad", "Contactos");
-                FactoryAdaptadorGenerico fact = FactoryAdaptadorGenerico.getAdaptador(FactoryAdaptadorGenerico.Adaptador.Contacto);
+                fact = FactoryAdaptadorGenerico.getAdaptador(FactoryAdaptadorGenerico.Adaptador.Contacto);
                 List<Contactos> contactosArrayList = new Select().from(Contactos.class).execute();
                 for (Contactos con : contactosArrayList) con.setInternalId(con.getId());
                 fact.setObjectosAFiltrar(contactosArrayList);

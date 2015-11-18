@@ -33,7 +33,7 @@ public class Contacto extends AppCompatActivity implements View.OnClickListener{
         setContentView(R.layout.vista_contactos);
 
         Bundle tipoVista = getIntent().getExtras();
-        id = tipoVista.getString("Actividad");
+        id = tipoVista.getString("id");
 
         nombreContacto = (EditText) findViewById(R.id.guardar_contacto_nombre);
         apellidoContacto = (EditText) findViewById(R.id.guardar_contacto_apellido);
@@ -48,7 +48,7 @@ public class Contacto extends AppCompatActivity implements View.OnClickListener{
 
         botonGuardar = (Button) findViewById(R.id.guardar_contacto_btn_guardar);
         botonGuardar.setOnClickListener(this);
-        if(!id.isEmpty())
+        if(id != null && !id.isEmpty())
         {
             LLenamos();
         }
@@ -57,7 +57,11 @@ public class Contacto extends AppCompatActivity implements View.OnClickListener{
 
         @Override
     public void onClick(View v) {
-        Contactos contacto = new Contactos();
+        entidades.Contactos contacto;
+
+        if (id == null)  contacto = new Contactos();
+        else contacto = new Select().from(entidades.Contactos.class).where("id = ?",id).executeSingle();
+
         contacto.setNombre(nombreContacto.getText().toString());
         contacto.setApellido(apellidoContacto.getText().toString());
         contacto.setTelefono(telefonoContacto.getText().toString());

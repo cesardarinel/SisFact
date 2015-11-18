@@ -8,6 +8,8 @@ import java.io.Serializable;
 
 @Table(name="Productos")
 public class Productos  extends  Model implements Serializable{
+    protected Long internalId;
+
     @Column(name="nombre")
     protected String nombre;
 
@@ -16,6 +18,9 @@ public class Productos  extends  Model implements Serializable{
 
     @Column(name = "codigo_barra")
     protected String codigoBarra;
+
+    @Column(name="precio")
+    protected Integer precio;
 
     @Column(name="contacto")
     protected Contactos contacto;
@@ -83,5 +88,21 @@ public class Productos  extends  Model implements Serializable{
 
     public Categorias getCategoria() {
         return Categoria;
+    }
+
+    public Long getInternalId() {
+        return internalId;
+    }
+
+    public void setInternalId(Long internalId) {
+        this.internalId = internalId;
+    }
+
+    public Integer getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(Integer precio) {
+        this.precio = precio;
     }
 }

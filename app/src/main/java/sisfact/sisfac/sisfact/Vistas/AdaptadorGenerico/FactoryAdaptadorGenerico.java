@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.ArrayAdapter;
 
-import com.google.gson.Gson;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +12,27 @@ import entidades.ItemLista;
 import sisfact.sisfac.sisfact.Vistas.ListaAdaptador;
 
 public class FactoryAdaptadorGenerico implements Serializable{
+    public enum Adaptador{
+        Contacto,
+        Producto,
+        Factura
+    }
+    public static FactoryAdaptadorGenerico getAdaptador(Adaptador adapt){
+        FactoryAdaptadorGenerico r=null;
+        switch (adapt){
+            case Contacto:
+                r =  new AdaptadorContacto();
+                break;
+            case Producto:
+                r = new AdaptadorProducto();
+                break;
+            case Factura:
+                r = new AdaptadorFactura();
+                break;
+        }
+        return r;
+    }
+
     protected List<String> camposBuscables;
     protected List<?> objectosAFiltrar;
     protected ArrayList<ItemLista> objetosListado;
@@ -28,29 +47,7 @@ public class FactoryAdaptadorGenerico implements Serializable{
 
     public ArrayList<ItemLista> getObjetosListado() {
         return objetosListado;
-    }            boolean esValido = true;
-
-
-    public void setObjetosListado(ArrayList<ItemLista> objetosListado) {
-        this.objetosListado = objetosListado;
     }
-
-
-    public enum Adaptador{
-        Contacto
-    }
-    public static FactoryAdaptadorGenerico getAdaptador(Adaptador adapt){
-        FactoryAdaptadorGenerico r=null;
-        switch (adapt){
-            case Contacto:
-                r =  new AdaptadorContacto();
-                break;
-        }
-        return r;
-    }
-
-
-
 
     public  ArrayAdapter<String> getCamposBuscablesAdator(Context con){
         return new ArrayAdapter<>(con,android.R.layout.simple_spinner_dropdown_item,camposBuscables);

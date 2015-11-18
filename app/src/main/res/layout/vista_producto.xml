@@ -77,7 +77,7 @@
         android:text="Seccion"
         android:id="@+id/txt6" />
 
-    <AutoCompleteTextView
+    <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/plantilla_producto_seccion" />

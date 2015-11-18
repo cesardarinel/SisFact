@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Table(name="contactos")
 public class Contactos extends Model implements Serializable{
 
-	private Long internalId;
+	protected Long internalId;
 
 	@Column(name="nombre")
 	private String nombre;

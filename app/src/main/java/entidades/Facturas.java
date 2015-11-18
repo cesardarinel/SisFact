@@ -10,6 +10,8 @@ import java.util.Date;
 @Table(name="facturas")
 public class Facturas extends Model implements Serializable{
 
+	protected Long internalId;
+
 	@Column(name="fecha")
 	protected Date fecha;
 
@@ -45,4 +47,11 @@ public class Facturas extends Model implements Serializable{
 		this.contacto = contacto;
 	}
 
+	public Long getInternalId() {
+		return internalId;
+	}
+
+	public void setInternalId(Long internalId) {
+		this.internalId = internalId;
+	}
 }

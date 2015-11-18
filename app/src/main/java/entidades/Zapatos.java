@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Table(name="zapatos")
 public class Zapatos extends Model implements Serializable{
 
-    @Column(name="prodcuto")
+    @Column(name="producto")
     protected Productos producto;
 
     @Column(name="tipo_medida")

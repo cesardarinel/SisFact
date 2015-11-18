@@ -85,8 +85,8 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
     @Override
     public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
         Intent intent = data.getIntentClase(this);
-        String mensaje = data.getObjetosListado().get(position).getId();
-        intent.putExtra("Actividad", mensaje);
+        String id = data.getObjetosListado().get(position).getId();
+        intent.putExtra("id", id);
         startActivity(intent);
         this.finish();
     }

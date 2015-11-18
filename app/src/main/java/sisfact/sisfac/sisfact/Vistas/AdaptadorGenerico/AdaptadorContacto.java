@@ -3,11 +3,7 @@ package sisfact.sisfac.sisfact.Vistas.AdaptadorGenerico;
 import android.content.Context;
 import android.content.Intent;
 
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List;
 
 import entidades.Contactos;
 import entidades.ItemLista;
@@ -17,7 +13,10 @@ import sisfact.sisfac.sisfact.Vistas.ListaAdaptador;
 public class AdaptadorContacto extends FactoryAdaptadorGenerico {
     public AdaptadorContacto(){
         camposBuscables = new ArrayList<>();
-        camposBuscables.add("Nombre");
+        camposBuscables.add("Todos: Nombre");
+        camposBuscables.add("Cliente: Nombre");
+        camposBuscables.add("Suplidor: Nombre");
+
         camposBuscables.add("Telefono");
         camposBuscables.add("Direccion");
     }
@@ -30,8 +29,14 @@ public class AdaptadorContacto extends FactoryAdaptadorGenerico {
             Contactos contactos = (Contactos)obj;
             boolean esValido = true;
             switch (Campo){
-                case "Nombre":
+                case "Todos: Nombre":
                     if (!contactos.getNombre().contains(Valor)) esValido = false;
+                    break;
+                case "Cliente: Nombre":
+                    if (!contactos.getNombre().contains(Valor) && contactos.isEsCliente()) esValido = false;
+                    break;
+                case "Suplidor: Nombre":
+                    if (!contactos.getNombre().contains(Valor) && contactos.isEsSuplidor()) esValido = false;
                     break;
                 case "Telefono":
                     if (!contactos.getTelefono().contains(Valor)) esValido = false;

@@ -2,7 +2,6 @@ package sisfact.sisfac.sisfact.Vistas;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -34,16 +33,17 @@ import sisfact.sisfac.sisfact.R;
 
 
 public class Productos extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
-    protected String modo = null;
-    protected String [] spinner = {"","Zapatos", "Camisa","Pantalon","Ropa Interior"};
+    protected String [] spinner = {"Zapatos", "Camisa","Pantalon","Ropa Interior"};
     protected LinearLayout layout;
+    Long idProducto = null;
+
     //cosas de las vista
     protected Spinner tipoProducto;
     protected EditText nombrePoducto;
     protected Spinner marcaProducto;
     protected EditText precioProducto;
     protected AutoCompleteTextView contactoProducto;
-    protected AutoCompleteTextView seccionProducto;
+    protected Spinner seccionProducto;
     protected Spinner categoriaProducto;
     //Zapatos;
     protected TextView zapatosTextMedida;
@@ -82,7 +82,15 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
     //Botones
     protected Button botonGuardar;
 
-    //protected EditText;
+    //array adaptor
+    ArrayAdapter<String> marcaArrayAdapter;
+    ArrayAdapter<String> categoriaArrayAdapter;
+    ArrayAdapter<String> tipoCamisaArrayAdapter;
+    ArrayAdapter<String> tipoMangaArrayAdapter;
+    ArrayAdapter<String> tipoProductoArrayAdapter;
+    ArrayAdapter<String> tipoRopaInteiorArrayAdapter;
+    ArrayAdapter<String> seccionArrayAdapter;
+    ArrayAdapter<String> contactoArrayAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,23 +104,31 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
         List<Marcas> todasLasMarca = new Select().from(Marcas.class).execute();
 
         for (Marcas item : todasLasMarca)listaMarca.add(item.getNombre());
-        ArrayAdapter<String> marcaArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listaMarca);
+        marcaArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listaMarca);
         marcaProducto.setAdapter(marcaArrayAdapter);
 
         precioProducto = (EditText) findViewById(R.id.plantilla_producto_precio);
+
         contactoProducto = (AutoCompleteTextView) findViewById(R.id.plantilla_producto_contacto);
-        seccionProducto = (AutoCompleteTextView) findViewById(R.id.plantilla_producto_seccion);
+        List<entidades.Contactos> contactoses =  new Select().from(entidades.Contactos.class).execute();
+        ArrayList<String> listaContacto =  new ArrayList<>();
+        for(entidades.Contactos con : contactoses) listaContacto.add(con.getTelefono());
+        contactoArrayAdapter =  new ArrayAdapter<>(this,android.R.layout.simple_dropdown_item_1line,listaContacto);
+        contactoProducto.setAdapter(contactoArrayAdapter);
+
+
+        seccionProducto = (Spinner) findViewById(R.id.plantilla_producto_seccion);
+        List<Secciones> secciones =  new Select().from(Secciones.class).execute();
+        ArrayList<String> listaSeccion =  new ArrayList<>();
+        for (Secciones item : secciones) listaSeccion.add(item.getSeccion());
+        seccionArrayAdapter =  new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,listaSeccion);
+        seccionProducto.setAdapter(seccionArrayAdapter);
+
         categoriaProducto = (Spinner) findViewById(R.id.plantilla_producto_categoria);
         ArrayList<String> listaCategoria =  new ArrayList<>();
         List<Categorias> todasLasCategorias= new Select().from(Categorias.class).execute();
-        if (todasLasCategorias.size() == 0){
-            Categorias cat = new Categorias();
-            cat.setCategoria("Categoria 1");
-            cat.save();
-            todasLasCategorias.add(cat);
-        }
         for (Categorias item : todasLasCategorias)listaCategoria.add(item.getCategoria());
-        ArrayAdapter<String> categoriaArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listaCategoria);
+        categoriaArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listaCategoria);
         categoriaProducto.setAdapter(categoriaArrayAdapter);
 
         //Zapatos
@@ -129,7 +145,7 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
         ArrayList<String> listaTipoCamisa =  new ArrayList<>();
         List<TipoCamisas> todasLosTipoCamisas = new Select().from(TipoCamisas.class).execute();
         for (TipoCamisas item : todasLosTipoCamisas)listaTipoCamisa.add(item.getTipoCamisa());
-        ArrayAdapter<String> tipoCamisaArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listaTipoCamisa);
+        tipoCamisaArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listaTipoCamisa);
         tipoCamisa.setAdapter(tipoCamisaArrayAdapter);
 
         tipoMangaTextCamisa = (TextView) findViewById(R.id.plantilla_producto_camisa_txt_tipo_manga);
@@ -137,7 +153,7 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
         ArrayList<String> listaMangaCamisa =  new ArrayList<>();
         List<TipoMangas> todasLasMangasCamisas = new Select().from(TipoMangas.class).execute();
         for (TipoMangas item : todasLasMangasCamisas)listaTipoCamisa.add(item.getTipoManga());
-        ArrayAdapter<String> tipoMangaArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listaMangaCamisa);
+        tipoMangaArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listaMangaCamisa);
         tipoMangaCamisa.setAdapter(tipoMangaArrayAdapter);
 
 
@@ -169,129 +185,40 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
 
 
 
-        ArrayAdapter<String> tipoProductoArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spinner);
+        tipoProductoArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spinner);
         tipoProducto.setAdapter(tipoProductoArrayAdapter);
         tipoProducto.setOnItemSelectedListener(this);
 
         botonGuardar.setOnClickListener(this);
-
+        HabilitarProducto((String)tipoProducto.getSelectedItem());
+        String id;
+        idProducto = null;
         try{
-            modo = getIntent().getExtras().getString("modo");
-        }catch (Exception e){}
-        if(modo != null && modo.equals("detalles")){
-            Long idProducto = null;
+            id = getIntent().getExtras().getString("id");
+            idProducto = Long.valueOf(id);
+        }catch(Exception e){}
 
-            try{
-                idProducto = getIntent().getExtras().getLong("id");
-            }catch(Exception e){}
-
-            if (idProducto == null){
-                Toast.makeText(this,"El producto no es Valido",Toast.LENGTH_LONG).show();
-                finish();
-            }
-            entidades.Productos prod = new Select()
-                    .from(entidades.Productos.class)
-                    .where("id = ?",idProducto)
-                    .executeSingle();
-
-            botonGuardar.setVisibility(View.GONE);
-
-            tipoProducto.setEnabled(false);
-            int tipoProductoPos = tipoProductoArrayAdapter.getPosition(prod.getTipo());
-            tipoProducto.setSelection(tipoProductoPos);
-
-            nombrePoducto.setEnabled(false);
-            nombrePoducto.setText(prod.getNombre());
-
-            marcaProducto.setEnabled(false);
-            int marcaPos = marcaArrayAdapter.getPosition(prod.getMarca().getNombre());
-            marcaProducto.setSelection(marcaPos);
-
-            contactoProducto.setEnabled(false);
-            contactoProducto.setText(prod.getContacto().getTelefono());
-
-
-            seccionProducto.setEnabled(false);
-            seccionProducto.setText(prod.getSeccion().getSeccion());
-
-            categoriaProducto.setEnabled(false);
-            int categoriaPos = categoriaArrayAdapter.getPosition(prod.getCategoria().getCategoria());
-            categoriaProducto.setSelection(categoriaPos);
-
-            HabilitarProducto(prod.getTipo());
-            switch (prod.getTipo()){
-                case "Zapatos":
-                    Zapatos zapatos = new Select()
-                            .from(Zapatos.class)
-                            .where("producto = ?", idProducto)
-                            .executeSingle();
-
-                    zapatosMedida.setEnabled(false);
-                    zapatosMedida.setText(zapatos.getMedida());
-
-                    break;
-                case "Camisa":
-                    Camisas camisas = new Select()
-                            .from(Camisas.class)
-                            .where("producto = ?",idProducto)
-                            .executeSingle();
-
-                    tamanoCamisa.setEnabled(false);
-                    tamanoCamisa.setText(camisas.getTamano());
-
-                    tipoCamisa.setEnabled(false);
-                    int tipoCamisaPos= tipoCamisaArrayAdapter.getPosition(camisas.getTipoCamisa().getTipoCamisa());
-                    tipoCamisa.setSelection(tipoCamisaPos);
-
-                    tipoMangaCamisa.setEnabled(false);
-                    int tipoMangaPos = tipoMangaArrayAdapter.getPosition(camisas.getTipoManga().getTipoManga());
-                    tipoMangaCamisa.setSelection(tipoMangaPos);
-                    break;
-                case "Pantalon":
-                    Pantalones pantalones = new Select()
-                            .from(Pantalones.class)
-                            .where("producto = ?",idProducto)
-                            .executeSingle();
-
-                    largoPantalon.setEnabled(false);
-                    largoPantalon.setText(String.valueOf(pantalones.getLargo()));
-
-                    anchoPantalon.setEnabled(false);
-                    anchoPantalon.setText(String.valueOf(pantalones.getAncho()));
-
-                    sizePantalon.setEnabled(false);
-                    sizePantalon.setText(String.valueOf(pantalones.getSize()));
-
-                    break;
-                case "Ropa Interior":
-                    RopaInterioires ropaInterioires = new Select()
-                            .from(RopaInterioires.class)
-                            .where("producto = ?",idProducto)
-                            .executeSingle();
-
-                    tipoRopaInterior.setEnabled(false);
-                    int tipoRopaInteriorPos = tipoRopaInteiorArrayAdapter.getPosition(ropaInterioires.getTipoRopaInterior().getTipoRopaInterioir());
-                    tipoRopaInterior.setSelection(tipoRopaInteriorPos);
-
-                    medida1RopaInterior.setEnabled(false);
-                    medida1RopaInterior.setText(ropaInterioires.getMedida1());
-
-                    medida2RopaInterior.setEnabled(false);
-                    medida2RopaInterior.setText(ropaInterioires.getMedida2());
-                    break;
-            }
+        if (idProducto != null ){
+            LlenarProducto();
         }
     }
-    protected void HabilitarEdicion(){
+    protected void HabilitarEdicion(boolean habilitar){
         int total =  layout.getChildCount();
         for (int i=0;i<total;i++){
             View v = layout.getChildAt(i);
-            if (v.getVisibility() == View.VISIBLE) v.setEnabled(true);
+
+            if (v.getVisibility() == View.VISIBLE){
+                if (v instanceof EditText) {
+                    v.setFocusable(habilitar);
+                }
+                else{
+                    v.setEnabled(habilitar);
+                }
+            }
         }
         botonGuardar.setVisibility(View.VISIBLE);
     }
     public void Eliminar(){
-        Long idProducto;
         try{
             idProducto = Long.valueOf(getIntent().getExtras().getString("id"));
         }catch(Exception e){}
@@ -371,88 +298,384 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
 
     }
 
+    protected void LlenarProducto(){
+        entidades.Productos prod = new Select()
+                .from(entidades.Productos.class)
+                .where("id = ?",idProducto)
+                .executeSingle();
+
+        botonGuardar.setVisibility(View.GONE);
+
+        if (prod.getTipo() != null){
+            int tipoProductoPos = tipoProductoArrayAdapter.getPosition(prod.getTipo());
+            tipoProducto.setSelection(tipoProductoPos);
+        }
+
+        if(prod.getNombre() != null) nombrePoducto.setText(prod.getNombre());
+
+
+        if (prod.getMarca() != null){
+            int marcaPos = marcaArrayAdapter.getPosition(prod.getMarca().getNombre());
+            marcaProducto.setSelection(marcaPos);
+        }
+
+        if(prod.getPrecio() != null) precioProducto.setText(prod.getPrecio().toString());
+
+
+        if (prod.getContacto() != null) contactoProducto.setText(prod.getContacto().getTelefono());
+
+
+
+        if(prod.getSeccion() != null){
+            int seccionPos = seccionArrayAdapter.getPosition(prod.getSeccion().getSeccion());
+            seccionProducto.setSelection(seccionPos);
+        }
+
+
+        if (prod.getCategoria() != null){
+            int categoriaPos = categoriaArrayAdapter.getPosition(prod.getCategoria().getCategoria());
+            categoriaProducto.setSelection(categoriaPos);
+        }
+
+        HabilitarProducto(prod.getTipo());
+        HabilitarEdicion(true);
+        BuscarCambiosTipoProducto(prod.getTipo(), idProducto);
+
+
+    }
+    protected void BuscarCambiosTipoProducto(String tipo, Long idProd){
+        switch (tipo){
+            case "Zapatos":
+
+                Zapatos zapatos = new Select()
+                        .from(Zapatos.class)
+                        .where("producto = ?", idProd)
+                        .executeSingle();
+                if(zapatos.getMedida()!=null) zapatosMedida.setText(zapatos.getMedida());
+
+                break;
+            case "Camisa":
+                Camisas camisas = new Select()
+                        .from(Camisas.class)
+                        .where("producto = ?",idProd)
+                        .executeSingle();
+
+
+                if(camisas.getTamano() != null) tamanoCamisa.setText(camisas.getTamano());
+
+
+                if(camisas.getTipoCamisa().getTipoCamisa() != null) {
+                    int tipoCamisaPos = tipoCamisaArrayAdapter.getPosition(camisas.getTipoCamisa().getTipoCamisa());
+                    tipoCamisa.setSelection(tipoCamisaPos);
+                }
+
+                tipoMangaCamisa.setEnabled(false);
+
+                if (camisas.getTipoManga() != null) {
+                    int tipoMangaPos = tipoMangaArrayAdapter.getPosition(camisas.getTipoManga().getTipoManga());
+                    tipoMangaCamisa.setSelection(tipoMangaPos);
+                }
+
+                break;
+            case "Pantalon":
+                Pantalones pantalones = new Select()
+                        .from(Pantalones.class)
+                        .where("producto = ?",idProd)
+                        .executeSingle();
+
+
+                if( pantalones.getLargo() != null) largoPantalon.setText(String.valueOf(pantalones.getLargo()));
+
+                if(pantalones.getAncho() != null) anchoPantalon.setText(String.valueOf(pantalones.getAncho()));
+
+                if(pantalones.getSize() != null) sizePantalon.setText(String.valueOf(pantalones.getSize()));
+
+                break;
+            case "Ropa Interior":
+                RopaInterioires ropaInterioires = new Select()
+                        .from(RopaInterioires.class)
+                        .where("producto = ?",idProd)
+                        .executeSingle();
+
+
+                if (ropaInterioires.getTipoRopaInterior() != null) {
+                    int tipoRopaInteriorPos = tipoRopaInteiorArrayAdapter.getPosition(ropaInterioires.getTipoRopaInterior().getTipoRopaInterioir());
+                    tipoRopaInterior.setSelection(tipoRopaInteriorPos);
+                }
+
+                if(ropaInterioires.getMedida1() != null) medida1RopaInterior.setText(ropaInterioires.getMedida1());
+
+                if(ropaInterioires.getMedida2() != null) medida2RopaInterior.setText(ropaInterioires.getMedida2());
+                break;
+        }
+    }
     @Override
     public void onClick(View v) {
+        boolean esValidoProducto = true;
+        boolean esValidoTipoProducto = true;
+        entidades.Productos productos;
 
-
-        entidades.Productos productos =  new entidades.Productos();
+        if (idProducto == null){
+            productos = new entidades.Productos();
+        }
+        else {
+            productos = new Select().from(entidades.Productos.class).executeSingle();
+        }
         productos.setNombre(nombrePoducto.getText().toString());
-        Marcas marcas =  new Select()
-                .from(Marcas.class)
-                .where("nombre = ?", (String) marcaProducto.getSelectedItem())
-                .executeSingle();
-        productos.setMarca(marcas);
 
-        //TODO
-        //productos.setCodigoBarra();
+        productos.setTipo((String)tipoProducto.getSelectedItem());
+
+        if (productos.getNombre().isEmpty()){
+            esValidoProducto = false;
+            nombrePoducto.setError("El nombre del producto no puedes estar vacio");
+        }
+
+        if (marcaProducto.getSelectedItem() != null){
+            Marcas marcas =  new Select()
+                    .from(Marcas.class)
+                    .where("nombre = ?", (String) marcaProducto.getSelectedItem())
+                    .executeSingle();
+            productos.setMarca(marcas);
+        }
+        else{
+            //no puede estar vacia
+            esValidoProducto = false;
+        }
+
+
+        try{
+            productos.setPrecio(Integer.valueOf(precioProducto.getText().toString()));
+        }
+        catch (Exception e) {
+            if (precioProducto.getText().toString().isEmpty()){
+                precioProducto.setError("No puede estar vacio");
+                esValidoProducto = false;
+            }
+            else {
+                precioProducto.setError("No es un Numero");
+                esValidoProducto = false;
+            }
+
+        }
+        if (productos.getPrecio() != null && productos.getPrecio() < 0){
+            precioProducto.setError("No puede ser negativo");
+            esValidoProducto = false;
+        }
+
 
         Contactos contactos = new Select()
                 .from(Contactos.class)
                 .where("telefono = ?", contactoProducto.getText().toString())
                 .executeSingle();
+
         productos.setContacto(contactos);
 
-        Secciones secciones =  new Select()
-                .from(Secciones.class)
-                .where("seccion = ?",seccionProducto.getText().toString())
-                .executeSingle();
-        productos.setSeccion(secciones);
+        if (seccionProducto.getSelectedItem() != null){
+            Secciones secciones =  new Select()
+                    .from(Secciones.class)
+                    .where("seccion = ?", (String) seccionProducto.getSelectedItem())
+                    .executeSingle();
+            productos.setSeccion(secciones);
+        }
 
-        productos.setTipo((String) tipoProducto.getSelectedItem());
-        Categorias categorias = new Select()
-                .from(Categorias.class)
-                .where("categoria = ? ", (String) categoriaProducto.getSelectedItem())
-                .executeSingle();
-        productos.setCategoria(categorias);
-        productos.save();
-        try {
-            switch ((String)tipoProducto.getSelectedItem()){
-                case "Zapatos":
-                    Zapatos zapatos =  new Zapatos();
-                    zapatos.setProducto(productos);
-                    zapatos.setMedida(zapatosTextMedida.getText().toString());
-                    zapatos.save();
-                    break;
-                case "Camisa":
-                    Camisas camisas =  new Camisas();
-                    camisas.setProducto(productos);
-                    camisas.setTamano(tamanoCamisa.getText().toString());
+        if (categoriaProducto.getSelectedItem() != null){
+            Categorias categorias = new Select()
+                    .from(Categorias.class)
+                    .where("categoria = ? ", (String) categoriaProducto.getSelectedItem())
+                    .executeSingle();
+            productos.setCategoria(categorias);
+        }
+
+
+        if (esValidoProducto) productos.save();
+
+        switch ((String)tipoProducto.getSelectedItem()){
+            case "Zapatos":
+
+                if (idProducto != null) {
+                    if (!productos.getTipo().equals("Zapatos")){
+                        elemintarTipoProducto(productos.getTipo(),idProducto);
+                    }
+                }
+
+                Zapatos zapatos = new Zapatos();
+                zapatos.setProducto(productos);
+                zapatos.setMedida(zapatosMedida.getText().toString());
+
+                if (zapatos.getMedida().isEmpty()){
+                    zapatosMedida.setError("No puede estar vacio");
+                    esValidoTipoProducto = false;
+                }
+
+                if(esValidoTipoProducto && esValidoProducto) zapatos.save();
+
+
+                break;
+            case "Camisa":
+
+                if (idProducto != null) {
+                    if (!productos.getTipo().equals("Camisa")){
+                        elemintarTipoProducto(productos.getTipo(),idProducto);
+                    }
+                }
+
+                Camisas camisas =  new Camisas();
+                camisas.setProducto(productos);
+                camisas.setTamano(tamanoCamisa.getText().toString());
+
+
+                if (camisas.getTamano().isEmpty()){
+                    tamanoCamisa.setError("No puede estar vacio");
+                    esValidoTipoProducto = false;
+                }
+
+                if (tipoCamisa.getSelectedItem() != null){
                     TipoCamisas tipoCamisas =  new Select()
                             .from(TipoCamisas.class)
                             .where("tipo_camisa", (String) tipoCamisa.getSelectedItem())
                             .executeSingle();
                     camisas.setTipoCamisa(tipoCamisas);
+                }
+                else{
+                    // TODO: 11/18/15
+                    esValidoTipoProducto = false;
+                }
+                if(tipoMangaCamisa.getSelectedItem() != null){
                     TipoMangas tipoMangas =  new Select()
                             .from(TipoMangas.class)
                             .where("tipo_manga", (String) tipoMangaCamisa.getSelectedItem())
                             .executeSingle();
                     camisas.setTipoManga(tipoMangas);
-                    camisas.save();
-                    break;
-                case "Pantalon":
-                    Pantalones pantalones =  new Pantalones();
-                    pantalones.setProducto(productos);
+                }
+                else {
+                    //// TODO: 11/18/15
+                    esValidoTipoProducto = false;
+                }
+
+                if(esValidoTipoProducto && esValidoProducto) camisas.save();
+
+                break;
+            case "Pantalon":
+
+                if (idProducto != null) {
+                    if (!productos.getTipo().equals("Pantalon")){
+                        elemintarTipoProducto(productos.getTipo(),idProducto);
+                    }
+                }
+
+                Pantalones pantalones =  new Pantalones();
+                pantalones.setProducto(productos);
+
+                try{
                     pantalones.setLargo(Float.valueOf(largoPantalon.getText().toString()));
+                }
+                catch (Exception e){
+                    if(largoPantalon.getText().toString().isEmpty()){
+                        largoPantalon.setError("no puedes estar vacio");
+                        esValidoTipoProducto = false;
+                    }
+                    else{
+                        largoPantalon.setError("No es un numero");
+                        esValidoTipoProducto = false;
+                    }
+                }
+
+                if (pantalones.getLargo() != null && pantalones.getLargo() < 0){
+                    largoPantalon.setError("No puede ser negativo");
+                    esValidoTipoProducto = false;
+                }
+
+                try{
                     pantalones.setAncho(Float.valueOf(anchoPantalon.getText().toString()));
-                    pantalones.setSize(sizePantalon.getText().toString());
-                    pantalones.save();
-                    break;
-                case "Ropa Interior":
-                    RopaInterioires ropaInterioires =  new RopaInterioires();
-                    ropaInterioires.setProducto(productos);
+                }catch (Exception e){
+                    if(anchoPantalon.getText().toString().isEmpty()){
+                        anchoPantalon.setError("no puedes estar vacio");
+                        esValidoTipoProducto = false;
+                    }
+                    else{
+                        anchoPantalon.setError("No es un numero");
+                        esValidoTipoProducto = false;
+                    }
+                }
+                if (pantalones.getAncho() != null && pantalones.getAncho() < 0){
+                    anchoPantalon.setError("No puede ser negativo");
+                    esValidoTipoProducto = false;
+                }
+
+                pantalones.setSize(sizePantalon.getText().toString());
+
+
+                if (pantalones.getSize().isEmpty()){
+                    sizePantalon.setError("No puede estar vacio");
+                    esValidoTipoProducto = false;
+                }
+
+                if(esValidoTipoProducto && esValidoProducto) pantalones.save();
+
+                break;
+            case "Ropa Interior":
+
+                if (idProducto != null) {
+                    if (!productos.getTipo().equals("Pantalon")){
+                        elemintarTipoProducto(productos.getTipo(),idProducto);
+                    }
+                }
+
+                RopaInterioires ropaInterioires =  new RopaInterioires();
+                ropaInterioires.setProducto(productos);
+
+                if (tipoRopaInterior.getSelectedItem() != null){
                     TipoRopaInteriores tipoRopaInteriores =  new Select()
                             .from(TipoRopaInteriores.class)
                             .where("tipo_ropa_interior", (String) tipoRopaInterior.getSelectedItem())
                             .executeSingle();
                     ropaInterioires.setTipoRopaInterior(tipoRopaInteriores);
-                    ropaInterioires.setMedida1(medida1RopaInterior.getText().toString());
-                    ropaInterioires.setMedida2(medida2RopaInterior.getText().toString());
-                    ropaInterioires.save();
-                    break;
+                }
+                else {
+                    // TODO: 11/18/15
+                    esValidoTipoProducto = false;
+                }
+
+                ropaInterioires.setMedida1(medida1RopaInterior.getText().toString());
+
+                if (ropaInterioires.getMedida1().isEmpty()){
+                    medida1RopaInterior.setError("No puede estar vacia");
+                    esValidoTipoProducto = false;
+                }
+
+                ropaInterioires.setMedida2(medida2RopaInterior.getText().toString());
+
+                if (ropaInterioires.getMedida2().isEmpty()){
+                    medida2RopaInterior.setError("No puede estar vacia");
+                    esValidoTipoProducto = false;
+                }
+                if(esValidoTipoProducto && esValidoProducto) ropaInterioires.save();
+                break;
             }
-        }catch (Exception e){
-            Toast.makeText(this,"error guardando " + tipoProducto.getSelectedItem().toString(),Toast.LENGTH_LONG).show();
+
+        if(esValidoTipoProducto && esValidoProducto)  {
+            Toast.makeText(this, "Guardado con Exito", Toast.LENGTH_SHORT).show();
+            finish();
         }
-        finish();
+    }
+    protected void elemintarTipoProducto(String tipo,Long idProd){
+        switch (tipo){
+            case "Zapatos":
+                Zapatos zapatos =  new Select().from(Zapatos.class).where("producto = ? ",idProd).executeSingle();
+                zapatos.delete();
+                break;
+            case "Camisa":
+                Camisas camisas =  new Select().from(Camisas.class).where("producto = ? ",idProd).executeSingle();
+                camisas.delete();
+                break;
+            case "Pantalon":
+                Pantalones pantalones   = new Select().from(Pantalones.class).where("producto = ? ",idProd).executeSingle();
+                pantalones.delete();
+                break;
+            case "Ropa Interior":
+                RopaInterioires ropaInterioires =  new Select().from(RopaInterioires.class).where("producto = ? ",idProd).executeSingle();
+                ropaInterioires.delete();
+                break;
+        }
     }
 }
