@@ -82,8 +82,6 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
     //Botones
     protected Button botonGuardar;
 
-
-public class Productos extends AppCompatActivity {
     //protected EditText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
