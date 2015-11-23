@@ -15,9 +15,15 @@ import sisfact.sisfac.sisfact.R;
  * Created by cesar on 11/12/2015.
  */
 public class ListaAdaptador extends ArrayAdapter<ItemLista> {
+    //
     private Context context;
     private ArrayList<ItemLista> datos;
 
+    /**
+     *
+     * @param context
+     * @param datos
+     */
     public ListaAdaptador(Context context, ArrayList<ItemLista> datos) {
         super(context, R.layout.listado_vista_generic, datos);
         // Guardamos los parámetros en variables de clase.
@@ -25,6 +31,13 @@ public class ListaAdaptador extends ArrayAdapter<ItemLista> {
         this.datos = datos;
     }
 
+    /**
+     *
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 

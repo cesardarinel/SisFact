@@ -91,6 +91,11 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
     ArrayAdapter<String> tipoRopaInteiorArrayAdapter;
     ArrayAdapter<String> seccionArrayAdapter;
     ArrayAdapter<String> contactoArrayAdapter;
+
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -202,6 +207,11 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
             LlenarProducto();
         }
     }
+
+    /**
+     *
+     * @param habilitar
+     */
     protected void HabilitarEdicion(boolean habilitar){
         int total =  layout.getChildCount();
         for (int i=0;i<total;i++){
@@ -218,6 +228,10 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
         }
         botonGuardar.setVisibility(View.VISIBLE);
     }
+
+    /**
+     *
+     */
     public void Eliminar(){
         try{
             idProducto = Long.valueOf(getIntent().getExtras().getString("id"));
@@ -225,6 +239,11 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
         entidades.Productos prod= new Select().from(entidades.Productos.class).where("id = ? ").executeSingle();
         prod.delete();
     }
+
+    /**
+     *
+     * @param Habilitar
+     */
     protected void HabilitarProducto(String Habilitar){
         //Zapato
         zapatosTextMedida.setVisibility(View.GONE);
@@ -288,11 +307,22 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
 
     }
 
+    /**
+     *
+     * @param parent
+     * @param view
+     * @param position
+     * @param id
+     */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         HabilitarProducto(parent.getItemAtPosition(position).toString());
     }
 
+    /**
+     *
+     * @param parent
+     */
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
@@ -343,6 +373,12 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
 
 
     }
+
+    /**
+     *
+     * @param tipo
+     * @param idProd
+     */
     protected void BuscarCambiosTipoProducto(String tipo, Long idProd){
         switch (tipo){
             case "Zapatos":
@@ -409,6 +445,11 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
                 break;
         }
     }
+
+    /**
+     *
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         boolean esValidoProducto = true;
@@ -658,6 +699,12 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
             finish();
         }
     }
+
+    /**
+     *
+     * @param tipo
+     * @param idProd
+     */
     protected void elemintarTipoProducto(String tipo,Long idProd){
         switch (tipo){
             case "Zapatos":

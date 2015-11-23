@@ -9,8 +9,10 @@ import sisfact.sisfac.sisfact.R;
 public class MenuPrincipal extends AppCompatActivity {
 
 
-
-
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -38,6 +38,13 @@ public class vista_factura_lineas extends ListActivity {
         listView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_checked,city));
     }
 
+    /**
+     *
+     * @param parent
+     * @param v
+     * @param position
+     * @param id
+     */
     @Override
     public void onListItemClick(ListView parent, View v,int position,long id){
         CheckedTextView item = (CheckedTextView) v;

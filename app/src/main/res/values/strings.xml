@@ -1,21 +1,18 @@
 <resources>
-    <string name="app_name">SisFact</string>
+    <string name="app_name">MIGLEZ</string>
     <string name="title_activity_log_in">LogIn</string>
     <string name="action_settings">Settings</string>
     <string name="login">Login</string>
     <string name="ayuda">Ayuda</string>
-    <string name="title_activity_menu_principal">menuPrincipal</string>
-    <string name="title_activity_plantilla_factura">PlantillaFactura</string>
-    <string name="title_activity_vista_factura">vista_factura</string>
-
+    <string name="title_activity_menu_principal">Menu Principal</string>
+    <string name="title_activity_plantilla_factura">Plantilla Factura</string>
+    <string name="title_activity_vista_factura">vista factura</string>
 
     <!--MainMenu texto  -->
     <string name="Contacto">Contacto</string>
-    <!--<string name="Cliente">Cliente</string>-->
-    <!--<string name="Suplidores">Suplidores</string>-->
     <string name="Productos">Productos</string>
     <string name="Facturas">Facturas</string>
-    <string name="CPP">Cuentas Por Pagar</string>
+    <string name="CPP">Cuentas</string>
     <string name="Reportes">Reportes</string>
     <string name="title_activity_vista_modulo_view_generic">vista_modulo_view_generic</string>
 
@@ -27,6 +24,5 @@
     <string name="editar">Editar</string>
     <string name="eliminar">Eliminar</string>
     <string name="Cargando">Cargando..............</string>
-
 
 </resources>

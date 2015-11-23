@@ -49,6 +49,10 @@ public class vista_reporte extends AppCompatActivity implements View.OnClickList
 
     }
 
+    /**
+     *
+     * @param tipo
+     */
     public void crearVentana(String tipo){
 
         lo = LayoutInflater.from(dialog);
@@ -76,7 +80,12 @@ public class vista_reporte extends AppCompatActivity implements View.OnClickList
         alertDialog.show();
 
     }
-    
+
+    /**
+     *
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -84,6 +93,11 @@ public class vista_reporte extends AppCompatActivity implements View.OnClickList
         return true;
     }
 
+    /**
+     *
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -99,6 +113,10 @@ public class vista_reporte extends AppCompatActivity implements View.OnClickList
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     *
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         switch(v.getId()){

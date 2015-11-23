@@ -54,6 +54,11 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
         listado.setOnItemClickListener(this);
     }
 
+    /**
+     *
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater=getMenuInflater();
@@ -61,6 +66,11 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
         return true;
     }
 
+    /**
+     *
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -82,6 +92,13 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
 
     }
 
+    /**
+     *
+     * @param adapter
+     * @param view
+     * @param position
+     * @param arg
+     */
     @Override
     public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
         Intent intent = data.getIntentClase(this);
@@ -91,6 +108,13 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
         this.finish();
     }
 
+    /**
+     *
+     * @param v
+     * @param keyCode
+     * @param event
+     * @return
+     */
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
         ListaAdaptador  listaAdaptador = data.getCamposaFiltrar(this,(String)spinner.getSelectedItem(),textoBuscar.getText().toString());

@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageButton  factura,producto,contacto,cpp,reporte;
     Intent nuevaActividad;
     Gson serializeJson = new Gson();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +47,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    /**
+     *
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         FactoryAdaptadorGenerico fact;

@@ -9,13 +9,20 @@ import android.widget.ListView;
 import sisfact.sisfac.sisfact.R;
 
 public class vista_factura extends AppCompatActivity implements View.OnClickListener {
-
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vista_factura);
     }
 
+    /**
+     *
+     * @param v
+     */
     @Override
     public void onClick(View v){
         if (v.getId()==R.id.button_agregar_lineas) {

@@ -55,6 +55,10 @@ public class Contacto extends AppCompatActivity implements View.OnClickListener{
 
     }
 
+    /**
+     *
+     * @param v
+     */
         @Override
     public void onClick(View v) {
         entidades.Contactos contacto;
@@ -81,6 +85,10 @@ public class Contacto extends AppCompatActivity implements View.OnClickListener{
         }
         //posibement volver al menu
     }
+
+    /**
+     *
+     */
     public void LLenamos(){
 
 

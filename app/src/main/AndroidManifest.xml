@@ -35,20 +35,34 @@
             android:label="@string/title_activity_menu_principal"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
+        <activity
+            android:name=".Vistas.vista_factura"
+            android:label="@string/title_activity_vista_factura">
+        </activity>
+        <activity
+            android:name=".Vistas.Contacto"
+            android:label="@string/Contacto">
+        </activity>
+        <activity
+            android:name=".Vistas.vista_factura_lineas"
+            android:label="@string/title_activity_vista_factura">
+        </activity>
+        <activity
+            android:name=".Vistas.Productos"
+            >
+        </activity>
 
-        <activity android:name=".Vistas.vista_factura" >
+
+        <activity
+            android:name=".Vistas.vista_modulo_generic"
+            android:label="@string/title_activity_vista_modulo_view_generic" >
+
         </activity>
-        <activity android:name=".Vistas.Contacto" >
-        </activity>
-        <activity android:name=".Vistas.vista_factura_lineas" >
-        </activity>
-        <activity android:name=".Vistas.Productos" >
-        </activity>
-        <activity android:name=".Vistas.vista_modulo_generic" ></activity>
 
         <activity
             android:name=".Vistas.vista_reporte"
             android:label="@string/title_activity_vista_reporte" >
+
         </activity>
     </application>
 
