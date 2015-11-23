@@ -22,7 +22,7 @@ import sisfact.sisfac.sisfact.Vistas.AdaptadorGenerico.FactoryAdaptadorGenerico;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     //botones del menu
-    ImageButton  factura,producto,contacto,cpp,reporte;
+    ImageButton  factura,producto,contacto,cuenta,reporte;
     Intent nuevaActividad;
     Gson serializeJson = new Gson();
 
@@ -35,14 +35,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         producto= (ImageButton )findViewById(R.id.productos);
         contacto= (ImageButton )findViewById(R.id.contacto);
 
-        cpp= (ImageButton )findViewById(R.id.cpp);
+        cuenta= (ImageButton )findViewById(R.id.Cuenta);
         reporte= (ImageButton )findViewById(R.id.reporte);
         //----------------setOnClickListener--------------------
         factura.setOnClickListener(this);
         producto.setOnClickListener(this);
         contacto.setOnClickListener(this);
-
-        cpp.setOnClickListener(this);
+        cuenta.setOnClickListener(this);
         reporte.setOnClickListener(this);
 
     }
@@ -81,9 +80,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(nuevaActividad);
                 break;
 
-            case R.id.cpp:
-                nuevaActividad = new Intent(this, vista_modulo_generic.class);
-                nuevaActividad.putExtra("Actividad", "cpp");
+            case R.id.Cuenta:
+                nuevaActividad = new Intent(this, vista_cuenta.class);
+                nuevaActividad.putExtra("Actividad", "Cuenta");
                 startActivity(nuevaActividad);
                 break;
 

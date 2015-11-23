@@ -12,7 +12,9 @@
     <string name="Contacto">Contacto</string>
     <string name="Productos">Productos</string>
     <string name="Facturas">Facturas</string>
-    <string name="CPP">Cuentas</string>
+    <string name="Cuenta">Cuentas</string>
+    <string name="CPC">Cuentas Por Cobrar</string>
+    <string name="CPP">Cuentas Por Pagar</string>
     <string name="Reportes">Reportes</string>
     <string name="title_activity_vista_modulo_view_generic">vista_modulo_view_generic</string>
 
