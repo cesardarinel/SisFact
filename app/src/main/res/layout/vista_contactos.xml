@@ -1,127 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
+    android:layout_height="fill_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     tools:context="sisfact.sisfac.sisfact.Vistas.Contacto"
+    android:fillViewport="false">
 
-    >
-
-    <ScrollView
+    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-       >
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical"
+        android:id="@+id/plantilla_contacto_layout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Nombre"
+            android:id="@+id/guardar_contacto_textView1" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/guardar_contacto_nombre"
             android:layout_gravity="center_horizontal"
-            android:orientation="vertical">
+            android:inputType="text" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Nombre"
-        android:id="@+id/guardar_contacto_textView1" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Apellido"
+            android:id="@+id/guardar_contacto_textView2" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/guardar_contacto_nombre"
-        android:layout_gravity="center_horizontal" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/guardar_contacto_apellido"
+            android:layout_gravity="center_horizontal"
+            android:inputType="text" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Apellido"
-        android:id="@+id/guardar_contacto_textView2" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Telefono"
+            android:id="@+id/guardar_contacto_textView3" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/guardar_contacto_apellido"
-        android:layout_gravity="center_horizontal" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/guardar_contacto_telefono"
+            android:layout_gravity="center_horizontal"
+            android:inputType="phone"
+            android:maxLength="14" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Telefono"
-        android:id="@+id/guardar_contacto_textView3" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Celular"
+            android:id="@+id/guardar_contacto_textView4" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/guardar_contacto_telefono"
-        android:layout_gravity="center_horizontal"
-        android:inputType="phone" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/guardar_contacto_celular"
+            android:layout_gravity="center_horizontal"
+            android:inputType="phone"
+            android:maxLength="14" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Celular"
-        android:id="@+id/guardar_contacto_textView4" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Correo"
+            android:id="@+id/guardar_contacto_textView5" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/guardar_contacto_celular"
-        android:layout_gravity="center_horizontal"
-        android:inputType="phone" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/guardar_contacto_correo"
+            android:layout_gravity="center_horizontal"
+            android:inputType="textEmailAddress" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Direccion"
+            android:id="@+id/guardar_contacto_textView6" />
 
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/guardar_contacto_direccion"
+            android:layout_gravity="center_horizontal"
+            android:inputType="text" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Correo"
-        android:id="@+id/guardar_contacto_textView5" />
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Es Suplidor"
+            android:id="@+id/guardar_contacto_chkbx_es_suplidor" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/guardar_contacto_correo"
-        android:layout_gravity="center_horizontal"
-        android:inputType="textEmailAddress" />
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Es Cliente"
+            android:id="@+id/guardar_contacto_chkbx_es_cliente" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Direccion"
-        android:id="@+id/guardar_contacto_textView6" />
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_alignParentBottom="true">
+            <Button
+                android:id="@+id/guardar_contacto_btn_guardar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" android:text="Guardar">
+            </Button>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/guardar_contacto_direccion"
-        android:layout_gravity="center_horizontal" />
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Es Suplidor"
-        android:id="@+id/guardar_contacto_chkbx_es_suplidor" />
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Es Cliente"
-        android:id="@+id/guardar_contacto_chkbx_es_cliente" />
-
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Guardar"
-        android:id="@+id/guardar_contacto_btn_guardar" />
+            <Button
+                android:id="@+id/guardar_contacto_btn_cancelar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Cancelar">
+            </Button>
         </LinearLayout>
+
+    </LinearLayout>
 </ScrollView>
-</LinearLayout>

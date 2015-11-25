@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.ImageButton;
 
 import com.activeandroid.query.Select;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getOverflowMenu();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //inicialisamos variables
@@ -44,6 +47,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         cuenta.setOnClickListener(this);
         reporte.setOnClickListener(this);
 
+    }
+    private void getOverflowMenu() {
+        try {
+            ViewConfiguration config = ViewConfiguration.get(this);
+            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+            if(menuKeyField != null) {
+                menuKeyField.setAccessible(true);
+                menuKeyField.setBoolean(config, false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

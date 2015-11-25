@@ -60,9 +60,11 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
      * @return
      */
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+         public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater=getMenuInflater();
         inflater.inflate(R.menu.menu_generico_editar, menu);
+        menu.findItem(R.id.editar).setVisible(false);
+        menu.findItem(R.id.eliminar).setVisible(false);
         return true;
     }
 
