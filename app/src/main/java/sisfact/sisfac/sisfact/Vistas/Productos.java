@@ -624,7 +624,7 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
                 if (tipoCamisa.getSelectedItem() != null){
                     TipoCamisas tipoCamisas =  new Select()
                             .from(TipoCamisas.class)
-                            .where("tipo_camisa", (String) tipoCamisa.getSelectedItem())
+                            .where("tipo_camisa = ?", (String) tipoCamisa.getSelectedItem())
                             .executeSingle();
                     camisas.setTipoCamisa(tipoCamisas);
                 }
@@ -635,7 +635,7 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
                 if(tipoMangaCamisa.getSelectedItem() != null){
                     TipoMangas tipoMangas =  new Select()
                             .from(TipoMangas.class)
-                            .where("tipo_manga", (String) tipoMangaCamisa.getSelectedItem())
+                            .where("tipo_manga = ?", (String) tipoMangaCamisa.getSelectedItem())
                             .executeSingle();
                     camisas.setTipoManga(tipoMangas);
                 }

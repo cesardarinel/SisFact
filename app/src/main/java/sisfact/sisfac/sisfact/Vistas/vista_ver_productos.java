@@ -30,6 +30,7 @@ public class vista_ver_productos extends AppCompatActivity implements View.OnCli
     protected ViewGroup.LayoutParams imageParams;
     protected ViewGroup.LayoutParams labelParams;
     private  Intent intt;
+    Long id;
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
@@ -74,41 +75,11 @@ public class vista_ver_productos extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onClick(View v) {
-
-        final Productos prod = new Select().from(Productos.class).where("id = ?",v.getTag().toString()).executeSingle();
-        setContentView(R.layout.ver_producto_individual);
-
-        TextView titulo = (TextView) findViewById(R.id.producto_individual_nombre);
-        TextView precio = (TextView) findViewById(R.id.producto_individual_precio);
-        ImageView imagen = (ImageView) findViewById(R.id.producto_individual_imagen);
-
-        Button butt = (Button) findViewById(R.id.producto_individual_ver_detalles);
-        titulo.setText(prod.getNombre());
-        precio.setText(String.format("%.2f", Float.valueOf(prod.getPrecio().toString())));
-        Bitmap bitmap = BitmapFactory.decodeFile(prod.getRutaImagen());
-
-        if(bitmap == null){
-            bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.camera);
-        }
-
-        imagen.setImageBitmap(bitmap);
-
-        imagen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.parse("file://" + prod.getRutaImagen()), "image/*");
-                startActivity(intent);
-            }
-        });
-        intt = new Intent(this, sisfact.sisfac.sisfact.Vistas.Productos.class);
-        butt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                intt.putExtra("id",prod.getId());
-                startActivity(intt);
-            }
-        });
+        Intent intent = new Intent(this,detalle_producto_simple.class);
+        intent.putExtra("id",v.getTag().toString());
+        startActivity(intent);
+        finish();
     }
 }
+
+
