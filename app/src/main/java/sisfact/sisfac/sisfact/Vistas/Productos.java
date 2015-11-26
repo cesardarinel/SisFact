@@ -360,7 +360,8 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
 
         botonGuardar.setVisibility(View.GONE);
         if (prod.getRutaImagen() != null){
-            Bitmap bitmap = BitmapFactory.decodeFile(prod.getRutaImagen());
+            BitmapFactory.Options opt = new BitmapFactory.Options();
+            Bitmap bitmap = BitmapFactory.decodeFile(prod.getRutaImagen(),opt);
             botonSacarFoto.setImageBitmap(bitmap);
         }
         if (prod.getTipo() != null){

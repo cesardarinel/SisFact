@@ -47,10 +47,12 @@ public class vista_ver_productos extends AppCompatActivity implements View.OnCli
            linearLayout.setOrientation(LinearLayout.VERTICAL);
            ImageView imageButton = new ImageView(this);
             TextView textView = new TextView(this);
-            Bitmap bitmap = BitmapFactory.decodeFile(var.getRutaImagen());
+           BitmapFactory.Options opt = new BitmapFactory.Options();
+
+           Bitmap bitmap = BitmapFactory.decodeFile(var.getRutaImagen(),opt);
 
             if (bitmap == null){
-                bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.camera);
+                bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.camera,opt);
                 imageButton.setImageBitmap(bitmap);
             }
             else imageButton.setImageBitmap(bitmap);
