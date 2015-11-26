@@ -5,6 +5,7 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Table(name="Productos")
 public class Productos  extends  Model implements Serializable{
@@ -19,8 +20,27 @@ public class Productos  extends  Model implements Serializable{
     @Column(name = "codigo_barra")
     protected String codigoBarra;
 
+    public String getRutaImagen() {
+        return rutaImagen;
+    }
+
+    public void setRutaImagen(String rutaImagen) {
+        this.rutaImagen = rutaImagen;
+    }
+
+    @Column(name="ruta_imagen")
+    protected String rutaImagen;
+
+    public BigDecimal getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(BigDecimal precio) {
+        this.precio = precio;
+    }
+
     @Column(name="precio")
-    protected Integer precio;
+    protected BigDecimal precio;
 
     @Column(name="contacto")
     protected Contactos contacto;
@@ -98,11 +118,4 @@ public class Productos  extends  Model implements Serializable{
         this.internalId = internalId;
     }
 
-    public Integer getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(Integer precio) {
-        this.precio = precio;
-    }
 }

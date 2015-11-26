@@ -17,6 +17,16 @@ public class FactoryAdaptadorGenerico implements Serializable{
         Producto,
         Factura
     }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    protected  String titulo;
     public static FactoryAdaptadorGenerico getAdaptador(Adaptador adapt){
         FactoryAdaptadorGenerico r=null;
         switch (adapt){

@@ -11,6 +11,7 @@ import sisfact.sisfac.sisfact.Vistas.Productos;
 
 public class AdaptadorProducto extends FactoryAdaptadorGenerico {
     public AdaptadorProducto(){
+        titulo = "Productos";
         camposBuscables = new ArrayList<>();
         camposBuscables.add("Nombre");
         camposBuscables.add("Marca");

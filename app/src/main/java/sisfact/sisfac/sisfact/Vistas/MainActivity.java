@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.widget.Button;
+
 import android.widget.ImageButton;
 
 import com.activeandroid.query.Select;
@@ -27,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageButton  factura,producto,contacto,cuenta,reporte;
     Intent nuevaActividad;
     Gson serializeJson = new Gson();
-
+    Button boton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getOverflowMenu();
@@ -40,12 +42,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         cuenta= (ImageButton )findViewById(R.id.Cuenta);
         reporte= (ImageButton )findViewById(R.id.reporte);
+        boton = (Button) findViewById(R.id.ver_todos_los_productos);
+
         //----------------setOnClickListener--------------------
         factura.setOnClickListener(this);
         producto.setOnClickListener(this);
         contacto.setOnClickListener(this);
         cuenta.setOnClickListener(this);
         reporte.setOnClickListener(this);
+        boton.setOnClickListener(this);
 
     }
     private void getOverflowMenu() {
@@ -106,7 +111,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 nuevaActividad = new Intent(this, vista_modulo_generic.class);
                 nuevaActividad.putExtra("Actividad", "reporte");
                 startActivity(nuevaActividad);
-
+                break;
+            case R.id.ver_todos_los_productos:
+                nuevaActividad = new Intent(this,vista_ver_productos.class);
+                startActivity(nuevaActividad);
+                break;
             default:
                 break;
         }

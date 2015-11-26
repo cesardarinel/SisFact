@@ -14,6 +14,7 @@ import sisfact.sisfac.sisfact.Vistas.vista_factura;
 
 public class AdaptadorFactura extends  FactoryAdaptadorGenerico{
     public AdaptadorFactura(){
+        titulo = "Facturas";
         camposBuscables = new ArrayList<>();
         camposBuscables.add("Nombre");
         camposBuscables.add("Fecha");

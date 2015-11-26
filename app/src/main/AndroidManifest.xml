@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="sisfact.sisfac.sisfact" >
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <application
         android:name="entidades.ActiveAndroid.init"
         android:allowBackup="true"
@@ -59,6 +64,10 @@
         </activity>
         <activity android:name=".Vistas.vista_cuenta" >
         </activity>
+        <activity android:name=".Vistas.vista_ver_productos" >
+        </activity>
+
+
     </application>
 
 </manifest>

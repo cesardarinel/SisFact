@@ -44,6 +44,7 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
             Toast.makeText(this,"Los Datos Suministrados son invalidos",Toast.LENGTH_LONG).show();
             finish();
         }
+        setTitle(data.getTitulo());
         ArrayAdapter<String> stringArrayAdapter= data.getCamposBuscablesAdator(this);
         spinner =(Spinner)  findViewById(R.id.spinner);
         spinner.setAdapter(stringArrayAdapter);

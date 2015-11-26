@@ -12,6 +12,7 @@ import sisfact.sisfac.sisfact.Vistas.ListaAdaptador;
 
 public class AdaptadorContacto extends FactoryAdaptadorGenerico {
     public AdaptadorContacto(){
+        titulo = "Contactos";
         camposBuscables = new ArrayList<>();
         camposBuscables.add("Todos: Nombre");
         camposBuscables.add("Cliente: Nombre");

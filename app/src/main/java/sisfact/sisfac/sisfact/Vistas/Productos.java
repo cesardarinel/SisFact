@@ -1,13 +1,22 @@
 package sisfact.sisfac.sisfact.Vistas;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -15,6 +24,8 @@ import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 
+import java.io.File;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,11 +43,12 @@ import entidades.Zapatos;
 import sisfact.sisfac.sisfact.R;
 
 
-public class Productos extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
+public class Productos extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener, View.OnFocusChangeListener {
     protected String [] spinner = {"Zapatos", "Camisa","Pantalon","Ropa Interior"};
     protected LinearLayout layout;
     Long idProducto = null;
-
+    File photo = null;
+    File saveDir = null;
     //cosas de las vista
     protected Spinner tipoProducto;
     protected EditText nombrePoducto;
@@ -81,7 +93,7 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
 
     //Botones
     protected Button botonGuardar;
-
+    protected ImageView botonSacarFoto;
     //array adaptor
     ArrayAdapter<String> marcaArrayAdapter;
     ArrayAdapter<String> categoriaArrayAdapter;
@@ -92,6 +104,8 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
     ArrayAdapter<String> seccionArrayAdapter;
     ArrayAdapter<String> contactoArrayAdapter;
 
+    Uri imageUri;
+
     /**
      *
      * @param savedInstanceState
@@ -100,7 +114,45 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vista_producto);
+        setTitle("Productos");
+        IniciarComponente();
+        File tf = new File(Environment.getExternalStorageDirectory() +"/Foto-Productos/tmp.jpg");
+        if (tf.exists())tf.delete();
+        HabilitarProducto((String)tipoProducto.getSelectedItem());
+        String id;
+        idProducto = null;
+        try{
+            id = getIntent().getExtras().getString("id");
+            idProducto = Long.valueOf(id);
+        }catch(Exception e){}
 
+        if (idProducto != null ){
+            LlenarProducto();
+        }
+    }
+
+    /**
+     *
+     * @param habilitar
+     */
+    protected void HabilitarEdicion(boolean habilitar){
+        int total =  layout.getChildCount();
+        for (int i=0;i<total;i++){
+            View v = layout.getChildAt(i);
+
+            if (v.getVisibility() == View.VISIBLE){
+                if (v instanceof EditText) {
+                    v.setFocusable(habilitar);
+                }
+                else{
+                    v.setEnabled(habilitar);
+                }
+            }
+        }
+        botonGuardar.setVisibility(View.VISIBLE);
+    }
+
+    protected void IniciarComponente(){
         layout = (LinearLayout) findViewById(R.id.plantill_producto_layout);
         tipoProducto = (Spinner) findViewById(R.id.plantilla_producto_spnr_tipo_producto);
         nombrePoducto = (EditText) findViewById(R.id.plantilla_producto_nombre);
@@ -113,6 +165,8 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
         marcaProducto.setAdapter(marcaArrayAdapter);
 
         precioProducto = (EditText) findViewById(R.id.plantilla_producto_precio);
+        precioProducto.setOnFocusChangeListener(this);
+
 
         contactoProducto = (AutoCompleteTextView) findViewById(R.id.plantilla_producto_contacto);
         List<entidades.Contactos> contactoses =  new Select().from(entidades.Contactos.class).execute();
@@ -157,7 +211,7 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
         tipoMangaCamisa = (Spinner) findViewById(R.id.plantilla_producto_camisa_tipo_manga);
         ArrayList<String> listaMangaCamisa =  new ArrayList<>();
         List<TipoMangas> todasLasMangasCamisas = new Select().from(TipoMangas.class).execute();
-        for (TipoMangas item : todasLasMangasCamisas)listaTipoCamisa.add(item.getTipoManga());
+        for (TipoMangas item : todasLasMangasCamisas)listaMangaCamisa.add(item.getTipoManga());
         tipoMangaArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listaMangaCamisa);
         tipoMangaCamisa.setAdapter(tipoMangaArrayAdapter);
 
@@ -186,7 +240,6 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
         medida2TextRopaInterior = (TextView) findViewById(R.id.plantilla_producto_ropa_interior_txt_medida2);
         medida2RopaInterior = (EditText) findViewById(R.id.plantilla_producto_ropa_interior_medida2);
 
-        botonGuardar = (Button) findViewById(R.id.plantilla_producto_btn_guardar);
 
 
 
@@ -194,41 +247,12 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
         tipoProducto.setAdapter(tipoProductoArrayAdapter);
         tipoProducto.setOnItemSelectedListener(this);
 
+        botonGuardar = (Button) findViewById(R.id.plantilla_producto_btn_guardar);
+        botonSacarFoto= (ImageView) findViewById(R.id.plantill_producto_imagen_poducto);
+
         botonGuardar.setOnClickListener(this);
-        HabilitarProducto((String)tipoProducto.getSelectedItem());
-        String id;
-        idProducto = null;
-        try{
-            id = getIntent().getExtras().getString("id");
-            idProducto = Long.valueOf(id);
-        }catch(Exception e){}
-
-        if (idProducto != null ){
-            LlenarProducto();
-        }
+        botonSacarFoto.setOnClickListener(this);
     }
-
-    /**
-     *
-     * @param habilitar
-     */
-    protected void HabilitarEdicion(boolean habilitar){
-        int total =  layout.getChildCount();
-        for (int i=0;i<total;i++){
-            View v = layout.getChildAt(i);
-
-            if (v.getVisibility() == View.VISIBLE){
-                if (v instanceof EditText) {
-                    v.setFocusable(habilitar);
-                }
-                else{
-                    v.setEnabled(habilitar);
-                }
-            }
-        }
-        botonGuardar.setVisibility(View.VISIBLE);
-    }
-
     /**
      *
      */
@@ -335,7 +359,10 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
                 .executeSingle();
 
         botonGuardar.setVisibility(View.GONE);
-
+        if (prod.getRutaImagen() != null){
+            Bitmap bitmap = BitmapFactory.decodeFile(prod.getRutaImagen());
+            botonSacarFoto.setImageBitmap(bitmap);
+        }
         if (prod.getTipo() != null){
             int tipoProductoPos = tipoProductoArrayAdapter.getPosition(prod.getTipo());
             tipoProducto.setSelection(tipoProductoPos);
@@ -349,7 +376,9 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
             marcaProducto.setSelection(marcaPos);
         }
 
-        if(prod.getPrecio() != null) precioProducto.setText(prod.getPrecio().toString());
+        if(prod.getPrecio() != null) precioProducto.setText(
+            String.format("%.02f",Float.valueOf(prod.getPrecio().toString()))
+        );
 
 
         if (prod.getContacto() != null) contactoProducto.setText(prod.getContacto().getTelefono());
@@ -452,6 +481,17 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
      */
     @Override
     public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.plantilla_producto_btn_guardar:
+                GuardarProucto();
+                break;
+            case R.id.plantill_producto_imagen_poducto:
+                TomarFotoProducto();
+                break;
+        }
+    }
+
+    protected void GuardarProucto(){
         boolean esValidoProducto = true;
         boolean esValidoTipoProducto = true;
         entidades.Productos productos;
@@ -485,7 +525,9 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
 
 
         try{
-            productos.setPrecio(Integer.valueOf(precioProducto.getText().toString()));
+            productos.setPrecio(BigDecimal.valueOf(
+                            Float.valueOf(precioProducto.getText().toString()))
+            );
         }
         catch (Exception e) {
             if (precioProducto.getText().toString().isEmpty()){
@@ -498,7 +540,7 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
             }
 
         }
-        if (productos.getPrecio() != null && productos.getPrecio() < 0){
+        if (productos.getPrecio() != null && productos.getPrecio().floatValue() < 0){
             precioProducto.setError("No puede ser negativo");
             esValidoProducto = false;
         }
@@ -529,7 +571,16 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
 
 
         if (esValidoProducto) productos.save();
+        if (photo != null){
+            File newFile = new File(saveDir+"/"+productos.getId()+".jpg");
 
+            if (newFile.exists())newFile.delete();
+
+            if(photo.renameTo(newFile)){
+                productos.setRutaImagen(newFile.getAbsolutePath());
+                productos.save();
+            }
+        }
         switch ((String)tipoProducto.getSelectedItem()){
             case "Zapatos":
 
@@ -692,11 +743,47 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
                 }
                 if(esValidoTipoProducto && esValidoProducto) ropaInterioires.save();
                 break;
-            }
+        }
 
         if(esValidoTipoProducto && esValidoProducto)  {
             Toast.makeText(this, "Guardado con Exito", Toast.LENGTH_SHORT).show();
             finish();
+        }
+    }
+
+    protected void TomarFotoProducto(){
+        Intent cameraInent = new Intent("android.media.action.IMAGE_CAPTURE");
+        saveDir = new File(Environment.getExternalStorageDirectory() +"/Foto-Productos");
+        if (!saveDir.exists())saveDir.mkdirs();
+        photo = new File(saveDir,  "tmp.jpg");
+        cameraInent.putExtra(MediaStore.EXTRA_OUTPUT,
+                Uri.fromFile(photo));
+        imageUri = Uri.fromFile(photo);
+        startActivityForResult(cameraInent, 1);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 1:
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri selectedImage = imageUri;
+                    getContentResolver().notifyChange(selectedImage, null);
+                    ContentResolver cr = getContentResolver();
+                    Bitmap bitmap;
+                    try {
+                        bitmap = android.provider.MediaStore.Images.Media
+                                .getBitmap(cr, selectedImage);
+
+                        botonSacarFoto.setImageBitmap(bitmap);
+                        Toast.makeText(this, selectedImage.toString(),
+                                Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                        Toast.makeText(this, "Failed to load", Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                }
         }
     }
 
@@ -723,6 +810,23 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
                 RopaInterioires ropaInterioires =  new Select().from(RopaInterioires.class).where("producto = ? ",idProd).executeSingle();
                 ropaInterioires.delete();
                 break;
+        }
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        Float pval;
+        if (!hasFocus) {
+            try {
+                pval = Float.valueOf(precioProducto.getText().toString());
+            }
+            catch (Exception e){ return ;}
+            if(precioProducto.getText().toString().matches("\\d+")){
+                precioProducto.setText(String.format("%.2f",pval/100));
+            }
+            else if(precioProducto.getText().toString().matches("\\d+\\.\\d*")){
+                precioProducto.setText(String.format("%.02f",pval));
+            }
         }
     }
 }

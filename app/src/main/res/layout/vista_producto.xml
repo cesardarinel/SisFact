@@ -9,6 +9,17 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/plantill_producto_layout">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/camera"
+        android:maxHeight="200dp"
+        android:maxWidth="200dp"
+        android:layout_weight="1"
+        android:id="@+id/plantill_producto_imagen_poducto"
+        />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
