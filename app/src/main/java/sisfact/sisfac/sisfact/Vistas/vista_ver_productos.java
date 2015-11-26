@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.activeandroid.query.Select;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
 
@@ -50,12 +51,11 @@ public class vista_ver_productos extends AppCompatActivity implements View.OnCli
            BitmapFactory.Options opt = new BitmapFactory.Options();
 
            Bitmap bitmap = BitmapFactory.decodeFile(var.getRutaImagen(),opt);
-
-            if (bitmap == null){
-                bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.camera,opt);
-                imageButton.setImageBitmap(bitmap);
-            }
-            else imageButton.setImageBitmap(bitmap);
+           ImageLoader img = ImageLoader.getInstance();
+           if (bitmap == null){
+               imageButton.setImageResource(R.drawable.camera);
+           }
+           else img.displayImage("file:///" + var.getRutaImagen(), imageButton);
 
            textView.setText(var.getNombre());
 

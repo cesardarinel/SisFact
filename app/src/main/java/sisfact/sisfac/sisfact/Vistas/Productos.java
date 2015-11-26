@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.activeandroid.query.Select;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -360,9 +361,8 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
 
         botonGuardar.setVisibility(View.GONE);
         if (prod.getRutaImagen() != null){
-            BitmapFactory.Options opt = new BitmapFactory.Options();
-            Bitmap bitmap = BitmapFactory.decodeFile(prod.getRutaImagen(),opt);
-            botonSacarFoto.setImageBitmap(bitmap);
+            ImageLoader img = ImageLoader.getInstance();
+            img.displayImage("file:///"+prod.getRutaImagen(),botonSacarFoto);
         }
         if (prod.getTipo() != null){
             int tipoProductoPos = tipoProductoArrayAdapter.getPosition(prod.getTipo());
@@ -501,7 +501,7 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
             productos = new entidades.Productos();
         }
         else {
-            productos = new Select().from(entidades.Productos.class).executeSingle();
+            productos = new Select().from(entidades.Productos.class).where("id = ?",idProducto.toString()).executeSingle();
         }
         productos.setNombre(nombrePoducto.getText().toString());
 
@@ -571,8 +571,10 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
         }
 
 
+
         if (esValidoProducto) productos.save();
-        if (photo != null){
+
+        if (photo != null ){
             File newFile = new File(saveDir+"/"+productos.getId()+".jpg");
 
             if (newFile.exists())newFile.delete();

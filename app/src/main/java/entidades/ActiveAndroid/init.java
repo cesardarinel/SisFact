@@ -4,6 +4,8 @@ package entidades.ActiveAndroid;
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.app.Application;
 import com.activeandroid.query.Select;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import entidades.Categorias;
 import entidades.Marcas;
@@ -19,12 +21,25 @@ public class init extends Application {
     public void onCreate() {
         super.onCreate();
         ActiveAndroid.initialize(this);
+        DatabaseBoostrap();
+        InicializarImageLoader();
+
+    }
+
+    protected void InicializarImageLoader(){
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
+        ImageLoader.getInstance().init(config);
+
+    }
+    protected void DatabaseBoostrap(){
         String [] marcasPorDefecto  = new String []{"Marca 1","Marca 2"};
         String [] seccionPorDefecto  = new String []{"Hombre","Mujer","Niña","Niño"};
         String [] categoriaPorDefecto  = new String []{"Casual","Formal","Otro"};
         String [] tipoManga = new String[]{"Sin Mangas","Corta","Larga"};
         String [] tipoCamisa = new String[]{"Camisa","Polo Shirt"};
         String [] tiporopaInterior = new String[]{"Normal","Lingerie"};
+
+
         for (String val : marcasPorDefecto){
             Marcas marcas =  new Select().from(Marcas.class).where("nombre = ? " ,val).executeSingle();
             if (marcas == null){
@@ -78,6 +93,5 @@ public class init extends Application {
                 tipoMangas.save();
             }
         }
-
     }
 }

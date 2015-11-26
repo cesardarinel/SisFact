@@ -3,6 +3,7 @@ package sisfact.sisfac.sisfact.Vistas;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.activeandroid.query.Select;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import sisfact.sisfac.sisfact.R;
 
@@ -44,13 +46,13 @@ public class detalle_producto_simple extends AppCompatActivity implements View.O
         Button butt = (Button) findViewById(R.id.producto_individual_ver_detalles);
         titulo.setText(prod.getNombre());
         precio.setText(String.format("%.2f", Float.valueOf(prod.getPrecio().toString())));
-        Bitmap bitmap = BitmapFactory.decodeFile(prod.getRutaImagen());
-
-        if(bitmap == null){
-            bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.camera);
+        ImageLoader img = ImageLoader.getInstance();
+        if(prod.getRutaImagen() == null){
+            imagen.setImageResource(R.drawable.camera);
         }
+        else img.displayImage("file:///"+prod.getRutaImagen(),imagen);
 
-        imagen.setImageBitmap(bitmap);
+
 
         imagen.setOnClickListener(new View.OnClickListener() {
             @Override
