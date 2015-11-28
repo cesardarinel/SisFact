@@ -246,11 +246,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/plantilla_producto_ropa_interior_medida2" />
-    <Button
-        android:layout_width="fill_parent"
+    <LinearLayout
         android:layout_height="wrap_content"
-        android:id="@+id/plantilla_producto_btn_guardar"
-        android:text="Guardar"
-        />
+        android:layout_width="fill_parent"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/plantilla_producto_btn_guardar"
+            android:text="Guardar"
+            android:layout_weight="1"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/plantilla_producto_btn_cancelar"
+            android:text="Cancelar"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
+
 </LinearLayout>
 </ScrollView>

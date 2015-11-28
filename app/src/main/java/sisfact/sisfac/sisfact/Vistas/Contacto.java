@@ -247,7 +247,7 @@ public class Contacto extends AppCompatActivity implements View.OnClickListener{
         }
     }
 
-    private boolean stringIsEmpty(String s) {
+    public boolean stringIsEmpty(String s) {
         return  s == null || s.isEmpty();
     }
 

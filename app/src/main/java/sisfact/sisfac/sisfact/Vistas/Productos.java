@@ -1,7 +1,9 @@
 package sisfact.sisfac.sisfact.Vistas;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +12,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -95,22 +100,21 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
     //Botones
     protected Button botonGuardar;
     protected ImageView botonSacarFoto;
+    protected Button botonCancelar;
     //array adaptor
-    ArrayAdapter<String> marcaArrayAdapter;
-    ArrayAdapter<String> categoriaArrayAdapter;
-    ArrayAdapter<String> tipoCamisaArrayAdapter;
-    ArrayAdapter<String> tipoMangaArrayAdapter;
-    ArrayAdapter<String> tipoProductoArrayAdapter;
-    ArrayAdapter<String> tipoRopaInteiorArrayAdapter;
-    ArrayAdapter<String> seccionArrayAdapter;
-    ArrayAdapter<String> contactoArrayAdapter;
+    protected ArrayAdapter<String> marcaArrayAdapter;
+    protected ArrayAdapter<String> categoriaArrayAdapter;
+    protected ArrayAdapter<String> tipoCamisaArrayAdapter;
+    protected ArrayAdapter<String> tipoMangaArrayAdapter;
+    protected ArrayAdapter<String> tipoProductoArrayAdapter;
+    protected ArrayAdapter<String> tipoRopaInteiorArrayAdapter;
+    protected ArrayAdapter<String> seccionArrayAdapter;
+    protected ArrayAdapter<String> contactoArrayAdapter;
 
     Uri imageUri;
+    Menu  menuProductos;
+    String modo = "detalles";
 
-    /**
-     *
-     * @param savedInstanceState
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,25 +136,24 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
         }
     }
 
-    /**
-     *
-     * @param habilitar
-     */
     protected void HabilitarEdicion(boolean habilitar){
         int total =  layout.getChildCount();
         for (int i=0;i<total;i++){
             View v = layout.getChildAt(i);
-
             if (v.getVisibility() == View.VISIBLE){
                 if (v instanceof EditText) {
-                    v.setFocusable(habilitar);
-                }
-                else{
                     v.setEnabled(habilitar);
                 }
             }
         }
-        botonGuardar.setVisibility(View.VISIBLE);
+        if(habilitar) {
+            botonGuardar.setVisibility(View.VISIBLE);
+            botonCancelar.setVisibility(View.VISIBLE);
+        }
+        else {
+            botonGuardar.setVisibility(View.GONE);
+            botonCancelar.setVisibility(View.GONE);
+        }
     }
 
     protected void IniciarComponente(){
@@ -250,25 +253,14 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
 
         botonGuardar = (Button) findViewById(R.id.plantilla_producto_btn_guardar);
         botonSacarFoto= (ImageView) findViewById(R.id.plantill_producto_imagen_poducto);
+        botonCancelar= (Button) findViewById(R.id.plantilla_producto_btn_cancelar);
 
         botonGuardar.setOnClickListener(this);
         botonSacarFoto.setOnClickListener(this);
-    }
-    /**
-     *
-     */
-    public void Eliminar(){
-        try{
-            idProducto = Long.valueOf(getIntent().getExtras().getString("id"));
-        }catch(Exception e){}
-        entidades.Productos prod= new Select().from(entidades.Productos.class).where("id = ? ").executeSingle();
-        prod.delete();
+        botonCancelar.setOnClickListener(this);
     }
 
-    /**
-     *
-     * @param Habilitar
-     */
+
     protected void HabilitarProducto(String Habilitar){
         //Zapato
         zapatosTextMedida.setVisibility(View.GONE);
@@ -332,22 +324,11 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
 
     }
 
-    /**
-     *
-     * @param parent
-     * @param view
-     * @param position
-     * @param id
-     */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         HabilitarProducto(parent.getItemAtPosition(position).toString());
     }
 
-    /**
-     *
-     * @param parent
-     */
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
@@ -404,11 +385,6 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
 
     }
 
-    /**
-     *
-     * @param tipo
-     * @param idProd
-     */
     protected void BuscarCambiosTipoProducto(String tipo, Long idProd){
         switch (tipo){
             case "Zapatos":
@@ -476,10 +452,6 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
         }
     }
 
-    /**
-     *
-     * @param v
-     */
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -488,6 +460,10 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
                 break;
             case R.id.plantill_producto_imagen_poducto:
                 TomarFotoProducto();
+                break;
+            case R.id.plantilla_producto_btn_cancelar:
+                modo= "detalles";
+                cambiarEstadoComponentes();
                 break;
         }
     }
@@ -769,7 +745,7 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case 1:
+             case 1:
                 if (resultCode == Activity.RESULT_OK) {
                     Uri selectedImage = imageUri;
                     getContentResolver().notifyChange(selectedImage, null);
@@ -790,11 +766,6 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
         }
     }
 
-    /**
-     *
-     * @param tipo
-     * @param idProd
-     */
     protected void elemintarTipoProducto(String tipo,Long idProd){
         switch (tipo){
             case "Zapatos":
@@ -825,11 +796,91 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
             }
             catch (Exception e){ return ;}
             if(precioProducto.getText().toString().matches("\\d+")){
-                precioProducto.setText(String.format("%.2f",pval/100));
+                precioProducto.setText(String.format("%.2f",pval));
             }
             else if(precioProducto.getText().toString().matches("\\d+\\.\\d*")){
-                precioProducto.setText(String.format("%.02f",pval));
+                precioProducto.setText(String.format("%.2f",pval));
             }
         }
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menuProductos = menu;
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_generico_editar, menu);
+        menuProductos.findItem(R.id.nuevo).setVisible(false);
+
+        if (menuProductos == null) {
+            menuProductos.findItem(R.id.editar).setVisible(false);
+            menuProductos.findItem(R.id.eliminar).setVisible(false);
+        }
+        cambiarEstadoComponentes();
+        return true;
+    }
+    private void cambiarEstadoComponentes(){
+
+        switch (modo) {
+            case "detalles":
+                HabilitarEdicion(false);
+                break;
+            case "edicion":
+                HabilitarEdicion(true);
+                break;
+        }
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.editar:
+                menuProductos.findItem(R.id.editar).setVisible(false);
+                modo = "edicion";
+                cambiarEstadoComponentes();
+                return true;
+            case R.id.eliminar:
+                borrarProducto();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    private void borrarProducto() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.create();
+
+        dialog.setTitle("Eliminar Contacto");
+
+        dialog.setMessage("Esta seguro que desea eliminar este Contacto?");
+
+        dialog.setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                entidades.Productos prod = new Select()
+                        .from(entidades.Productos.class)
+                        .where("id = ? ", idProducto.toString())
+                        .executeSingle();
+                elemintarTipoProducto(prod.getTipo(), prod.getId());
+                try {
+                    File imagepath = new File(prod.getRutaImagen());
+                    imagepath.delete();
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+                prod.delete();
+
+                finish();
+            }
+        });
+
+        dialog.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        dialog.show();
+    }
+
 }
