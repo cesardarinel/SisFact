@@ -31,13 +31,6 @@ public class ListaAdaptador extends ArrayAdapter<ItemLista> {
         this.datos = datos;
     }
 
-    /**
-     *
-     * @param position
-     * @param convertView
-     * @param parent
-     * @return
-     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 

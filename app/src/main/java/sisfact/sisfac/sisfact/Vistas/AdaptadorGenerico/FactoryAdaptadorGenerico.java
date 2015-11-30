@@ -8,10 +8,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import entidades.Contactos;
 import entidades.ItemLista;
 import sisfact.sisfac.sisfact.Vistas.ListaAdaptador;
 
 public class FactoryAdaptadorGenerico implements Serializable{
+
     public enum Adaptador{
         Contacto,
         Producto,
@@ -21,6 +23,8 @@ public class FactoryAdaptadorGenerico implements Serializable{
     public String getTitulo() {
         return titulo;
     }
+
+    protected ItemLista nuevoItem;
 
     public void setTitulo(String titulo) {
         this.titulo = titulo;
@@ -47,6 +51,8 @@ public class FactoryAdaptadorGenerico implements Serializable{
     protected List<?> objectosAFiltrar;
     protected ArrayList<ItemLista> objetosListado;
 
+
+
     public List<?> getObjectosAFiltrar() {
         return objectosAFiltrar;
     }
@@ -67,4 +73,16 @@ public class FactoryAdaptadorGenerico implements Serializable{
 
     public Intent getIntentClase(Context con){return null;}
 
+    protected Object objAgregar(Long id){return null;}
+
+
+    public  void agregar(Long itemLista){
+        ArrayList<Object> genList = new ArrayList<>();
+        for (Object obj : objectosAFiltrar){
+            genList.add(obj);
+        }
+        genList.add(objAgregar(itemLista));
+        objectosAFiltrar = genList;
+    }
+    public void update(){}
 }

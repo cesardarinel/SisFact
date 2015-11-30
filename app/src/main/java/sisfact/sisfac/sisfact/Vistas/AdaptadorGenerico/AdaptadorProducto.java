@@ -3,7 +3,10 @@ package sisfact.sisfac.sisfact.Vistas.AdaptadorGenerico;
 import android.content.Context;
 import android.content.Intent;
 
+import com.activeandroid.query.Select;
+
 import java.util.ArrayList;
+import java.util.Objects;
 
 import entidades.ItemLista;
 import sisfact.sisfac.sisfact.Vistas.ListaAdaptador;
@@ -28,6 +31,7 @@ public class AdaptadorProducto extends FactoryAdaptadorGenerico {
         for(Object obj : getObjectosAFiltrar()){
             entidades.Productos productos = (entidades.Productos) obj;
             boolean esValido = true;
+            if (productos == null) continue;
             switch (Campo){
                 case "Nombre":
                     if (!productos.getNombre().contains(Valor)) esValido = false;
@@ -54,11 +58,31 @@ public class AdaptadorProducto extends FactoryAdaptadorGenerico {
                 getObjetosListado().add(itemLista);
             }
         }
-        ListaAdaptador listadoAdaptr = new ListaAdaptador(con, getObjetosListado());
-        return listadoAdaptr;
+        return new ListaAdaptador(con, getObjetosListado());
     }
+
     @Override
     public Intent getIntentClase(Context con){
         return new Intent(con,Productos.class);
     }
+
+    @Override
+    protected Object objAgregar(Long id){
+        return new Select()
+                .from(entidades.Productos.class)
+                .where("id = ?",id)
+                .executeSingle();
+    }
+
+    @Override
+    public void update(){
+        ArrayList<entidades.Productos> productoses = new ArrayList<>();
+        for (Object obj : objectosAFiltrar){
+            entidades.Productos viejo = (entidades.Productos) obj;
+            entidades.Productos nuevo  = new Select().from(entidades.Productos.class).where("id = ?", viejo.getInternalId()).executeSingle();
+            productoses.add(nuevo);
+        }
+        objectosAFiltrar = productoses;
+    }
+
 }

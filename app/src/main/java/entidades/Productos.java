@@ -31,13 +31,16 @@ public class Productos  extends  Model implements Serializable{
     @Column(name="ruta_imagen")
     protected String rutaImagen;
 
-    public BigDecimal getPrecio() {
-        return precio;
+    public Integer getCantidad() {
+        return cantidad;
     }
 
-    public void setPrecio(BigDecimal precio) {
-        this.precio = precio;
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
     }
+
+    @Column(name = "cantidad")
+    protected Integer cantidad;
 
     @Column(name="precio")
     protected BigDecimal precio;
@@ -111,11 +114,20 @@ public class Productos  extends  Model implements Serializable{
     }
 
     public Long getInternalId() {
+        if (getId() != null) return  getId();
         return internalId;
     }
 
     public void setInternalId(Long internalId) {
         this.internalId = internalId;
+    }
+
+    public BigDecimal getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(BigDecimal precio) {
+        this.precio = precio;
     }
 
 }

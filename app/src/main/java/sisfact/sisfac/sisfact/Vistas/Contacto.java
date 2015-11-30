@@ -78,7 +78,7 @@ public class Contacto extends AppCompatActivity implements View.OnClickListener{
         celularContacto.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
         //Cargando Contacto si existe en la base de datos
-        if(parametros.getString("id") != null) {
+        if(parametros != null && parametros.getString("id") != null) {
             try {
                 contactoCargado = new Select().from(Contactos.class).where("id = ? ", parametros.getString("id")).executeSingle();
                 setValoresComponentes(contactoCargado);
@@ -254,15 +254,19 @@ public class Contacto extends AppCompatActivity implements View.OnClickListener{
     private void guardarContacto() {
         boolean componentesValidos = validarValoresComponentes();
         if (componentesValidos) {
+            Intent intent = new Intent();
             entidades.Contactos contactoTemporal = getValoresComponentes();
+            contactoTemporal.save();
             if (contactoCargado == null) {
                 menuContactos.findItem(R.id.editar).setVisible(true);
                 menuContactos.findItem(R.id.eliminar).setVisible(true);
+                intent.putExtra("id", contactoTemporal.getId());
             }
-            contactoTemporal.save();
             contactoCargado = contactoTemporal;
             modo = "detalles";
             cambiarEstadoComponentes();
+            setResult(RESULT_OK,intent);
+            finish();
         }
     }
 

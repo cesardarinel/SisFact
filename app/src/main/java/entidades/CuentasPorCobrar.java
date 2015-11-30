@@ -13,6 +13,8 @@ public class CuentasPorCobrar extends Model implements Serializable{
 	@Column(name="factura")
 	protected Facturas factura;
 
+	protected Long internalId;
+
 	@Column(name="pago")
 	protected Float pago;
 
@@ -53,4 +55,14 @@ public class CuentasPorCobrar extends Model implements Serializable{
 	public void setEsPagado(boolean esPagado) {
 		this.esPagado = esPagado;
 	}
+
+	public Long getInternalId() {
+		if (getId() != null) return getId();
+		return internalId;
+	}
+
+	public void setInternalId(Long internalId) {
+		this.internalId = internalId;
+	}
+
 }

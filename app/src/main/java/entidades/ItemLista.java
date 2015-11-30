@@ -1,9 +1,8 @@
 package entidades;
 
-/**
- * Created by cesar on 11/12/2015.
- */
-public class ItemLista {
+import java.io.Serializable;
+
+public class ItemLista implements Serializable {
     protected String id;
     protected String info;
     protected String texto1;

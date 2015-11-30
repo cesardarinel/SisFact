@@ -4,6 +4,8 @@ package sisfact.sisfac.sisfact.Vistas.AdaptadorGenerico;
 import android.content.Context;
 import android.content.Intent;
 
+import com.activeandroid.query.Select;
+
 import java.util.ArrayList;
 
 import entidades.Facturas;
@@ -48,11 +50,28 @@ public class AdaptadorFactura extends  FactoryAdaptadorGenerico{
                 getObjetosListado().add(itemLista);
             }
         }
-        ListaAdaptador listadoAdaptr = new ListaAdaptador(con, getObjetosListado());
-        return listadoAdaptr;
+
+        return new ListaAdaptador(con, getObjetosListado());
     }
     @Override
     public Intent getIntentClase(Context con){
         return new Intent(con,vista_factura.class);
+    }
+    @Override
+    protected Object objAgregar(Long id){
+        return new Select().
+                from(Facturas.class)
+                .where("id = ?",id)
+                .executeSingle();
+    }
+    @Override
+    public void update(){
+        ArrayList<Facturas> facturases = new ArrayList<>();
+        for (Object obj : objectosAFiltrar){
+            Facturas viejo = (Facturas)obj;
+            Facturas nuevo  = new Select().from(Facturas.class).where("id = ?",viejo.getInternalId()).executeSingle();
+            facturases.add(nuevo);
+        }
+        objectosAFiltrar = facturases;
     }
 }

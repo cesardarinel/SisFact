@@ -3,6 +3,8 @@ package sisfact.sisfac.sisfact.Vistas.AdaptadorGenerico;
 import android.content.Context;
 import android.content.Intent;
 
+import com.activeandroid.query.Select;
+
 import java.util.ArrayList;
 
 import entidades.Contactos;
@@ -61,5 +63,22 @@ public class AdaptadorContacto extends FactoryAdaptadorGenerico {
     @Override
     public Intent getIntentClase(Context con){
         return new Intent(con,Contacto.class);
+    }
+    @Override
+    protected Object objAgregar(Long id){
+        return new Select()
+                .from(Contactos.class)
+                .where("id = ?",id)
+                .executeSingle();
+    }
+    @Override
+    public void update(){
+        ArrayList<Contactos> contactoses = new ArrayList<>();
+        for (Object obj : objectosAFiltrar){
+            Contactos viejo = (Contactos)obj;
+            Contactos nuevo  = new Select().from(Contactos.class).where("id = ?",viejo.getInternalId()).executeSingle();
+            contactoses.add(nuevo);
+        }
+        objectosAFiltrar = contactoses;
     }
 }

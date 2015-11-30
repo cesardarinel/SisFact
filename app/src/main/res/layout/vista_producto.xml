@@ -22,6 +22,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Cantidad"
+        />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/plantill_producto_cantidad"
+        android:inputType="numberDecimal"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Tipo"
         android:id="@+id/txt7" />
     <Spinner
@@ -77,7 +89,9 @@
     <AutoCompleteTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/plantilla_producto_contacto" />
+        android:id="@+id/plantilla_producto_contacto"
+        android:inputType="numberDecimal"
+        />
 
     <TextView
         android:layout_width="wrap_content"

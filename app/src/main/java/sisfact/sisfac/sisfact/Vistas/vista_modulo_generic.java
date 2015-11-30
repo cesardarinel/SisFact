@@ -15,19 +15,19 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
 import entidades.ItemLista;
 import sisfact.sisfac.sisfact.R;
 import sisfact.sisfac.sisfact.Vistas.AdaptadorGenerico.FactoryAdaptadorGenerico;
 
 public class vista_modulo_generic extends AppCompatActivity implements AdapterView.OnItemClickListener ,AdapterView.OnKeyListener {
 
-    String titulo;
-    ListView listado;
-    FactoryAdaptadorGenerico data;
-    Spinner spinner;
-    EditText textoBuscar;
+    protected String titulo;
+    protected ListView listado;
+    protected FactoryAdaptadorGenerico factoryAdaptadorGenerico;
+    protected Spinner spinner;
+    protected EditText textoBuscar;
+    protected final int resultadoDeAgregar =1;
+    ListaAdaptador  listaAdaptador;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
@@ -39,18 +39,18 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
         textoBuscar.setOnKeyListener(this);
         Bundle tipoVista = getIntent().getExtras();
         titulo = tipoVista.getString("Actividad");
-        data = (FactoryAdaptadorGenerico) tipoVista.getSerializable("Datos");
-        if (data == null){
+        factoryAdaptadorGenerico = (FactoryAdaptadorGenerico) tipoVista.getSerializable("Datos");
+        if (factoryAdaptadorGenerico == null){
             Toast.makeText(this,"Los Datos Suministrados son invalidos",Toast.LENGTH_LONG).show();
             finish();
         }
-        setTitle(data.getTitulo());
-        ArrayAdapter<String> stringArrayAdapter= data.getCamposBuscablesAdator(this);
+        setTitle(factoryAdaptadorGenerico.getTitulo());
+        ArrayAdapter<String> stringArrayAdapter= factoryAdaptadorGenerico.getCamposBuscablesAdator(this);
         spinner =(Spinner)  findViewById(R.id.spinner);
         spinner.setAdapter(stringArrayAdapter);
 
 
-        ListaAdaptador  listaAdaptador = data.getCamposaFiltrar(this,(String)spinner.getSelectedItem(),"");
+        listaAdaptador = factoryAdaptadorGenerico.getCamposaFiltrar(this,(String)spinner.getSelectedItem(),"");
         if (listaAdaptador !=  null)  listado.setAdapter(listaAdaptador);
         listado.setOnItemClickListener(this);
     }
@@ -69,19 +69,13 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
         return true;
     }
 
-    /**
-     *
-     * @param item
-     * @return
-     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
             case R.id.nuevo:
-                Intent nuevaActividad = data.getIntentClase(this);
-                nuevaActividad.putExtra("Actividad","");
-                startActivity(nuevaActividad);
+                Intent intent = factoryAdaptadorGenerico.getIntentClase(this);
+                startActivityForResult(intent, resultadoDeAgregar);
                 return true;
             case R.id.editar:
                 System.out.println("Se presionó Editar");
@@ -95,32 +89,33 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
 
     }
 
-    /**
-     *
-     * @param adapter
-     * @param view
-     * @param position
-     * @param arg
-     */
     @Override
     public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
-        Intent intent = data.getIntentClase(this);
-        String id = data.getObjetosListado().get(position).getId();
+        Intent intent = factoryAdaptadorGenerico.getIntentClase(this);
+        String id = factoryAdaptadorGenerico.getObjetosListado().get(position).getId();
         intent.putExtra("id", id);
-        startActivity(intent);
-        this.finish();
+        startActivityForResult(intent,resultadoDeAgregar);
     }
 
-    /**
-     *
-     * @param v
-     * @param keyCode
-     * @param event
-     * @return
-     */
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == resultadoDeAgregar) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                Long itemLista = (Long)data.getSerializableExtra("id");
+                if (itemLista != null){
+                    factoryAdaptadorGenerico.agregar(itemLista);
+                }
+                factoryAdaptadorGenerico.update();
+                listaAdaptador = factoryAdaptadorGenerico.getCamposaFiltrar(this,(String)spinner.getSelectedItem(),"");
+                listado.setAdapter(listaAdaptador);
+            }
+        }
+    }
+        @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
-        ListaAdaptador  listaAdaptador = data.getCamposaFiltrar(this,(String)spinner.getSelectedItem(),textoBuscar.getText().toString());
+        listaAdaptador = factoryAdaptadorGenerico.getCamposaFiltrar(this,(String)spinner.getSelectedItem(),textoBuscar.getText().toString());
         if (listaAdaptador !=  null)  listado.setAdapter(listaAdaptador);
         return false;
     }

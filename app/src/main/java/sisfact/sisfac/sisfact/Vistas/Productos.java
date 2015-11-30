@@ -6,7 +6,6 @@ import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -27,6 +26,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -63,6 +63,7 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
     protected AutoCompleteTextView contactoProducto;
     protected Spinner seccionProducto;
     protected Spinner categoriaProducto;
+    protected EditText cantidadProducto;
     //Zapatos;
     protected TextView zapatosTextMedida;
     protected EditText zapatosMedida;
@@ -113,12 +114,17 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
 
     Uri imageUri;
     Menu  menuProductos;
-    String modo = "detalles";
+    final String Editar = "edicion";
+    final String Detalle = "detalles";
+
+    String modo = Detalle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vista_producto);
+
         setTitle("Productos");
         IniciarComponente();
         File tf = new File(Environment.getExternalStorageDirectory() +"/Foto-Productos/tmp.jpg");
@@ -133,7 +139,10 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
 
         if (idProducto != null ){
             LlenarProducto();
+            modo = Detalle;
         }
+        else modo = Editar;
+        cambiarEstadoComponentes();
     }
 
     protected void HabilitarEdicion(boolean habilitar){
@@ -141,7 +150,7 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
         for (int i=0;i<total;i++){
             View v = layout.getChildAt(i);
             if (v.getVisibility() == View.VISIBLE){
-                if (v instanceof EditText) {
+                if (v instanceof EditText || v instanceof Spinner) {
                     v.setEnabled(habilitar);
                 }
             }
@@ -161,6 +170,8 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
         tipoProducto = (Spinner) findViewById(R.id.plantilla_producto_spnr_tipo_producto);
         nombrePoducto = (EditText) findViewById(R.id.plantilla_producto_nombre);
         marcaProducto = (Spinner) findViewById(R.id.plantilla_producto_marca);
+        cantidadProducto = (EditText) findViewById(R.id.plantill_producto_cantidad);
+
         ArrayList<String> listaMarca =  new ArrayList<>();
         List<Marcas> todasLasMarca = new Select().from(Marcas.class).execute();
 
@@ -362,6 +373,8 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
             String.format("%.02f",Float.valueOf(prod.getPrecio().toString()))
         );
 
+        if (prod.getCantidad() != null) cantidadProducto.setText(prod.getCantidad().toString());
+
 
         if (prod.getContacto() != null) contactoProducto.setText(prod.getContacto().getTelefono());
 
@@ -378,7 +391,7 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
             categoriaProducto.setSelection(categoriaPos);
         }
 
-        HabilitarProducto(prod.getTipo());
+        if(prod.getTipo() != null) HabilitarProducto(prod.getTipo());
         HabilitarEdicion(true);
         BuscarCambiosTipoProducto(prod.getTipo(), idProducto);
 
@@ -522,6 +535,18 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
             esValidoProducto = false;
         }
 
+        if(cantidadProducto.getText().toString().isEmpty()){
+            cantidadProducto.setError("no puede estar vacio");
+            esValidoProducto = false;
+
+        }
+        else if(Integer.valueOf(cantidadProducto.getText().toString()) < 0){
+            cantidadProducto.setError("no puede ser negativo");
+            esValidoProducto = false;
+        }
+        else{
+            productos.setCantidad(Integer.valueOf(cantidadProducto.getText().toString()));
+        }
 
         Contactos contactos = new Select()
                 .from(Contactos.class)
@@ -726,6 +751,12 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
 
         if(esValidoTipoProducto && esValidoProducto)  {
             Toast.makeText(this, "Guardado con Exito", Toast.LENGTH_SHORT).show();
+            Intent returnIntent = new Intent();
+
+            if(idProducto == null){
+                returnIntent.putExtra("id", productos.getId());
+            }
+            setResult(Activity.RESULT_OK, returnIntent);
             finish();
         }
     }
@@ -767,6 +798,7 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
     }
 
     protected void elemintarTipoProducto(String tipo,Long idProd){
+        if (tipo == null || idProd == null) return;
         switch (tipo){
             case "Zapatos":
                 Zapatos zapatos =  new Select().from(Zapatos.class).where("producto = ? ",idProd).executeSingle();
@@ -822,10 +854,10 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
     private void cambiarEstadoComponentes(){
 
         switch (modo) {
-            case "detalles":
+            case Detalle:
                 HabilitarEdicion(false);
                 break;
-            case "edicion":
+            case Editar:
                 HabilitarEdicion(true);
                 break;
         }
@@ -835,7 +867,7 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
         switch (item.getItemId()) {
             case R.id.editar:
                 menuProductos.findItem(R.id.editar).setVisible(false);
-                modo = "edicion";
+                modo = Editar;
                 cambiarEstadoComponentes();
                 return true;
             case R.id.eliminar:
@@ -860,15 +892,14 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
                         .from(entidades.Productos.class)
                         .where("id = ? ", idProducto.toString())
                         .executeSingle();
+
                 elemintarTipoProducto(prod.getTipo(), prod.getId());
-                try {
+                if (prod.getRutaImagen() != null) {
                     File imagepath = new File(prod.getRutaImagen());
                     imagepath.delete();
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
                 }
-                prod.delete();
-
+                ActiveAndroid.getDatabase().execSQL(String.format("delete from productos where id =%d;",prod.getInternalId()));
+                setResult(Activity.RESULT_OK, new Intent());
                 finish();
             }
         });

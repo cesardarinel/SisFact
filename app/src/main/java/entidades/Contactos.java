@@ -105,6 +105,7 @@ public class Contactos extends Model implements Serializable{
 	}
 
 	public Long getInternalId() {
+		if (getId() != null) return getId();
 		return internalId;
 	}
 
