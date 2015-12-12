@@ -54,7 +54,8 @@ public class vista_cuenta extends AppCompatActivity   implements View.OnClickLis
              List<CuentasPorCobrar> cuentasPorCobrars= new Select().from(CuentasPorCobrar.class).execute();
              factoryAdaptadorGenerico.setObjectosAFiltrar(cuentasPorCobrars);
              for(CuentasPorCobrar item : cuentasPorCobrars) item.setInternalId(item.getId());
-             nuevaActividad.putExtra("Data",factoryAdaptadorGenerico);
+             nuevaActividad.putExtra("Datos",factoryAdaptadorGenerico);
+             nuevaActividad.putExtra("fecha",true);
              startActivity(nuevaActividad);
 
          }
@@ -65,7 +66,8 @@ public class vista_cuenta extends AppCompatActivity   implements View.OnClickLis
             List<CuentasPorPagar> cuentasPorPagars= new Select().from(CuentasPorPagar.class).execute();
             factoryAdaptadorGenerico.setObjectosAFiltrar(cuentasPorPagars);
             for(CuentasPorPagar item : cuentasPorPagars) item.setInternalId(item.getId());
-            nuevaActividad.putExtra("Data",factoryAdaptadorGenerico);
+            nuevaActividad.putExtra("Datos",factoryAdaptadorGenerico);
+            nuevaActividad.putExtra("fecha",true);
             startActivity(nuevaActividad);
         }
     }

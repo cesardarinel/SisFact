@@ -17,14 +17,6 @@ import android.widget.RadioButton;
 
 import com.activeandroid.ActiveAndroid;
 
-import net.sf.jasperreports.engine.JRDataSource;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRField;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
 
 import java.util.HashMap;
 
@@ -83,19 +75,7 @@ public class vista_reporte extends AppCompatActivity implements View.OnClickList
         alerta.setPositiveButton("Generar Reporte", new DialogInterface.OnClickListener(){
            public void onClick(DialogInterface vistaOpcion,int id){
                ActiveAndroid.getDatabase();
-               if(tipo .equals("contacto")){
-                   try{
-                       JasperReport jasperReport = JasperCompileManager.compileReport("hellojasper.jrxml");
-                       JasperPrint jasperPrint = JasperFillManager.fillReport(
-                               jasperReport,
-                               new HashMap<String,Object>(),
-                               new ClienteReporte()
-                       );
-                       JasperExportManager.exportReportToPdfFile(
-                               jasperPrint, "HelloJasper.pdf");
-                   }
-                   catch (Exception e){}
-               }
+
            }
 
         });
@@ -161,18 +141,6 @@ public class vista_reporte extends AppCompatActivity implements View.OnClickList
 
             default:
                 break;
-        }
-    }
-    class ClienteReporte implements JRDataSource {
-
-        @Override
-        public boolean next() throws JRException {
-            return false;
-        }
-
-        @Override
-        public Object getFieldValue(JRField jrField) throws JRException {
-            return null;
         }
     }
 }

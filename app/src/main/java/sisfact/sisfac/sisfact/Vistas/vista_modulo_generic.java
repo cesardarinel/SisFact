@@ -16,6 +16,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -51,7 +52,7 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
         if (factoryAdaptadorGenerico == null){
             Toast.makeText(this,"Los Datos Suministrados son invalidos",Toast.LENGTH_LONG).show();
             finish();
-            return;
+            //return;
         }
 
 
@@ -81,6 +82,13 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
         listaAdaptador = factoryAdaptadorGenerico.getCamposaFiltrar(this,(String)spinner.getSelectedItem(),"");
         if (listaAdaptador !=  null) listado.setAdapter(listaAdaptador);
         listado.setOnItemClickListener(this);
+        Boolean habilitarFecha = tipoVista.getBoolean("fecha");
+        if (habilitarFecha){
+            desdeDate.setVisibility(View.VISIBLE);
+            hastaDate.setVisibility(View.VISIBLE);
+            ((TextView)findViewById(R.id.textView3)).setVisibility(View.VISIBLE);
+            ((TextView)findViewById(R.id.textView4)).setVisibility(View.VISIBLE);
+        }
     }
 
     private DatePickerDialog createDatePickerDialog(final EditText e){
