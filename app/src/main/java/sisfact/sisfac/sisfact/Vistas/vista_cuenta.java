@@ -12,7 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import entidades.Contactos;
+import entidades.CuentaPorPagarPagos;
+import entidades.CuentasPorCobrar;
+import entidades.CuentasPorPagar;
 import sisfact.sisfac.sisfact.R;
+import sisfact.sisfac.sisfact.Vistas.AdaptadorGenerico.AdaptadorCuentasPorCobrar;
 import sisfact.sisfac.sisfact.Vistas.AdaptadorGenerico.FactoryAdaptadorGenerico;
 
 public class vista_cuenta extends AppCompatActivity   implements View.OnClickListener{
@@ -45,14 +49,23 @@ public class vista_cuenta extends AppCompatActivity   implements View.OnClickLis
     public void onClick(View v) {
         //cuentas por pagar
          if(R.id.cpp==v.getId()){
-             nuevaActividad = new Intent(this, vista_generica_cuentas.class);
+             nuevaActividad = new Intent(this,vista_modulo_generic.class);
+             FactoryAdaptadorGenerico factoryAdaptadorGenerico = FactoryAdaptadorGenerico.getAdaptador(FactoryAdaptadorGenerico.Adaptador.CuentasPorCobrar);
+             List<CuentasPorCobrar> cuentasPorCobrars= new Select().from(CuentasPorCobrar.class).execute();
+             factoryAdaptadorGenerico.setObjectosAFiltrar(cuentasPorCobrars);
+             for(CuentasPorCobrar item : cuentasPorCobrars) item.setInternalId(item.getId());
+             nuevaActividad.putExtra("Data",factoryAdaptadorGenerico);
              startActivity(nuevaActividad);
 
          }
         //cuentas por cobrar
         if(R.id.cpc == v.getId()) {
-            nuevaActividad = new Intent(this, vista_generica_cuentas.class);
-            nuevaActividad.putExtra("Actividad", "cpc");
+            nuevaActividad = new Intent(this, vista_modulo_generic.class);
+            FactoryAdaptadorGenerico factoryAdaptadorGenerico = FactoryAdaptadorGenerico.getAdaptador(FactoryAdaptadorGenerico.Adaptador.CuentasPorPagar);
+            List<CuentasPorPagar> cuentasPorPagars= new Select().from(CuentasPorPagar.class).execute();
+            factoryAdaptadorGenerico.setObjectosAFiltrar(cuentasPorPagars);
+            for(CuentasPorPagar item : cuentasPorPagars) item.setInternalId(item.getId());
+            nuevaActividad.putExtra("Data",factoryAdaptadorGenerico);
             startActivity(nuevaActividad);
         }
     }

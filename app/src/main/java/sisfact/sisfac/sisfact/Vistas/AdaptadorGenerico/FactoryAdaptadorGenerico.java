@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import entidades.Contactos;
 import entidades.ItemLista;
 import sisfact.sisfac.sisfact.Vistas.ListaAdaptador;
 
@@ -18,7 +17,8 @@ public class FactoryAdaptadorGenerico implements Serializable{
         Contacto,
         Producto,
         Factura,
-        CuentasPorCobrar
+        CuentasPorCobrar,
+        CuentasPorPagar
     }
 
     public String getTitulo() {
@@ -44,8 +44,11 @@ public class FactoryAdaptadorGenerico implements Serializable{
             case Factura:
                 r = new AdaptadorFactura();
                 break;
+            case CuentasPorPagar:
+                r =  new AdaptadorCuentasPorPagar();
+                break;
             case CuentasPorCobrar:
-                r =  new AdaptadorCuentasPorCobrar();
+                r = new AdaptadorCuentasPorCobrar();
                 break;
         }
         return r;

@@ -7,7 +7,7 @@ import com.activeandroid.annotation.Table;
 import java.io.Serializable;
 import java.sql.Date;
 
-@Table(name="cuentas_por_cobrar")
+@Table(name="cunetas_por_cobrar")
 public class CuentasPorCobrar extends Model implements Serializable{
 
 	@Column(name="factura")
@@ -15,14 +15,8 @@ public class CuentasPorCobrar extends Model implements Serializable{
 
 	protected Long internalId;
 
-	@Column(name="pago")
-	protected Float pago;
-
-	@Column(name="fecha_pagada")
-	protected Date fechaPagada;
-
-	@Column(name="es_pagado")
-	protected boolean esPagado;
+	@Column(name = "fecha_Creada")
+	Date fechaCreada;
 
 	public Facturas getFactura() {
 		return factura;
@@ -30,30 +24,6 @@ public class CuentasPorCobrar extends Model implements Serializable{
 
 	public void setFactura(Facturas factura) {
 		this.factura = factura;
-	}
-
-	public Float getPago() {
-		return pago;
-	}
-
-	public void setPago(Float pago) {
-		this.pago = pago;
-	}
-
-	public Date getFechaPagada() {
-		return fechaPagada;
-	}
-
-	public void setFechaPagada(Date fechaPagada) {
-		this.fechaPagada = fechaPagada;
-	}
-
-	public boolean isEsPagado() {
-		return esPagado;
-	}
-
-	public void setEsPagado(boolean esPagado) {
-		this.esPagado = esPagado;
 	}
 
 	public Long getInternalId() {
