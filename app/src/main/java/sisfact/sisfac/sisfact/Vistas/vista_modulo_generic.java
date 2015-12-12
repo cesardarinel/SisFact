@@ -38,8 +38,6 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
     protected final int resultadoDeAgregar =1;
     protected DatePickerDialog desdeFechaDialog;
     protected DatePickerDialog hastaFechaDialog;
-
-    protected SimpleDateFormat dateFormatter;
     ListaAdaptador listaAdaptador;
 
 
@@ -55,8 +53,7 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
             finish();
             return;
         }
-        Calendar newCalendar = Calendar.getInstance();
-        dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+
 
 
         titulo = tipoVista.getString("Actividad");
@@ -71,19 +68,12 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
         desdeDate.setInputType(InputType.TYPE_NULL);
         desdeDate.setOnClickListener(this);
 
-        hastaDate = (EditText) findViewById(R.id.vista_generica_desdeDate);
+        hastaDate = (EditText) findViewById(R.id.vista_generica_hastaDate);
         hastaDate.setInputType(InputType.TYPE_NULL);
         hastaDate.setOnClickListener(this);
 
-        hastaFechaDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                Calendar newDate = Calendar.getInstance();
-                newDate.set(year, monthOfYear, dayOfMonth);
-                hastaDate.setText(dateFormatter.format(newDate.getTime()));
-            }
-
-        },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+        desdeFechaDialog = createDatePickerDialog(desdeDate);
+        hastaFechaDialog = createDatePickerDialog(hastaDate);
         spinner = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter<String> stringArrayAdapter = factoryAdaptadorGenerico.getCamposBuscablesAdator(this);
         spinner.setAdapter(stringArrayAdapter);
@@ -91,6 +81,21 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
         listaAdaptador = factoryAdaptadorGenerico.getCamposaFiltrar(this,(String)spinner.getSelectedItem(),"");
         if (listaAdaptador !=  null) listado.setAdapter(listaAdaptador);
         listado.setOnItemClickListener(this);
+    }
+
+    private DatePickerDialog createDatePickerDialog(final EditText e){
+        Calendar newCalendar = Calendar.getInstance();
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy", new Locale("ES"));
+
+        return new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, monthOfYear, dayOfMonth);
+                e.setText(dateFormatter.format(newDate.getTime()));
+            }
+
+        },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
     }
 
     @Override
