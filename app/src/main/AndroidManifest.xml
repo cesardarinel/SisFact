@@ -59,6 +59,10 @@
             android:label="@string/title_activity_vista_modulo_view_generic" >
         </activity>
         <activity
+            android:name=".Vistas.vista_generica_cuentas"
+            android:label="@string/title_activity_vista_modulo_view_generic" >
+        </activity>
+        <activity
             android:name=".Vistas.vista_reporte"
             android:label="@string/title_activity_vista_reporte" >
         </activity>

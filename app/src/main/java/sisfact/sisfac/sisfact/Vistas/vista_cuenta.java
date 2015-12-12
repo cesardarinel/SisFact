@@ -6,7 +6,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 
+import com.activeandroid.query.Select;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import entidades.Contactos;
 import sisfact.sisfac.sisfact.R;
+import sisfact.sisfac.sisfact.Vistas.AdaptadorGenerico.FactoryAdaptadorGenerico;
 
 public class vista_cuenta extends AppCompatActivity   implements View.OnClickListener{
     //Botones
@@ -38,14 +45,13 @@ public class vista_cuenta extends AppCompatActivity   implements View.OnClickLis
     public void onClick(View v) {
         //cuentas por pagar
          if(R.id.cpp==v.getId()){
-             nuevaActividad = new Intent(this, vista_modulo_generic.class);
-             nuevaActividad.putExtra("Actividad", "cpp");
+             nuevaActividad = new Intent(this, vista_generica_cuentas.class);
              startActivity(nuevaActividad);
 
          }
         //cuentas por cobrar
         if(R.id.cpc == v.getId()) {
-            nuevaActividad = new Intent(this, vista_modulo_generic.class);
+            nuevaActividad = new Intent(this, vista_generica_cuentas.class);
             nuevaActividad.putExtra("Actividad", "cpc");
             startActivity(nuevaActividad);
         }

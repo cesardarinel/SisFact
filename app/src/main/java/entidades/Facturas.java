@@ -15,12 +15,8 @@ public class Facturas extends Model implements Serializable{
 	@Column(name="fecha")
 	protected Date fecha;
 
-	@Column(name="firma")
-	protected String firma;
-
 	@Column(name="contacto")
 	protected Contactos contacto;
-
 
 
 	public Date getFecha() {
@@ -29,14 +25,6 @@ public class Facturas extends Model implements Serializable{
 
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
-	}
-
-	public String getFirma() {
-		return firma;
-	}
-
-	public void setFirma(String firma) {
-		this.firma = firma;
 	}
 
 	public Contactos getContacto() {

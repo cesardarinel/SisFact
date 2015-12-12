@@ -8,13 +8,14 @@ import com.activeandroid.query.Select;
 import java.util.ArrayList;
 
 import entidades.Contactos;
+import entidades.CuentasPorCobrar;
 import entidades.ItemLista;
 import sisfact.sisfac.sisfact.Vistas.Contacto;
 import sisfact.sisfac.sisfact.Vistas.ListaAdaptador;
 
-public class AdaptadorContacto extends FactoryAdaptadorGenerico {
-    public AdaptadorContacto(){
-        titulo = "Contactos";
+public class AdaptadorCuentasPorCobrar extends  FactoryAdaptadorGenerico{
+    public AdaptadorCuentasPorCobrar(){
+        titulo = "Cuenta Por Cobrar";
         camposBuscables = new ArrayList<>();
         camposBuscables.add("Todos: Nombre");
         camposBuscables.add("Cliente: Nombre");
@@ -25,21 +26,42 @@ public class AdaptadorContacto extends FactoryAdaptadorGenerico {
     }
 
     @Override
-    public ListaAdaptador getCamposaFiltrar(Context con,String Campo,String Valor){
+    public ListaAdaptador getCamposaFiltrar(Context con,Action act){
         objetosListado = new ArrayList<>();
 
         for(Object obj : getObjectosAFiltrar()){
-            Contactos contactos = (Contactos)obj;
+            CuentasPorCobrar cuentasPorCobrar = (CuentasPorCobrar)obj;
+            if (act.CompraraObjeto(cuentasPorCobrar)){
+                ItemLista itemLista =  new ItemLista();
+                itemLista.setId(cuentasPorCobrar.getInternalId().toString());
+                itemLista.setInfo(cuentasPorCobrar.getFactura().getContacto().getNombre());
+                itemLista.setTexto1(cuentasPorCobrar.getFactura().getFecha().toString());
+                getObjetosListado().add(itemLista);
+            }
+        }
+        ListaAdaptador listadoAdaptr = new ListaAdaptador(con, getObjetosListado());
+
+        return listadoAdaptr;
+    }
+
+    @Override
+    public ListaAdaptador getCamposaFiltrar(Context con,String Campo,String Valor) {
+        objetosListado = new ArrayList<>();
+
+        for (Object obj : getObjectosAFiltrar()) {
+            Contactos contactos = (Contactos) obj;
             boolean esValido = true;
-            switch (Campo){
+            switch (Campo) {
                 case "Todos: Nombre":
                     if (!contactos.getNombre().contains(Valor)) esValido = false;
                     break;
                 case "Cliente: Nombre":
-                    if (!contactos.getNombre().contains(Valor) && contactos.isEsCliente()) esValido = false;
+                    if (!contactos.getNombre().contains(Valor) && contactos.isEsCliente())
+                        esValido = false;
                     break;
                 case "Suplidor: Nombre":
-                    if (!contactos.getNombre().contains(Valor) && contactos.isEsSuplidor()) esValido = false;
+                    if (!contactos.getNombre().contains(Valor) && contactos.isEsSuplidor())
+                        esValido = false;
                     break;
                 case "Telefono":
                     if (!contactos.getTelefono().contains(Valor)) esValido = false;
@@ -48,8 +70,8 @@ public class AdaptadorContacto extends FactoryAdaptadorGenerico {
                     if (!contactos.getDireccion().contains(Valor)) esValido = false;
                     break;
             }
-            if (esValido){
-                ItemLista itemLista =  new ItemLista();
+            if (esValido) {
+                ItemLista itemLista = new ItemLista();
                 itemLista.setId(contactos.getInternalId().toString());
                 itemLista.setInfo(contactos.getNombre());
                 itemLista.setTexto1(contactos.getApellido());
@@ -61,8 +83,10 @@ public class AdaptadorContacto extends FactoryAdaptadorGenerico {
     }
     @Override
     public Intent getIntentClase(Context con){
+        //TODO
         return new Intent(con,Contacto.class);
     }
+    //TODO
     @Override
     protected Object objAgregar(Long id){
         return new Select()
@@ -70,6 +94,7 @@ public class AdaptadorContacto extends FactoryAdaptadorGenerico {
                 .where("id = ?",id)
                 .executeSingle();
     }
+    //TODO
     @Override
     public void update(){
         ArrayList<Contactos> contactoses = new ArrayList<>();

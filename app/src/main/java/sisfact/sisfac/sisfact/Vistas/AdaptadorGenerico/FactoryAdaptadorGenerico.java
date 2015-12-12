@@ -17,7 +17,8 @@ public class FactoryAdaptadorGenerico implements Serializable{
     public enum Adaptador{
         Contacto,
         Producto,
-        Factura
+        Factura,
+        CuentasPorCobrar
     }
 
     public String getTitulo() {
@@ -42,6 +43,9 @@ public class FactoryAdaptadorGenerico implements Serializable{
                 break;
             case Factura:
                 r = new AdaptadorFactura();
+                break;
+            case CuentasPorCobrar:
+                r =  new AdaptadorCuentasPorCobrar();
                 break;
         }
         return r;
@@ -71,9 +75,20 @@ public class FactoryAdaptadorGenerico implements Serializable{
 
     public ListaAdaptador getCamposaFiltrar(Context con,String Campo,String Valor){return null;}
 
+    public ListaAdaptador getCamposaFiltrar(Context con,String Campo,String Valor,List<?> lista){
+        List<?> tmp = objectosAFiltrar;
+        objectosAFiltrar = lista;
+        ListaAdaptador listaAdaptador = this.getCamposaFiltrar(con,Campo,Valor);
+        objectosAFiltrar = tmp;
+        return listaAdaptador;
+    }
+
+    public ListaAdaptador getCamposaFiltrar(Context con,Action act){return null;}
+
     public Intent getIntentClase(Context con){return null;}
 
     protected Object objAgregar(Long id){return null;}
+
 
 
     public  void agregar(Long itemLista){
@@ -86,3 +101,5 @@ public class FactoryAdaptadorGenerico implements Serializable{
     }
     public void update(){}
 }
+
+
