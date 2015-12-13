@@ -10,9 +10,17 @@ import java.util.Date;
 @Table(name="cunetas_por_cobrar_pago")
 public class CuentaPorPagarPagos extends Model{
 
+    public CuentasPorPagar getCuentasPorPagar() {
+        return cuentasPorPagar;
+    }
+
+    public void setCuentasPorPagar(CuentasPorPagar cuentasPorPagar) {
+        this.cuentasPorPagar = cuentasPorPagar;
+    }
+
     @Column(name = "cuenta_por_pagar")
     protected
-    CuentasPorCobrar cuentasPorCobrar;
+    CuentasPorPagar cuentasPorPagar;
 
     @Column(name = "fecha_pago")
     protected
@@ -22,13 +30,7 @@ public class CuentaPorPagarPagos extends Model{
     protected
     BigDecimal monto;
 
-    public CuentasPorCobrar getCuentasPorCobrar() {
-        return cuentasPorCobrar;
-    }
 
-    public void setCuentasPorCobrar(CuentasPorCobrar cuentasPorCobrar) {
-        this.cuentasPorCobrar = cuentasPorCobrar;
-    }
 
     public Date getFechaPago() {
         return fechaPago;

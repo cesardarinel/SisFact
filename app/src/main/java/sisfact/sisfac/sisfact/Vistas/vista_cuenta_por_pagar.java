@@ -1,11 +1,11 @@
 package sisfact.sisfac.sisfact.Vistas;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.AdapterView;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import entidades.Contactos;
-import entidades.CuentasPorCobrar;
 import entidades.CuentasPorPagar;
 import sisfact.sisfac.sisfact.R;
 
@@ -44,7 +42,8 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
     private EditText fechaCreacion;
     private ArrayAdapter<String> contactoArrayAdapter;
     private Map<String,String> telefonosContactos;
-
+    protected TableRow.LayoutParams parametroFila;
+    protected TableLayout.LayoutParams parametroTablaRow;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +91,37 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
 
         table = (TableLayout) findViewById(R.id.cuenta_tabla);
 
+        parametroFila = new TableRow .LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        parametroFila.weight = 1f;
+        parametroFila.gravity = Gravity.START;
+
+        //ponle un mejor nombre
+        parametroTablaRow = new TableLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+
+        //crear elemento
+        TextView textView1 = new TextView(this);
+        textView1.setText("hola");
+        //setear el layout params para las filas
+        textView1.setLayoutParams(parametroFila);
+
+        TextView textView2 = new TextView(this);
+        textView2.setText("estas");
+        textView2.setLayoutParams(parametroFila);
+
+        //crea el contendor de la fila
+        TableRow tableRow = new TableRow(this);
+        //asignarle los parametros
+        tableRow.setLayoutParams(parametroTablaRow);
+
+        //agregar los elemtnos que estan por fila
+        tableRow.addView(textView1);
+        tableRow.addView(textView2);
+
+        //agregar la fila a la tabla
+        table.addView(tableRow);
     }
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
