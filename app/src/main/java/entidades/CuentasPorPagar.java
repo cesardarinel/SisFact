@@ -5,6 +5,7 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 
 @Table(name ="cunetas_por_pagar")
 public class CuentasPorPagar extends Model{
@@ -20,6 +21,30 @@ public class CuentasPorPagar extends Model{
     @Column
     protected
     BigDecimal monto;
+
+
+    @Column
+    protected
+    String descripcion;
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public Date getFechaCreada() {
+        return fechaCreada;
+    }
+
+    public void setFechaCreada(Date fechaCreada) {
+        this.fechaCreada = fechaCreada;
+    }
+
+    @Column(name = "fecha_Creada")
+    Date fechaCreada;
 
     public Contactos getContacto() {
         return contacto;

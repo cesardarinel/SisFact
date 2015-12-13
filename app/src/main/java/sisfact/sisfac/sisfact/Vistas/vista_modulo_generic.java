@@ -2,7 +2,10 @@ package sisfact.sisfac.sisfact.Vistas;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.KeyEvent;
@@ -21,6 +24,7 @@ import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import entidades.ItemLista;
@@ -40,6 +44,8 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
     protected DatePickerDialog desdeFechaDialog;
     protected DatePickerDialog hastaFechaDialog;
     ListaAdaptador listaAdaptador;
+    Calendar newCalendar;
+    SimpleDateFormat dateFormatter;
 
 
     @Override
@@ -52,11 +58,11 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
         if (factoryAdaptadorGenerico == null){
             Toast.makeText(this,"Los Datos Suministrados son invalidos",Toast.LENGTH_LONG).show();
             finish();
-            //return;
+            return;
         }
 
-
-
+        newCalendar = Calendar.getInstance();
+        dateFormatter = new SimpleDateFormat("dd/MM/yyyy", new Locale("es","ES"));
         titulo = tipoVista.getString("Actividad");
         setTitle(factoryAdaptadorGenerico.getTitulo());
 
@@ -67,13 +73,15 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
 
         desdeDate = (EditText) findViewById(R.id.vista_generica_desdeDate);
         desdeDate.setInputType(InputType.TYPE_NULL);
+        desdeDate.setText(dateFormatter.format(new Date(newCalendar.get(Calendar.YEAR) - 1900, 0, 1)));
         desdeDate.setOnClickListener(this);
 
         hastaDate = (EditText) findViewById(R.id.vista_generica_hastaDate);
         hastaDate.setInputType(InputType.TYPE_NULL);
+        hastaDate.setText(dateFormatter.format(new Date()));
         hastaDate.setOnClickListener(this);
 
-        desdeFechaDialog = createDatePickerDialog(desdeDate);
+        desdeFechaDialog = createDatePickerDialog(desdeDate,newCalendar.get(Calendar.YEAR),0,1);
         hastaFechaDialog = createDatePickerDialog(hastaDate);
         spinner = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter<String> stringArrayAdapter = factoryAdaptadorGenerico.getCamposBuscablesAdator(this);
@@ -91,9 +99,7 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
         }
     }
 
-    private DatePickerDialog createDatePickerDialog(final EditText e){
-        Calendar newCalendar = Calendar.getInstance();
-        final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy", new Locale("ES"));
+    private DatePickerDialog createDatePickerDialog(final EditText e, final int year, final int month, final int day){
 
         return new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
 
@@ -103,7 +109,12 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
                 e.setText(dateFormatter.format(newDate.getTime()));
             }
 
-        },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+        },year, month, day);
+    }
+
+    private DatePickerDialog createDatePickerDialog(final EditText e){
+
+        return createDatePickerDialog(e,newCalendar.get(Calendar.YEAR),newCalendar.get(Calendar.MONTH),newCalendar.get(Calendar.DAY_OF_MONTH));
     }
 
     @Override

@@ -59,10 +59,6 @@
             android:label="@string/title_activity_vista_modulo_view_generic" >
         </activity>
         <activity
-            android:name=".Vistas.vista_generica_cuentas"
-            android:label="@string/title_activity_vista_modulo_view_generic" >
-        </activity>
-        <activity
             android:name=".Vistas.vista_reporte"
             android:label="@string/title_activity_vista_reporte" >
         </activity>
@@ -72,7 +68,9 @@
         </activity>
         <activity android:name=".Vistas.detalle_producto_simple" >
         </activity>
-
+        <activity android:name=".Vistas.vista_cuenta_por_pagar"
+            android:label="Cuentas Por Pagar">
+        </activity>
     </application>
 
 </manifest>

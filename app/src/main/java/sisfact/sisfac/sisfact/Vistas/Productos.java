@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -189,7 +190,7 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
         for(entidades.Contactos con : contactoses) listaContacto.add(con.getTelefono());
         contactoArrayAdapter =  new ArrayAdapter<>(this,android.R.layout.simple_dropdown_item_1line,listaContacto);
         contactoProducto.setAdapter(contactoArrayAdapter);
-
+        contactoProducto.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
         seccionProducto = (Spinner) findViewById(R.id.plantilla_producto_seccion);
         List<Secciones> secciones =  new Select().from(Secciones.class).execute();
@@ -475,6 +476,10 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
                 TomarFotoProducto();
                 break;
             case R.id.plantilla_producto_btn_cancelar:
+                if (idProducto == null) {
+                    finish();
+                    return;
+                }
                 modo= "detalles";
                 cambiarEstadoComponentes();
                 break;
@@ -836,7 +841,6 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menuProductos = menu;
@@ -844,7 +848,7 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
         inflater.inflate(R.menu.menu_generico_editar, menu);
         menuProductos.findItem(R.id.nuevo).setVisible(false);
 
-        if (menuProductos == null) {
+        if (idProducto == null) {
             menuProductos.findItem(R.id.editar).setVisible(false);
             menuProductos.findItem(R.id.eliminar).setVisible(false);
         }

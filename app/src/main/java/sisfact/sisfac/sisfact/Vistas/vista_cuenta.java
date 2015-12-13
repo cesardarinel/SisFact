@@ -54,6 +54,7 @@ public class vista_cuenta extends AppCompatActivity   implements View.OnClickLis
              List<CuentasPorCobrar> cuentasPorCobrars= new Select().from(CuentasPorCobrar.class).execute();
              factoryAdaptadorGenerico.setObjectosAFiltrar(cuentasPorCobrars);
              for(CuentasPorCobrar item : cuentasPorCobrars) item.setInternalId(item.getId());
+             nuevaActividad.putExtra("Actividad", "Cuentas Por Cobrar");
              nuevaActividad.putExtra("Datos",factoryAdaptadorGenerico);
              nuevaActividad.putExtra("fecha",true);
              startActivity(nuevaActividad);
@@ -63,9 +64,9 @@ public class vista_cuenta extends AppCompatActivity   implements View.OnClickLis
         if(R.id.cpc == v.getId()) {
             nuevaActividad = new Intent(this, vista_modulo_generic.class);
             FactoryAdaptadorGenerico factoryAdaptadorGenerico = FactoryAdaptadorGenerico.getAdaptador(FactoryAdaptadorGenerico.Adaptador.CuentasPorPagar);
-            List<CuentasPorPagar> cuentasPorPagars= new Select().from(CuentasPorPagar.class).execute();
-            factoryAdaptadorGenerico.setObjectosAFiltrar(cuentasPorPagars);
-            for(CuentasPorPagar item : cuentasPorPagars) item.setInternalId(item.getId());
+            List<CuentasPorPagar> cuentasPorPagarList= new Select().from(CuentasPorPagar.class).execute();
+            factoryAdaptadorGenerico.setObjectosAFiltrar(cuentasPorPagarList);
+            for(CuentasPorPagar item : cuentasPorPagarList) item.setInternalId(item.getId());
             nuevaActividad.putExtra("Datos",factoryAdaptadorGenerico);
             nuevaActividad.putExtra("fecha",true);
             startActivity(nuevaActividad);

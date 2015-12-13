@@ -14,6 +14,7 @@ import entidades.CuentasPorPagar;
 import entidades.ItemLista;
 import sisfact.sisfac.sisfact.Vistas.Contacto;
 import sisfact.sisfac.sisfact.Vistas.ListaAdaptador;
+import sisfact.sisfac.sisfact.Vistas.vista_cuenta_por_pagar;
 
 public class AdaptadorCuentasPorPagar extends  FactoryAdaptadorGenerico{
     public AdaptadorCuentasPorPagar(){
@@ -87,7 +88,7 @@ public class AdaptadorCuentasPorPagar extends  FactoryAdaptadorGenerico{
     @Override
     public Intent getIntentClase(Context con){
         //TODO
-        return new Intent(con,Contacto.class);
+        return new Intent(con,vista_cuenta_por_pagar.class);
     }
     //TODO
     @Override
