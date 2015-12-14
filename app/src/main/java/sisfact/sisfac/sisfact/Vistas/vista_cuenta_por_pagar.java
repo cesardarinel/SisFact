@@ -1,5 +1,6 @@
 package sisfact.sisfac.sisfact.Vistas;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneNumberFormattingTextWatcher;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -23,6 +25,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import entidades.CuentaPorPagarPagos;
 import entidades.CuentasPorPagar;
 import sisfact.sisfac.sisfact.R;
 
@@ -33,10 +36,10 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
 
     private Bundle parametros;
     private CuentasPorPagar cuentaCargada;
+    private List<CuentaPorPagarPagos> cuentaCargadaPagos;
     private SimpleDateFormat dateFormatter;
     private AutoCompleteTextView numeroContacto;
     private TableLayout table;
-    private List<TableRow> tableRows;
     private EditText monto;
     private EditText descripcion;
     private EditText fechaCreacion;
@@ -64,9 +67,16 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
         if(parametros != null && parametros.getString("id") != null) {
             try {
                 cuentaCargada = new Select().from(CuentasPorPagar.class).where("id = ? ", parametros.getString("id")).executeSingle();
+                cuentaCargadaPagos = new Select().from(CuentaPorPagarPagos.class).where("cuentasPorPagar.id = ? ", parametros.getString("id")).execute();
                 numeroContacto.setText(cuentaCargada.getContacto().getTelefono());
+                numeroContacto.setEnabled(false);
+                monto.setText(cuentaCargada.getMonto().toString());
+                monto.setEnabled(false);
                 descripcion.setText(cuentaCargada.getDescripcion());
                 fechaCreacion.setText(dateFormatter.format(cuentaCargada.getFechaCreada()));
+                fechaCreacion.setEnabled(false);
+                findViewById(R.id.cuenta_tabla_fila_header).setVisibility(View.VISIBLE);
+                findViewById(R.id.plantilla_cuenta_monto_btn_agregar).setVisibility(View.VISIBLE);
             } catch (Exception e) {
                 e.printStackTrace();
                 finish();
@@ -90,38 +100,27 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
         monto.setOnFocusChangeListener(this);
 
         table = (TableLayout) findViewById(R.id.cuenta_tabla);
-
         parametroFila = new TableRow .LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         parametroFila.weight = 1f;
         parametroFila.gravity = Gravity.START;
-
-        //ponle un mejor nombre
         parametroTablaRow = new TableLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
         );
 
-        //crear elemento
-        TextView textView1 = new TextView(this);
-        textView1.setText("hola");
-        //setear el layout params para las filas
-        textView1.setLayoutParams(parametroFila);
 
-        TextView textView2 = new TextView(this);
-        textView2.setText("estas");
-        textView2.setLayoutParams(parametroFila);
+        if(cuentaCargada != null) {
+            for (CuentaPorPagarPagos p : cuentaCargadaPagos) {
+                agregarFilaATabla(p.getMono().toString(),
+                        dateFormatter.format(p.getFechaPago()),
+                        Integer.parseInt(p.getId().toString()));
+            }
+        }
+        findViewById(R.id.cuenta_tabla_fila_header).setVisibility(View.VISIBLE);
+        findViewById(R.id.plantilla_cuenta_monto_btn_agregar).setVisibility(View.VISIBLE);
+        agregarFilaATabla("600.00",dateFormatter.format(new Date()), 1);
 
-        //crea el contendor de la fila
-        TableRow tableRow = new TableRow(this);
-        //asignarle los parametros
-        tableRow.setLayoutParams(parametroTablaRow);
 
-        //agregar los elemtnos que estan por fila
-        tableRow.addView(textView1);
-        tableRow.addView(textView2);
-
-        //agregar la fila a la tabla
-        table.addView(tableRow);
     }
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
@@ -139,4 +138,49 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
             }
         }
     }
+
+    public void agregarFilaATabla(String monto,String sFecha,Integer Id){
+        TextView pago = new TextView(this);
+        final TableRow tableRow = new TableRow(this);
+
+        pago.setText(monto);
+        pago.setTextColor(Color.BLACK);
+        //setear el layout params para las filas
+        pago.setLayoutParams(parametroFila);
+
+        TextView fecha = new TextView(this);
+        fecha.setText(sFecha);
+        fecha.setTextColor(Color.BLACK);
+        fecha.setLayoutParams(parametroFila);
+
+        Button editar = new Button(this);
+        editar.setText("Editar");
+        editar.setLayoutParams(parametroFila);
+        editar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Agregar Dialog de Editar Linea
+            }
+        });
+
+        Button borrar = new Button(this);
+        borrar.setText("Borrar");
+        borrar.setLayoutParams(parametroFila);
+        borrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Agregar Dialog de Borrar Linea
+                //table.removeView(tableRow);
+            }
+        });
+
+        tableRow.addView(pago);
+        tableRow.addView(fecha);
+        tableRow.addView(editar);
+        tableRow.addView(borrar);
+        tableRow.setId(Id);
+
+        table.addView(tableRow);
+    }
+
 }

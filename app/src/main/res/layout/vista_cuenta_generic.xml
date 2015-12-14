@@ -83,7 +83,7 @@
             android:inputType="date"
             android:ems="10"
             android:id="@+id/plantilla_cuenta_valor_fecha_creacion"
-            android:enabled="false" />
+            />
 
         <TableLayout
             android:layout_width="fill_parent"
@@ -94,18 +94,20 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:visibility="gone"
                 android:id="@+id/cuenta_tabla_fila_header">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="Pago"
                     android:layout_weight="1"
-                    android:layout_gravity="left"
+                    android:gravity="start"
                     android:textColor="#000"
-                    android:id="@+id/cuenta_columna_pago"
-                    android:background="#b8baba" />
+                    android:id="@+id/cuenta_columna_editar"
+                    android:background="#b8baba"
+                    android:autoText="false" />
 
                 <TextView
                     android:layout_width="fill_parent"
@@ -116,6 +118,26 @@
                     android:gravity="start"
                     android:textColor="#000"
                     android:id="@+id/cuenta_columna_fecha"
+                    android:background="#b8baba"
+                    android:autoText="false" />
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:textColor="#000"
+                    android:id="@+id/cuenta_columna_editar"
+                    android:background="#b8baba"
+                    android:autoText="false" />
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:textColor="#000"
+                    android:id="@+id/cuenta_columna_borrar"
                     android:background="#b8baba"
                     android:autoText="false" />
 
@@ -163,6 +185,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Agregar"
+            android:visibility="gone"
             android:id="@+id/plantilla_cuenta_monto_btn_agregar"
             />
 
