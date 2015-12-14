@@ -41,11 +41,11 @@ public class CuentaPorPagarPagos  extends Model implements Serializable {
         this.fechaPago = fechaPago;
     }
 
-    public BigDecimal getMono() {
+    public BigDecimal getMonto() {
         return monto;
     }
 
-    public void setMono(BigDecimal mono) {
+    public void setMonto(BigDecimal mono) {
         this.monto = mono;
     }
 }

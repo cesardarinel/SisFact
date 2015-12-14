@@ -20,14 +20,12 @@ public class CuentasPorPagar extends Model implements Serializable {
     protected
     Contactos contacto;
 
-    @Column
+    @Column(name = "monto")
     protected
     BigDecimal monto;
 
-
-    @Column
-    protected
-    String descripcion;
+    @Column(name="descripcion")
+    protected String descripcion;
 
     public String getDescripcion() {
         return descripcion;

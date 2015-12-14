@@ -37,7 +37,7 @@ public class AdaptadorCuentasPorPagar extends  FactoryAdaptadorGenerico{
             if (act.CompraraObjeto(cuentasPorPagar)){
                 ItemLista itemLista =  new ItemLista();
                 System.out.println(cuentasPorPagar.getContacto().getInternalId().toString());
-                itemLista.setId(cuentasPorPagar.getContacto().getInternalId().toString());
+                itemLista.setId(cuentasPorPagar.getInternalId().toString());
                 itemLista.setInfo(cuentasPorPagar.getContacto().getNombre());
                 itemLista.setTexto1(cuentasPorPagar.getContacto().getApellido());
                 itemLista.setTexto2(cuentasPorPagar.getContacto().getTelefono());
@@ -77,8 +77,7 @@ public class AdaptadorCuentasPorPagar extends  FactoryAdaptadorGenerico{
             }
             if (esValido) {
                 ItemLista itemLista = new ItemLista();
-                itemLista.setId(cuentasPorPagar.getContacto().getInternalId().toString());
-                //itemLista.setId(String.valueOf(1));
+                itemLista.setId(cuentasPorPagar.getInternalId().toString());
                 itemLista.setInfo(cuentasPorPagar.getContacto().getNombre());
                 itemLista.setTexto1(cuentasPorPagar.getContacto().getApellido());
                 itemLista.setTexto2(cuentasPorPagar.getContacto().getTelefono());
@@ -96,7 +95,7 @@ public class AdaptadorCuentasPorPagar extends  FactoryAdaptadorGenerico{
     @Override
     protected Object objAgregar(Long id){
         return new Select()
-                .from(CuentasPorCobrar.class)
+                .from(CuentasPorPagar.class)
                 .where("id = ?",id)
                 .executeSingle();
     }

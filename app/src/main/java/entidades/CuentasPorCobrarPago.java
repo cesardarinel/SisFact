@@ -5,21 +5,29 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.math.BigDecimal;
+import java.util.Date;
 
 @Table(name = "cuentas_por_cobrar_pago")
 public class CuentasPorCobrarPago extends Model implements Serializable {
 
-    @Column(name = "cuentas_por_cobrar_pagos")
+    @Column(name = "cuentas_por_cobrar")
     protected
     CuentasPorCobrar cuentasPorCobrar;
 
-    @Column(name = "fecha_pago")
-    protected
-    Date fechaPago;
+    public BigDecimal getMonto() {
+        return monto;
+    }
 
-    @Column(name="fecha_pagada")
-    protected Date fechaCreada;
+    public void setMonto(BigDecimal monto) {
+        this.monto = monto;
+    }
+
+    @Column(name = "monto")
+    protected BigDecimal monto;
+
+    @Column(name="fecha_pago")
+    protected Date fechaPago;
 
 
     public CuentasPorCobrar getCuentasPorCobrar() {
@@ -36,13 +44,5 @@ public class CuentasPorCobrarPago extends Model implements Serializable {
 
     public void setFechaPago(Date fechaPago) {
         this.fechaPago = fechaPago;
-    }
-
-    public Date getFechaCreada() {
-        return fechaCreada;
-    }
-
-    public void setFechaCreada(Date fechaCreada) {
-        this.fechaCreada = fechaCreada;
     }
 }
