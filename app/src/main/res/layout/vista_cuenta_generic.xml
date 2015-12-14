@@ -85,11 +85,7 @@
             android:id="@+id/plantilla_cuenta_valor_fecha_creacion"
             />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Guardar"
-            android:id="@+id/cuenta_guardar_btn" />
+
 
         <TableLayout
             android:layout_width="fill_parent"
@@ -159,7 +155,7 @@
             android:textColor="#F00"
             android:id="@+id/cuenta_texto_pagado"
             android:visibility="gone"
-            android:layout_marginTop="10px" />
+            android:layout_marginTop="20px" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -168,7 +164,7 @@
             android:textColor="#000"
             android:id="@+id/cuenta_texto_pagado_valor"
             android:visibility="gone"
-            android:layout_marginTop="10px" />
+            android:layout_marginTop="20px" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -177,7 +173,7 @@
             android:text="Total Adeudado:"
             android:textColor="#F00"
             android:id="@+id/cuenta_texto_adeudado"
-            android:layout_marginTop="10px" />
+            android:layout_marginTop="20px" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -186,7 +182,7 @@
             android:textColor="#000"
             android:id="@+id/cuenta_texto_adeudado_valor"
             android:visibility="gone"
-            android:layout_marginTop="10px" />
+            android:layout_marginTop="20px" />
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -194,6 +190,27 @@
             android:visibility="gone"
             android:id="@+id/plantilla_cuenta_monto_btn_agregar"
             />
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_alignParentBottom="true"
+           >
+            <Button
+                android:id="@+id/cuenta_guardar_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" android:text="Guardar">
+            </Button>
+
+            <Button
+                android:id="@+id/cuenta_cancelar_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Cancelar">
+            </Button>
+        </LinearLayout>
 
     </LinearLayout>
 
