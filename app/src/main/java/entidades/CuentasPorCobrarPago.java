@@ -10,7 +10,7 @@ import java.sql.Date;
 @Table(name = "cuentas_por_cobrar_pago")
 public class CuentasPorCobrarPago extends Model implements Serializable {
 
-    @Column(name = "cuentas_por_cobrar_pagos")
+    @Column(name = "cuentas_por_cobrar")
     protected
     CuentasPorCobrar cuentasPorCobrar;
 

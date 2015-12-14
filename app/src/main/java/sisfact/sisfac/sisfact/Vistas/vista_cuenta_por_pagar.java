@@ -3,12 +3,12 @@ package sisfact.sisfac.sisfact.Vistas;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneNumberFormattingTextWatcher;
-import android.text.Editable;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,9 +41,6 @@ import entidades.CuentaPorPagarPagos;
 import entidades.CuentasPorPagar;
 import sisfact.sisfac.sisfact.R;
 
-/**
- * Created by Stanley on 12/13/15.
- */
 public class vista_cuenta_por_pagar extends AppCompatActivity implements View.OnFocusChangeListener,View.OnClickListener {
 
     private Bundle parametros;
@@ -68,7 +65,6 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
     private TableRow.LayoutParams parametroFila;
     private Menu menuCuenta;
     protected DatePickerDialog fechaCreacionDialog;
-    protected Dialog crearLineaDialog;
 
     private String modo;
     Calendar newCalendar;
@@ -76,6 +72,7 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         //Obteniendo parametros pasados a la vista
         parametros = getIntent().getExtras();
         //Cargando Contacto si existe en la base de datos
@@ -84,8 +81,8 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
         dateFormatter = new SimpleDateFormat("dd/MM/yyyy", new Locale("es","ES"));
         findViewById(R.id.cuenta_texto_factura).setVisibility(View.GONE);
         findViewById(R.id.cuenta_valor_factura).setVisibility(View.GONE);
-        pagadoVal = BigDecimal.ONE.valueOf(0.0);
-        adeudadoVal = BigDecimal.ONE.valueOf(0.0);
+        pagadoVal = BigDecimal.valueOf(0.0);
+        adeudadoVal = BigDecimal.valueOf(0.0);
 
         numeroContacto = (AutoCompleteTextView) findViewById(R.id.cuenta_valor_contacto);
         monto = (EditText) findViewById(R.id.cuenta_valor_monto);
@@ -95,7 +92,10 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
         fechaCreacion.setOnClickListener(this);
         table = (TableLayout) findViewById(R.id.cuenta_tabla);
         agregarPagoBtn = (Button) findViewById(R.id.plantilla_cuenta_monto_btn_agregar);
-        agregarPagoBtn.setOnClickListener(this);
+
+        AgregarEvento agregarEvento = new AgregarEvento();
+        agregarEvento.setContext(this);
+        agregarPagoBtn.setOnClickListener(agregarEvento);
         pagadotxt = (TextView) findViewById(R.id.cuenta_texto_pagado);
         pagado = (TextView) findViewById(R.id.cuenta_texto_pagado_valor);
         adeudadotxt = (TextView) findViewById(R.id.cuenta_texto_adeudado);
@@ -109,7 +109,7 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
             try {
 
                 cuentaCargada = new Select().from(CuentasPorPagar.class).where("id = ? ", parametros.getString("id")).executeSingle();
-                cuentaCargadaPagos = new Select().from(CuentaPorPagarPagos.class).where("id = ? ", parametros.getString("id")).execute();
+                cuentaCargadaPagos = new Select().from(CuentaPorPagarPagos.class).where("cuenta_por_pagar = ? ", cuentaCargada.getId()).execute();
                 numeroContacto.setText(cuentaCargada.getContacto().getTelefono());
                 numeroContacto.setEnabled(false);
                 monto.setText(cuentaCargada.getMonto().toString());
@@ -120,10 +120,12 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
                 fechaCreacionDialog =  createDatePickerDialog(fechaCreacion,cuentaCargada.getFechaCreada().getYear(),cuentaCargada.getFechaCreada().getMonth(),cuentaCargada.getFechaCreada().getDay());
                 adeudadoVal = (cuentaCargada.getMonto());
                 modo = "detalles";
+
+
             } catch (Exception e) {
-                e.printStackTrace();
-                finish();
-                return;
+//                e.printStackTrace();
+//                finish();
+//                return;
             }
         } else {
             fechaCreacion.setText(dateFormatter.format(new Date()));
@@ -145,18 +147,16 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
         parametroFila = new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         parametroFila.weight = 1f;
 
-        if(cuentaCargada != null) {
-            for (CuentaPorPagarPagos p : cuentaCargadaPagos) {
-                agregarFilaATabla(p.getMono().toString(),
-                        dateFormatter.format(p.getFechaPago()),
-                        Integer.parseInt(p.getId().toString()));
-                pagadoVal = pagadoVal.add(p.getMono());
-
+        if (cuentaCargadaPagos != null){
+            for (CuentaPorPagarPagos item :cuentaCargadaPagos){
+                agregarFilaATabla(
+                        item.getMonto().toString(),
+                        dateFormatter.format(item.getFechaPago()),
+                        item.getId()
+                );
             }
         }
-        adeudadoVal = adeudadoVal.subtract(pagadoVal);
-        adeudado.setText(adeudadoVal.toString());
-        pagado.setText(pagadoVal.toString());
+        ActualizarMonto();
         table.setVisibility(View.VISIBLE);
 
     }
@@ -177,8 +177,17 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
             }
         }
     }
-
-    public void agregarFilaATabla(String monto,String sFecha,final Integer id){
+    protected void ActualizarMonto(){
+        if(cuentaCargada != null) {
+            for (CuentaPorPagarPagos p : cuentaCargadaPagos) {
+                pagadoVal = pagadoVal.add(p.getMonto());
+            }
+        }
+        adeudadoVal = adeudadoVal.subtract(pagadoVal);
+        adeudado.setText(adeudadoVal.toString());
+        pagado.setText(pagadoVal.toString());
+    }
+    public void agregarFilaATabla(String monto,String sFecha,final Long id){
         TextView pago = new TextView(this);
         final TableRow tableRow = new TableRow(this);
 
@@ -197,32 +206,29 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
 
         editar.setImageResource(R.drawable.ic_menu_edit);
         editar.setLayoutParams(parametroFila);
-        editar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Agregar Dialog de Editar Linea
-                System.out.println(id);
-            }
-        });
+
+        EditarEvento editarEvento = new EditarEvento();
+        editarEvento.setContext(this);
+        editarEvento.setIdPago(id);
+        editarEvento.setTableRow(tableRow);
+
+        editar.setOnClickListener(editarEvento);
 
         ImageView borrar = new ImageView(this);
         borrar.setImageResource(R.drawable.ic_menu_delete);
         borrar.setLayoutParams(parametroFila);
 
-        borrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Agregar Dialog de Borrar Linea
-                //table.removeView(tableRow);
-            }
-        });
+        BorraEvento borraEvento =  new BorraEvento();
+        borraEvento.setContext(this);
+        borraEvento.setIdPago(id);
+        borraEvento.setTableRow(tableRow);
+        borrar.setOnClickListener(borraEvento);
 
         tableRow.addView(pago);
         tableRow.addView(fecha);
         tableRow.addView(editar);
         tableRow.addView(borrar);
-        tableRow.setId(id);
-
+        tableRow.setTag(id);
         table.addView(tableRow);
     }
 
@@ -347,27 +353,7 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
     }
 
     private void crearLinea() {
-        final EditText edittext = new EditText(this);
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
-        alert.setMessage("Enter Your Message");
-        alert.setTitle("Enter Your Title");
-
-        alert.setView(edittext);
-
-        alert.setPositiveButton("Yes Option", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                String YouEditTextValue = edittext.getText().toString();
-            }
-        });
-
-        alert.setNegativeButton("No Option", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // what ever you want to do with No option.
-            }
-        });
-
-        alert.show();
     }
 
     @Override
@@ -420,4 +406,172 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
         }
     }
 
+    class BorraEvento implements View.OnClickListener{
+        protected Long idPago;
+        protected Context context;
+
+        public TableRow getTableRow() {
+            return tableRow;
+        }
+
+        public void setTableRow(TableRow tableRow) {
+            this.tableRow = tableRow;
+        }
+
+        protected  TableRow tableRow;
+        @Override
+        public void onClick(View v) {
+            final CuentaPorPagarPagos cuentaPorPagarPagos = new Select().from(CuentaPorPagarPagos.class).where("id = ?", getIdPago()).executeSingle();
+
+            AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+
+            alert.setMessage("Esta Seguro que desea borrar");
+            alert.setTitle("Esta accion es irreversible");
+
+
+            alert.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    cuentaPorPagarPagos.delete();
+                    table.removeView(tableRow);
+                }
+            });
+
+            alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // what ever you want to do with No option.
+                }
+            });
+
+            alert.show();
+        }
+
+        public Long getIdPago() {
+            return idPago;
+        }
+
+        public void setIdPago(Long idPago) {
+            this.idPago = idPago;
+        }
+
+        public Context getContext() {
+            return context;
+        }
+
+        public void setContext(Context context) {
+            this.context = context;
+        }
+    }
+    class AgregarEvento implements View.OnClickListener{
+        public Context getContext() {
+            return context;
+        }
+
+        public void setContext(Context context) {
+            this.context = context;
+        }
+
+        protected Context context;
+        @Override
+        public void onClick(View v) {
+            final EditText edittext = new EditText(context);
+            edittext.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
+            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+
+            alert.setMessage("Monto a agregar");
+            alert.setTitle("Monto");
+
+            alert.setView(edittext);
+
+            alert.setPositiveButton("Agregar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    Float monto = Float.valueOf(edittext.getText().toString());
+
+                    CuentaPorPagarPagos cuentasPorPagarPagos = new CuentaPorPagarPagos();
+                    cuentasPorPagarPagos.setFechaPago(new Date());
+                    cuentasPorPagarPagos.setCuentasPorPagar(cuentaCargada);
+                    cuentasPorPagarPagos.setMonto(new BigDecimal(monto));
+                    cuentasPorPagarPagos.save();
+                    System.out.println("id del pago indivdual; " + cuentasPorPagarPagos.getId() + "pago " + cuentaCargada.getId());
+                    agregarFilaATabla(
+                            edittext.getText().toString(),
+                            dateFormatter.format(cuentasPorPagarPagos.getFechaPago()),
+                            cuentasPorPagarPagos.getId()
+                    );
+                    ActualizarMonto();
+
+                }
+            });
+
+            alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // what ever you want to do with No option.
+                }
+            });
+
+            alert.show();
+        }
+    }
+    class EditarEvento implements View.OnClickListener{
+
+        public TableRow getTableRow() {
+            return tableRow;
+        }
+
+        public void setTableRow(TableRow tableRow) {
+            this.tableRow = tableRow;
+        }
+
+        TableRow tableRow;
+        public Long getIdPago() {
+            return idPago;
+        }
+
+        public void setIdPago(Long idPago) {
+            this.idPago = idPago;
+        }
+
+        protected Long idPago;
+
+        public Context getContext() {
+            return context;
+        }
+
+        public void setContext(Context context) {
+            this.context = context;
+        }
+
+        protected Context context;
+        @Override
+        public void onClick(View v) {
+            final EditText edittext = new EditText(context);
+            final CuentaPorPagarPagos cuentaPorPagarPagos = new Select().from(CuentaPorPagarPagos.class).where("id = ?",idPago).executeSingle();
+            edittext.setText(cuentaPorPagarPagos.getMonto().toString());
+            edittext.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
+            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+
+            alert.setMessage("Monto a Cambiar");
+            alert.setTitle("Monto");
+
+            alert.setView(edittext);
+
+            alert.setPositiveButton("Agregar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                Float monto = Float.valueOf(edittext.getText().toString());
+                cuentaPorPagarPagos.setMonto(new BigDecimal(monto));
+                cuentaPorPagarPagos.save();
+                //precio
+                ((TextView)tableRow.getChildAt(0)).setText(cuentaPorPagarPagos.getMonto().toString());
+                ActualizarMonto();
+                }
+            });
+
+            alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // what ever you want to do with No option.
+                }
+            });
+
+            alert.show();
+        }
+    }
 }
