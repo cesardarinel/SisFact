@@ -2,11 +2,13 @@ package sisfact.sisfac.sisfact.Vistas;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.text.Editable;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -66,6 +68,8 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
     private TableRow.LayoutParams parametroFila;
     private Menu menuCuenta;
     protected DatePickerDialog fechaCreacionDialog;
+    protected Dialog crearLineaDialog;
+
     private String modo;
     Calendar newCalendar;
 
@@ -100,6 +104,7 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
         cancelarBtn = (Button) findViewById(R.id.cuenta_cancelar_btn);
         cancelarBtn.setOnClickListener(this);
         guardarCuentaBtn.setOnClickListener(this);
+
         if(parametros != null && parametros.getString("id") != null) {
             try {
 
@@ -113,7 +118,7 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
                 fechaCreacion.setText(dateFormatter.format(cuentaCargada.getFechaCreada()));
                 fechaCreacion.setEnabled(false);
                 fechaCreacionDialog =  createDatePickerDialog(fechaCreacion,cuentaCargada.getFechaCreada().getYear(),cuentaCargada.getFechaCreada().getMonth(),cuentaCargada.getFechaCreada().getDay());
-                adeudadoVal.add(cuentaCargada.getMonto());
+                adeudadoVal = (cuentaCargada.getMonto());
                 modo = "detalles";
             } catch (Exception e) {
                 e.printStackTrace();
@@ -145,11 +150,12 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
                 agregarFilaATabla(p.getMono().toString(),
                         dateFormatter.format(p.getFechaPago()),
                         Integer.parseInt(p.getId().toString()));
-                pagadoVal.add(p.getMono());
+                pagadoVal = pagadoVal.add(p.getMono());
 
             }
         }
-        adeudado.setText(adeudadoVal.subtract(pagadoVal).toString());
+        adeudadoVal = adeudadoVal.subtract(pagadoVal);
+        adeudado.setText(adeudadoVal.toString());
         pagado.setText(pagadoVal.toString());
         table.setVisibility(View.VISIBLE);
 
@@ -263,6 +269,9 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
                 modo = "detalles";
                 cambiarEstadoComponentes();
                 break;
+            case R.id.plantilla_cuenta_monto_btn_agregar:
+                crearLinea();
+                break;
         }
     }
 
@@ -337,27 +346,28 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
 
     }
 
-    private void dialogLinea() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.create();
+    private void crearLinea() {
+        final EditText edittext = new EditText(this);
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
-        dialog.setTitle("Linea Cuenta Por Pagar");
+        alert.setMessage("Enter Your Message");
+        alert.setTitle("Enter Your Title");
 
+        alert.setView(edittext);
 
-        dialog.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+        alert.setPositiveButton("Yes Option", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String YouEditTextValue = edittext.getText().toString();
             }
         });
 
-        dialog.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
+        alert.setNegativeButton("No Option", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // what ever you want to do with No option.
             }
         });
 
-        dialog.show();
+        alert.show();
     }
 
     @Override

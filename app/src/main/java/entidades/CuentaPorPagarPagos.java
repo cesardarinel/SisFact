@@ -4,11 +4,12 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Table(name="cunetas_por_cobrar_pago")
-public class CuentaPorPagarPagos extends Model{
+public class CuentaPorPagarPagos  extends Model implements Serializable {
 
     public CuentasPorPagar getCuentasPorPagar() {
         return cuentasPorPagar;

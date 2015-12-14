@@ -1,12 +1,14 @@
 package entidades;
 
+import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
+import java.io.Serializable;
 import java.sql.Date;
 
 @Table(name = "cuentas_por_cobrar_pago")
-public class CuentasPorCobrarPago {
+public class CuentasPorCobrarPago extends Model implements Serializable {
 
     @Column(name = "cuentas_por_cobrar_pagos")
     protected

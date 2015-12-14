@@ -3,12 +3,14 @@ package entidades;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
 
 @Table(name ="cunetas_por_pagar")
-public class CuentasPorPagar extends Model{
+public class CuentasPorPagar extends Model implements Serializable {
 
 
 
@@ -62,9 +64,9 @@ public class CuentasPorPagar extends Model{
         this.monto = monto;
     }
     public Long getInternalId() {
+        if (getId() != null) return getId();
         return internalId;
     }
-
     public void setInternalId(Long internalId) {
         this.internalId = internalId;
     }

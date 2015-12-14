@@ -66,6 +66,7 @@ public class vista_cuenta extends AppCompatActivity   implements View.OnClickLis
             FactoryAdaptadorGenerico factoryAdaptadorGenerico = FactoryAdaptadorGenerico.getAdaptador(FactoryAdaptadorGenerico.Adaptador.CuentasPorPagar);
             List<CuentasPorPagar> cuentasPorPagarList= new Select().from(CuentasPorPagar.class).execute();
             for(CuentasPorPagar item : cuentasPorPagarList) {
+                item.getContacto().setInternalId(item.getContacto().getId());
                 item.setInternalId(item.getId());
             }
             factoryAdaptadorGenerico.setObjectosAFiltrar(cuentasPorPagarList);
