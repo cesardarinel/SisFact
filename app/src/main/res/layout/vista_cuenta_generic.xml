@@ -85,6 +85,12 @@
             android:id="@+id/plantilla_cuenta_valor_fecha_creacion"
             />
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Guardar"
+            android:id="@+id/cuenta_guardar_btn" />
+
         <TableLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

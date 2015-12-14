@@ -47,21 +47,21 @@ public class vista_cuenta extends AppCompatActivity   implements View.OnClickLis
      */
     @Override
     public void onClick(View v) {
-        //cuentas por pagar
-         if(R.id.cpp==v.getId()){
+        //cuentas por cobrar
+         if(R.id.cpc==v.getId()){
              nuevaActividad = new Intent(this,vista_modulo_generic.class);
              FactoryAdaptadorGenerico factoryAdaptadorGenerico = FactoryAdaptadorGenerico.getAdaptador(FactoryAdaptadorGenerico.Adaptador.CuentasPorCobrar);
              List<CuentasPorCobrar> cuentasPorCobrars= new Select().from(CuentasPorCobrar.class).execute();
              factoryAdaptadorGenerico.setObjectosAFiltrar(cuentasPorCobrars);
              for(CuentasPorCobrar item : cuentasPorCobrars) item.setInternalId(item.getId());
-             nuevaActividad.putExtra("Actividad", "Cuentas Por Cobrar");
+             nuevaActividad.putExtra("Actividad", "Cuentas Por Pagar");
              nuevaActividad.putExtra("Datos",factoryAdaptadorGenerico);
              nuevaActividad.putExtra("fecha",true);
              startActivity(nuevaActividad);
 
          }
-        //cuentas por cobrar
-        if(R.id.cpc == v.getId()) {
+        //cuentas por pagar
+        if(R.id.cpp == v.getId()) {
             nuevaActividad = new Intent(this, vista_modulo_generic.class);
             FactoryAdaptadorGenerico factoryAdaptadorGenerico = FactoryAdaptadorGenerico.getAdaptador(FactoryAdaptadorGenerico.Adaptador.CuentasPorPagar);
             List<CuentasPorPagar> cuentasPorPagarList= new Select().from(CuentasPorPagar.class).execute();

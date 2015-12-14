@@ -81,7 +81,7 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
         hastaDate.setText(dateFormatter.format(new Date()));
         hastaDate.setOnClickListener(this);
 
-        desdeFechaDialog = createDatePickerDialog(desdeDate,newCalendar.get(Calendar.YEAR),0,1);
+        desdeFechaDialog = createDatePickerDialog(desdeDate,newCalendar.get(Calendar.YEAR) - 1900,0,1);
         hastaFechaDialog = createDatePickerDialog(hastaDate);
         spinner = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter<String> stringArrayAdapter = factoryAdaptadorGenerico.getCamposBuscablesAdator(this);

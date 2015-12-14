@@ -1,11 +1,18 @@
 package sisfact.sisfac.sisfact.Vistas;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.text.InputType;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -18,17 +25,19 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
+import entidades.Contactos;
 import entidades.CuentaPorPagarPagos;
 import entidades.CuentasPorPagar;
 import sisfact.sisfac.sisfact.R;
@@ -36,7 +45,7 @@ import sisfact.sisfac.sisfact.R;
 /**
  * Created by Stanley on 12/13/15.
  */
-public class vista_cuenta_por_pagar extends AppCompatActivity implements View.OnFocusChangeListener {
+public class vista_cuenta_por_pagar extends AppCompatActivity implements View.OnFocusChangeListener,View.OnClickListener {
 
     private Bundle parametros;
     private CuentasPorPagar cuentaCargada;
@@ -47,9 +56,17 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
     private EditText monto;
     private EditText descripcion;
     private EditText fechaCreacion;
+    private TextView pagadotxt;
+    private TextView pagado;
+    private TextView adeudadotxt;
+    private TextView adeudado;
+    private Button agregarPagoBtn;
+    private Button guardarCuentaBtn;
     private ArrayAdapter<String> contactoArrayAdapter;
     private TableRow.LayoutParams parametroFila;
-    private TableLayout.LayoutParams parametroTablaRow;
+    private Menu menuCuenta;
+    protected DatePickerDialog fechaCreacionDialog;
+    private String modo;
     Calendar newCalendar;
 
     @Override
@@ -59,7 +76,7 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
         parametros = getIntent().getExtras();
         //Cargando Contacto si existe en la base de datos
         setContentView(R.layout.vista_cuenta_generic);
-
+        newCalendar = Calendar.getInstance();
         dateFormatter = new SimpleDateFormat("dd/MM/yyyy", new Locale("es","ES"));
         findViewById(R.id.cuenta_texto_factura).setVisibility(View.GONE);
         findViewById(R.id.cuenta_valor_factura).setVisibility(View.GONE);
@@ -68,10 +85,20 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
         monto = (EditText) findViewById(R.id.cuenta_valor_monto);
         descripcion = (EditText) findViewById(R.id.cuenta_valor_descripcion);
         fechaCreacion = (EditText) findViewById(R.id.plantilla_cuenta_valor_fecha_creacion);
+        fechaCreacion.setInputType(InputType.TYPE_NULL);
+        fechaCreacion.setOnClickListener(this);
         table = (TableLayout) findViewById(R.id.cuenta_tabla);
-
+        agregarPagoBtn = (Button) findViewById(R.id.plantilla_cuenta_monto_btn_agregar);
+        agregarPagoBtn.setOnClickListener(this);
+        pagadotxt = (TextView) findViewById(R.id.cuenta_texto_pagado);
+        pagado = (TextView) findViewById(R.id.cuenta_texto_pagado_valor);
+        adeudadotxt = (TextView) findViewById(R.id.cuenta_texto_adeudado);
+        adeudado = (TextView) findViewById(R.id.cuenta_texto_adeudado_valor);
+        guardarCuentaBtn = (Button) findViewById(R.id.cuenta_guardar_btn);
+        guardarCuentaBtn.setOnClickListener(this);
         if(parametros != null && parametros.getString("id") != null) {
             try {
+
                 cuentaCargada = new Select().from(CuentasPorPagar.class).where("id = ? ", parametros.getString("id")).executeSingle();
                 cuentaCargadaPagos = new Select().from(CuentaPorPagarPagos.class).where("cuentasPorPagar.id = ? ", parametros.getString("id")).execute();
                 numeroContacto.setText(cuentaCargada.getContacto().getTelefono());
@@ -81,9 +108,8 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
                 descripcion.setText(cuentaCargada.getDescripcion());
                 fechaCreacion.setText(dateFormatter.format(cuentaCargada.getFechaCreada()));
                 fechaCreacion.setEnabled(false);
-                table.setVisibility(View.VISIBLE);
-                findViewById(R.id.cuenta_tabla_fila_header).setVisibility(View.VISIBLE);
-                findViewById(R.id.plantilla_cuenta_monto_btn_agregar).setVisibility(View.VISIBLE);
+                fechaCreacionDialog =  createDatePickerDialog(fechaCreacion,cuentaCargada.getFechaCreada().getYear(),cuentaCargada.getFechaCreada().getMonth(),cuentaCargada.getFechaCreada().getDay());
+                modo = "detalles";
             } catch (Exception e) {
                 e.printStackTrace();
                 finish();
@@ -91,27 +117,23 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
             }
         } else {
             fechaCreacion.setText(dateFormatter.format(new Date()));
+            fechaCreacionDialog = createDatePickerDialog(fechaCreacion);
+            modo = "edicion";
         }
-
         List<entidades.Contactos> contactosList =  new Select().from(entidades.Contactos.class).execute();
         ArrayList<String> listaContacto =  new ArrayList<>();
         for(entidades.Contactos con : contactosList) {
             listaContacto.add(con.getTelefono());
             listaContacto.add(con.getCelular());
         }
+
         contactoArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, listaContacto);
         numeroContacto.setAdapter(contactoArrayAdapter);
         numeroContacto.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         monto.setOnFocusChangeListener(this);
 
-        parametroFila = new TableRow .LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        parametroFila = new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         parametroFila.weight = 1f;
-        parametroFila.gravity = Gravity.START;
-        parametroTablaRow = new TableLayout.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        );
-
 
         if(cuentaCargada != null) {
             for (CuentaPorPagarPagos p : cuentaCargadaPagos) {
@@ -120,9 +142,14 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
                         Integer.parseInt(p.getId().toString()));
             }
         }
+        cambiarEstadoComponentes();
         table.setVisibility(View.VISIBLE);
-        agregarFilaATabla("600.00",dateFormatter.format(new Date()), 1);
 
+        agregarFilaATabla("600.00", dateFormatter.format(new Date(115,11,1)), 1);
+        agregarFilaATabla("1200.00",dateFormatter.format(new Date()), 2);
+        agregarFilaATabla("1000000.00",dateFormatter.format(new Date()), 3);
+        agregarFilaATabla("1200.00",dateFormatter.format(new Date()), 4);
+        agregarFilaATabla("200.00",dateFormatter.format(new Date()), 5);
 
     }
     @Override
@@ -142,7 +169,7 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
         }
     }
 
-    public void agregarFilaATabla(String monto,String sFecha,Integer Id){
+    public void agregarFilaATabla(String monto,String sFecha,final Integer id){
         TextView pago = new TextView(this);
         final TableRow tableRow = new TableRow(this);
 
@@ -157,17 +184,20 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
         fecha.setLayoutParams(parametroFila);
 
         ImageView editar = new ImageView(this);
+
+
         editar.setImageResource(R.drawable.ic_menu_edit);
         editar.setLayoutParams(parametroFila);
         editar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Agregar Dialog de Editar Linea
+                System.out.println(id);
             }
         });
 
         ImageView borrar = new ImageView(this);
-        editar.setImageResource(R.drawable.ic_menu_delete);
+        borrar.setImageResource(R.drawable.ic_menu_delete);
         borrar.setLayoutParams(parametroFila);
 
         borrar.setOnClickListener(new View.OnClickListener() {
@@ -182,7 +212,7 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
         tableRow.addView(fecha);
         tableRow.addView(editar);
         tableRow.addView(borrar);
-        tableRow.setId(Id);
+        tableRow.setId(id);
 
         table.addView(tableRow);
     }
@@ -203,6 +233,141 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
     private DatePickerDialog createDatePickerDialog(final EditText e){
 
         return createDatePickerDialog(e,newCalendar.get(Calendar.YEAR),newCalendar.get(Calendar.MONTH),newCalendar.get(Calendar.DAY_OF_MONTH));
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.plantilla_cuenta_valor_fecha_creacion:
+                fechaCreacionDialog.show();
+                break;
+            case R.id.cuenta_guardar_btn:
+                guardarCuenta();
+                finish();
+                break;
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.menuCuenta = menu;
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_generico_editar, menu);
+        menuCuenta.findItem(R.id.nuevo).setVisible(false);
+
+        if (cuentaCargada == null) {
+            menuCuenta.findItem(R.id.editar).setVisible(false);
+            menuCuenta.findItem(R.id.eliminar).setVisible(false);
+        }
+        cambiarEstadoComponentes();
+        return true;
+    }
+
+    private void borrarCuenta() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.create();
+
+        dialog.setTitle("Eliminar Cuenta Por Pagar");
+
+        dialog.setMessage("Esta seguro que desea eliminar esta Cuenta Por Pagar?");
+
+        dialog.setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                List<CuentaPorPagarPagos> pagos = new Select().from(CuentaPorPagarPagos.class).where("cuentasPorPagar.id = ? ", cuentaCargada.getId()).execute();
+                for (CuentaPorPagarPagos pago : pagos) {
+                    pago.delete();
+                }
+                cuentaCargada.delete();
+                finish();
+            }
+        });
+
+        dialog.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void guardarCuenta(){
+        boolean esValido = false;
+        Contactos contacto = new Select()
+                .from(Contactos.class)
+                .where("telefono = ? OR celular = ?", numeroContacto.getText().toString(),
+                        numeroContacto.getText().toString()).executeSingle();
+
+        esValido = (numeroContacto.getText().toString().trim() != "")
+                && (monto.getText().toString().trim() != "")
+                && (fechaCreacion.getText().toString().trim() != "")
+                && (contacto != null);
+
+        if (esValido) {
+            cuentaCargada = new CuentasPorPagar();
+            cuentaCargada.setContacto(contacto);
+            cuentaCargada.setMonto(BigDecimal.valueOf(Float.valueOf(monto.getText().toString())));
+            cuentaCargada.setDescripcion(descripcion.getText().toString());
+            String[] dateParts = fechaCreacion.getText().toString().split("/");
+            cuentaCargada.setFechaCreada(java.sql.Date.valueOf(dateParts[2] + "-"+dateParts[1]+"-"+dateParts[0]));
+            cuentaCargada.save();
+        }
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.editar:
+                menuCuenta.findItem(R.id.editar).setVisible(false);
+                modo = "edicion";
+                cambiarEstadoComponentes();
+                return true;
+            case R.id.eliminar:
+                borrarCuenta();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void cambiarEstadoComponentes(){
+
+        switch (modo) {
+            case "detalles":
+                table.setVisibility(View.VISIBLE);
+                pagado.setVisibility(View.VISIBLE);
+                pagadotxt.setVisibility(View.VISIBLE);
+                adeudado.setVisibility(View.VISIBLE);
+                adeudadotxt.setVisibility(View.VISIBLE);
+                agregarPagoBtn.setVisibility(View.VISIBLE);
+                guardarCuentaBtn.setVisibility(View.GONE);
+                menuCuenta.findItem(R.id.eliminar).setVisible(true);
+                numeroContacto.setEnabled(false);
+                monto.setEnabled(false);
+                descripcion.setEnabled(false);
+                fechaCreacion.setEnabled(false);
+                break;
+            case "edicion":
+                table.setVisibility(View.GONE);
+                pagado.setVisibility(View.GONE);
+                pagadotxt.setVisibility(View.GONE);
+                adeudado.setVisibility(View.GONE);
+                adeudadotxt.setVisibility(View.GONE);
+                agregarPagoBtn.setVisibility(View.GONE);
+                guardarCuentaBtn.setVisibility(View.VISIBLE);
+                if (cuentaCargada != null) {
+                    menuCuenta.findItem(R.id.editar).setVisible(true);
+                    menuCuenta.findItem(R.id.eliminar).setVisible(true);
+                }
+                numeroContacto.setEnabled(true);
+                monto.setEnabled(true);
+                descripcion.setEnabled(true);
+                fechaCreacion.setEnabled(true);
+                break;
+        }
     }
 
 }
