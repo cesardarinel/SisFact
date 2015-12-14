@@ -1,5 +1,6 @@
 package sisfact.sisfac.sisfact.Vistas;
 
+import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +11,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -19,6 +22,7 @@ import com.activeandroid.query.Select;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -44,9 +48,10 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
     private EditText descripcion;
     private EditText fechaCreacion;
     private ArrayAdapter<String> contactoArrayAdapter;
-    private Map<String,String> telefonosContactos;
-    protected TableRow.LayoutParams parametroFila;
-    protected TableLayout.LayoutParams parametroTablaRow;
+    private TableRow.LayoutParams parametroFila;
+    private TableLayout.LayoutParams parametroTablaRow;
+    Calendar newCalendar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +68,8 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
         monto = (EditText) findViewById(R.id.cuenta_valor_monto);
         descripcion = (EditText) findViewById(R.id.cuenta_valor_descripcion);
         fechaCreacion = (EditText) findViewById(R.id.plantilla_cuenta_valor_fecha_creacion);
-        telefonosContactos = new HashMap<>();
+        table = (TableLayout) findViewById(R.id.cuenta_tabla);
+
         if(parametros != null && parametros.getString("id") != null) {
             try {
                 cuentaCargada = new Select().from(CuentasPorPagar.class).where("id = ? ", parametros.getString("id")).executeSingle();
@@ -75,6 +81,7 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
                 descripcion.setText(cuentaCargada.getDescripcion());
                 fechaCreacion.setText(dateFormatter.format(cuentaCargada.getFechaCreada()));
                 fechaCreacion.setEnabled(false);
+                table.setVisibility(View.VISIBLE);
                 findViewById(R.id.cuenta_tabla_fila_header).setVisibility(View.VISIBLE);
                 findViewById(R.id.plantilla_cuenta_monto_btn_agregar).setVisibility(View.VISIBLE);
             } catch (Exception e) {
@@ -91,15 +98,12 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
         for(entidades.Contactos con : contactosList) {
             listaContacto.add(con.getTelefono());
             listaContacto.add(con.getCelular());
-            telefonosContactos.put(con.getTelefono(), con.toString());
-            telefonosContactos.put(con.getCelular(),con.toString());
         }
         contactoArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, listaContacto);
         numeroContacto.setAdapter(contactoArrayAdapter);
         numeroContacto.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         monto.setOnFocusChangeListener(this);
 
-        table = (TableLayout) findViewById(R.id.cuenta_tabla);
         parametroFila = new TableRow .LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         parametroFila.weight = 1f;
         parametroFila.gravity = Gravity.START;
@@ -116,8 +120,7 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
                         Integer.parseInt(p.getId().toString()));
             }
         }
-        findViewById(R.id.cuenta_tabla_fila_header).setVisibility(View.VISIBLE);
-        findViewById(R.id.plantilla_cuenta_monto_btn_agregar).setVisibility(View.VISIBLE);
+        table.setVisibility(View.VISIBLE);
         agregarFilaATabla("600.00",dateFormatter.format(new Date()), 1);
 
 
@@ -153,8 +156,8 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
         fecha.setTextColor(Color.BLACK);
         fecha.setLayoutParams(parametroFila);
 
-        Button editar = new Button(this);
-        editar.setText("Editar");
+        ImageView editar = new ImageView(this);
+        editar.setImageResource(R.drawable.ic_menu_edit);
         editar.setLayoutParams(parametroFila);
         editar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,9 +166,10 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
             }
         });
 
-        Button borrar = new Button(this);
-        borrar.setText("Borrar");
+        ImageView borrar = new ImageView(this);
+        editar.setImageResource(R.drawable.ic_menu_delete);
         borrar.setLayoutParams(parametroFila);
+
         borrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -181,6 +185,24 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
         tableRow.setId(Id);
 
         table.addView(tableRow);
+    }
+
+    private DatePickerDialog createDatePickerDialog(final EditText e, final int year, final int month, final int day){
+
+        return new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, monthOfYear, dayOfMonth);
+                e.setText(dateFormatter.format(newDate.getTime()));
+            }
+
+        },year, month, day);
+    }
+
+    private DatePickerDialog createDatePickerDialog(final EditText e){
+
+        return createDatePickerDialog(e,newCalendar.get(Calendar.YEAR),newCalendar.get(Calendar.MONTH),newCalendar.get(Calendar.DAY_OF_MONTH));
     }
 
 }
