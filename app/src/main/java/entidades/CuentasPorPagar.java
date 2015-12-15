@@ -17,12 +17,10 @@ public class CuentasPorPagar extends Model implements Serializable {
     protected Long internalId;
 
     @Column(name = "contacto")
-    protected
-    Contactos contacto;
+    protected Contactos contacto;
 
     @Column(name = "monto")
-    protected
-    BigDecimal monto;
+    protected BigDecimal monto;
 
     @Column(name="descripcion")
     protected String descripcion;

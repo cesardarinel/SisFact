@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/editar"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="@string/editar"
+        android:orderInCategory="0"
+        app:showAsAction="collapseActionView"/>
+
+    <item android:id="@+id/eliminar"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="@string/eliminar"
+        android:orderInCategory="0"
+        app:showAsAction="collapseActionView"/>
+
+    <item android:id="@+id/detalle_cliente"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="Ver Detalle Cliente"
+        android:orderInCategory="0"
+        app:showAsAction="collapseActionView"/>
+
+    <item android:id="@+id/detalle_factura"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="Ver Detalle Factura"
+        android:orderInCategory="0"
+        app:showAsAction="collapseActionView"/>
+</menu>

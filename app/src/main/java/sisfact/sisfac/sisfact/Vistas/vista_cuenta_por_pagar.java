@@ -337,12 +337,29 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menuCuenta = menu;
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_generico_editar, menu);
-        menuCuenta.findItem(R.id.nuevo).setVisible(false);
+        inflater.inflate(R.menu.menu_cuentas, menu);
+        menuCuenta.findItem(R.id.detalle_cliente).setVisible(false);
+        menuCuenta.findItem(R.id.detalle_factura).setVisible(false);
+        if (esCuentaPorCobrar){
+            if (cuentaCargadaCobrar == null) {
+                menuCuenta.findItem(R.id.editar).setVisible(false);
+                menuCuenta.findItem(R.id.eliminar).setVisible(false);
 
-        if (cuentaCargadaPago == null) {
-            menuCuenta.findItem(R.id.editar).setVisible(false);
-            menuCuenta.findItem(R.id.eliminar).setVisible(false);
+            }
+            else{
+                menuCuenta.findItem(R.id.detalle_factura).setVisible(true);
+            }
+
+        }
+
+        else {
+            if (cuentaCargadaPago == null ) {
+                menuCuenta.findItem(R.id.editar).setVisible(false);
+                menuCuenta.findItem(R.id.eliminar).setVisible(false);
+            }
+            else{
+                menuCuenta.findItem(R.id.detalle_cliente).setVisible(true);
+            }
         }
         cambiarEstadoComponentes();
         return true;
@@ -449,6 +466,13 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
                 return true;
             case R.id.eliminar:
                 borrarCuenta();
+                return true;
+            case R.id.detalle_cliente:
+                Intent intent = new Intent(this,Contacto.class);
+                intent.putExtra("id",cuentaCargadaPago.getContacto().getId().toString());
+                startActivity(intent);
+                return true;
+            case R.id.detalle_factura:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

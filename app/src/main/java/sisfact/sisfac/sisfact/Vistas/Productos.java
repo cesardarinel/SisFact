@@ -845,7 +845,7 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
     public boolean onCreateOptionsMenu(Menu menu) {
         menuProductos = menu;
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_generico_editar, menu);
+        inflater.inflate(R.menu.menu_producto_editar , menu);
         menuProductos.findItem(R.id.nuevo).setVisible(false);
 
         if (idProducto == null) {
@@ -876,6 +876,33 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
                 return true;
             case R.id.eliminar:
                 borrarProducto();
+                return true;
+            case R.id.agregar_marca:
+                final EditText edittext = new EditText(this);
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+                alert.setMessage("Marca a agregar");
+                alert.setTitle("Marca");
+
+                alert.setView(edittext);
+
+                alert.setPositiveButton("Agregar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        Marcas marcas = new Marcas();
+                        marcas.setNombre(edittext.getText().toString());
+                        marcas.save();
+                        marcaArrayAdapter.add(marcas.getNombre());
+                        marcaArrayAdapter.notifyDataSetChanged();
+                    }
+                });
+
+                alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // what ever you want to do with No option.
+                    }
+                });
+
+                alert.show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
