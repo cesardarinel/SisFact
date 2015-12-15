@@ -26,5 +26,6 @@
     <string name="editar">Editar</string>
     <string name="eliminar">Eliminar</string>
     <string name="Cargando">Cargando..............</string>
+    <string name="title_activity_cantidad__articulo">Cantidad_Articulo</string>
 
 </resources>
