@@ -7,7 +7,7 @@ import com.activeandroid.query.Select;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.util.Date;
 
 @Table(name ="cunetas_por_pagar")
 public class CuentasPorPagar extends Model implements Serializable {

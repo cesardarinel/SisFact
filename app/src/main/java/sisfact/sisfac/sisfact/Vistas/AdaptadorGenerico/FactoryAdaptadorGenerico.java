@@ -80,14 +80,16 @@ public class FactoryAdaptadorGenerico implements Serializable{
 
     public ListaAdaptador getCamposaFiltrar(Context con,String Campo,String Valor,List<?> lista){
         List<?> tmp = objectosAFiltrar;
+        System.out.println("tamano de objetos filtraos "+tmp.size());
         objectosAFiltrar = lista;
         ListaAdaptador listaAdaptador = this.getCamposaFiltrar(con,Campo,Valor);
         objectosAFiltrar = tmp;
         return listaAdaptador;
     }
 
-    public ListaAdaptador getCamposaFiltrar(Context con,Action act){return null;}
-
+    public ArrayList<?> getObjetosFiltradoPor(Action act){
+        return null;
+    }
     public Intent getIntentClase(Context con){return null;}
 
     protected Object objAgregar(Long id){return null;}

@@ -6,7 +6,7 @@ import com.activeandroid.annotation.Table;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.util.Date;
 
 @Table(name="cunetas_por_cobrar")
 public class CuentasPorCobrar extends Model implements Serializable{

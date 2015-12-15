@@ -14,9 +14,6 @@ import sisfact.sisfac.sisfact.Vistas.Contacto;
 import sisfact.sisfac.sisfact.Vistas.ListaAdaptador;
 import sisfact.sisfac.sisfact.Vistas.vista_cuenta_por_pagar;
 
-/**
- * Created by mrmomo on 12/12/15.
- */
 public class AdaptadorCuentasPorCobrar extends FactoryAdaptadorGenerico {
     public AdaptadorCuentasPorCobrar(){
         titulo = "Cuenta Por Cobrar";
@@ -30,24 +27,19 @@ public class AdaptadorCuentasPorCobrar extends FactoryAdaptadorGenerico {
     }
 
     @Override
-    public ListaAdaptador getCamposaFiltrar(Context con,Action act){
+    public ArrayList<?> getObjetosFiltradoPor(Action act){
         objetosListado = new ArrayList<>();
-
+        ArrayList<CuentasPorCobrar> cuentasPorCobrars =  new ArrayList<>();
         for(Object obj : getObjectosAFiltrar()){
-            CuentasPorCobrar cuentasPorPagar = (CuentasPorCobrar)obj;
-            if (act.CompraraObjeto(cuentasPorPagar)){
-                ItemLista itemLista =  new ItemLista();
-                itemLista.setId(cuentasPorPagar.getFactura().getContacto().getInternalId().toString());
-                itemLista.setInfo(cuentasPorPagar.getFactura().getContacto().getNombre());
-                itemLista.setTexto1(cuentasPorPagar.getFactura().getContacto().getApellido());
-                itemLista.setTexto2(cuentasPorPagar.getFactura().getContacto().getTelefono());
-                getObjetosListado().add(itemLista);
+            CuentasPorCobrar cuentasPorCobrar;
+            cuentasPorCobrar = (CuentasPorCobrar)obj;
+            if (act.CompraraObjeto(cuentasPorCobrar)){
+                cuentasPorCobrars.add(cuentasPorCobrar);
             }
         }
-        ListaAdaptador listadoAdaptr = new ListaAdaptador(con, getObjetosListado());
-
-        return listadoAdaptr;
+        return cuentasPorCobrars;
     }
+
 
     @Override
     public ListaAdaptador getCamposaFiltrar(Context con,String Campo,String Valor) {

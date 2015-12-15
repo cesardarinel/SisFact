@@ -1,5 +1,6 @@
 package sisfact.sisfac.sisfact.Vistas.AdaptadorGenerico;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 
@@ -29,24 +30,17 @@ public class AdaptadorCuentasPorPagar extends  FactoryAdaptadorGenerico{
     }
 
     @Override
-    public ListaAdaptador getCamposaFiltrar(Context con,Action act){
+    public ArrayList<?> getObjetosFiltradoPor(Action act){
         objetosListado = new ArrayList<>();
-
+        ArrayList<CuentasPorPagar> cuentasPorPagars =  new ArrayList<>();
         for(Object obj : getObjectosAFiltrar()){
-            CuentasPorPagar cuentasPorPagar = (CuentasPorPagar)obj;
+            CuentasPorPagar cuentasPorPagar;
+            cuentasPorPagar = (CuentasPorPagar)obj;
             if (act.CompraraObjeto(cuentasPorPagar)){
-                ItemLista itemLista =  new ItemLista();
-                System.out.println(cuentasPorPagar.getContacto().getInternalId().toString());
-                itemLista.setId(cuentasPorPagar.getInternalId().toString());
-                itemLista.setInfo(cuentasPorPagar.getContacto().getNombre());
-                itemLista.setTexto1(cuentasPorPagar.getContacto().getApellido());
-                itemLista.setTexto2(cuentasPorPagar.getContacto().getTelefono());
-                getObjetosListado().add(itemLista);
+                cuentasPorPagars.add(cuentasPorPagar);
             }
         }
-        ListaAdaptador listadoAdaptr = new ListaAdaptador(con, getObjetosListado());
-
-        return listadoAdaptr;
+        return cuentasPorPagars;
     }
 
     @Override

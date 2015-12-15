@@ -2,10 +2,7 @@ package sisfact.sisfac.sisfact.Vistas;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.KeyEvent;
@@ -19,7 +16,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -27,11 +23,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import entidades.ItemLista;
+import entidades.CuentasPorCobrar;
+import entidades.CuentasPorPagar;
 import sisfact.sisfac.sisfact.R;
+import sisfact.sisfac.sisfact.Vistas.AdaptadorGenerico.Action;
 import sisfact.sisfac.sisfact.Vistas.AdaptadorGenerico.FactoryAdaptadorGenerico;
 
-public class vista_modulo_generic extends AppCompatActivity implements AdapterView.OnItemClickListener ,AdapterView.OnKeyListener, View.OnClickListener {
+public class vista_modulo_generic extends AppCompatActivity implements AdapterView.OnItemClickListener ,AdapterView.OnKeyListener, View.OnClickListener, Action {
 
     protected String titulo;
     protected ListView listado;
@@ -43,11 +41,12 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
     protected final int resultadoDeAgregar =1;
     protected DatePickerDialog desdeFechaDialog;
     protected DatePickerDialog hastaFechaDialog;
-    ListaAdaptador listaAdaptador;
-    Calendar newCalendar;
-    SimpleDateFormat dateFormatter;
-
-
+    protected ListaAdaptador listaAdaptador;
+    protected Calendar newCalendar;
+    protected SimpleDateFormat dateFormatter;
+    protected Date fechaInicio;
+    protected Date fechaFin;
+    protected  Boolean habilitarFecha = false;
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
@@ -73,9 +72,12 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
 
         desdeDate = (EditText) findViewById(R.id.vista_generica_desdeDate);
         desdeDate.setInputType(InputType.TYPE_NULL);
+
+        fechaInicio = new Date(newCalendar.get(Calendar.YEAR) - 1900, 0, 1);
         desdeDate.setText(dateFormatter.format(new Date(newCalendar.get(Calendar.YEAR) - 1900, 0, 1)));
         desdeDate.setOnClickListener(this);
 
+        fechaFin = new Date();
         hastaDate = (EditText) findViewById(R.id.vista_generica_hastaDate);
         hastaDate.setInputType(InputType.TYPE_NULL);
         hastaDate.setText(dateFormatter.format(new Date()));
@@ -86,17 +88,19 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
         spinner = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter<String> stringArrayAdapter = factoryAdaptadorGenerico.getCamposBuscablesAdator(this);
         spinner.setAdapter(stringArrayAdapter);
-
-        listaAdaptador = factoryAdaptadorGenerico.getCamposaFiltrar(this,(String)spinner.getSelectedItem(),"");
-        if (listaAdaptador !=  null) listado.setAdapter(listaAdaptador);
         listado.setOnItemClickListener(this);
-        Boolean habilitarFecha = tipoVista.getBoolean("fecha");
+
+        habilitarFecha = tipoVista.getBoolean("fecha");
         if (habilitarFecha){
             desdeDate.setVisibility(View.VISIBLE);
             hastaDate.setVisibility(View.VISIBLE);
-            ((TextView)findViewById(R.id.textView3)).setVisibility(View.VISIBLE);
-            ((TextView)findViewById(R.id.textView4)).setVisibility(View.VISIBLE);
+            findViewById(R.id.textView3).setVisibility(View.VISIBLE);
+            findViewById(R.id.textView4).setVisibility(View.VISIBLE);
         }
+
+        actualizarCampos();
+
+
     }
 
     private DatePickerDialog createDatePickerDialog(final EditText e, final int year, final int month, final int day){
@@ -107,11 +111,31 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
                 Calendar newDate = Calendar.getInstance();
                 newDate.set(year, monthOfYear, dayOfMonth);
                 e.setText(dateFormatter.format(newDate.getTime()));
+                if (e.getId() == R.id.vista_generica_desdeDate){
+                    fechaInicio = newDate.getTime();
+                }
+                else if (e.getId() == R.id.vista_generica_hastaDate){
+                    fechaFin = newDate.getTime();
+                }
+                actualizarCampos();
             }
-
         },year, month, day);
     }
 
+    protected  void actualizarCampos(){
+        if (habilitarFecha){
+            listaAdaptador = factoryAdaptadorGenerico.getCamposaFiltrar(
+                this,
+                (String) spinner.getSelectedItem(),
+                textoBuscar.getText().toString(),
+                factoryAdaptadorGenerico.getObjetosFiltradoPor(this)
+            );
+        }
+        else {
+            listaAdaptador = factoryAdaptadorGenerico.getCamposaFiltrar(this, (String) spinner.getSelectedItem(), textoBuscar.getText().toString());
+        }
+        if (listaAdaptador !=  null)  listado.setAdapter(listaAdaptador);
+    }
     private DatePickerDialog createDatePickerDialog(final EditText e){
 
         return createDatePickerDialog(e,newCalendar.get(Calendar.YEAR),newCalendar.get(Calendar.MONTH),newCalendar.get(Calendar.DAY_OF_MONTH));
@@ -129,11 +153,6 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
         }
     }
 
-    /**
-     *
-     * @param menu
-     * @return
-     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater=getMenuInflater();
@@ -190,8 +209,22 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
     }
         @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
-        listaAdaptador = factoryAdaptadorGenerico.getCamposaFiltrar(this,(String)spinner.getSelectedItem(),textoBuscar.getText().toString());
-        if (listaAdaptador !=  null)  listado.setAdapter(listaAdaptador);
+        actualizarCampos();
         return false;
+    }
+
+    @Override
+    public Boolean CompraraObjeto(Object obj) {
+        Date refDate =  new Date();
+        if (getTitle().equals("Cuenta Por Cobrar")){
+            CuentasPorCobrar cuentasPorCobrar= (CuentasPorCobrar) obj;
+            refDate = cuentasPorCobrar.getFechaCreada();
+        }
+        else if (getTitle().equals("Cuenta Por Pagar")){
+            CuentasPorPagar cuentasPorPagar = (CuentasPorPagar)obj;
+            refDate = cuentasPorPagar.getFechaCreada();
+        }
+        System.out.println("\n\n\n\nfecha inicio: " +fechaInicio +"\n fecha final " + fechaFin + "\n fecha ref " + refDate);
+        return (refDate.after(fechaInicio) && refDate.before(fechaFin));
     }
 }
