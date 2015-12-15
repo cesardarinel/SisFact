@@ -8,6 +8,7 @@ import com.activeandroid.query.Select;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Table(name ="cunetas_por_pagar")
 public class CuentasPorPagar extends Model implements Serializable {
@@ -59,11 +60,25 @@ public class CuentasPorPagar extends Model implements Serializable {
     public void setMonto(BigDecimal monto) {
         this.monto = monto;
     }
+
     public Long getInternalId() {
         if (getId() != null) return getId();
         return internalId;
     }
+    
     public void setInternalId(Long internalId) {
         this.internalId = internalId;
+    }
+
+    public Boolean EstaPagado(){
+        List<CuentaPorPagarPagos> cuentasPorCobrarPagos = new Select()
+                .from(CuentaPorPagarPagos.class)
+                .where("cuenta_por_pagar = ? ",getInternalId())
+                .execute();
+        BigDecimal total = BigDecimal.ZERO;
+        for (CuentaPorPagarPagos item : cuentasPorCobrarPagos){
+            total = total.add(item.getMonto());
+        }
+        return (total.compareTo(monto) == 0);
     }
 }

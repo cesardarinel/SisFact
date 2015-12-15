@@ -12,8 +12,7 @@ import java.util.Date;
 public class CuentasPorCobrarPago extends Model implements Serializable {
 
     @Column(name = "cuentas_por_cobrar")
-    protected
-    CuentasPorCobrar cuentasPorCobrar;
+    protected CuentasPorCobrar cuentasPorCobrar;
 
     public BigDecimal getMonto() {
         return monto;
@@ -45,4 +44,6 @@ public class CuentasPorCobrarPago extends Model implements Serializable {
     public void setFechaPago(Date fechaPago) {
         this.fechaPago = fechaPago;
     }
+
+
 }

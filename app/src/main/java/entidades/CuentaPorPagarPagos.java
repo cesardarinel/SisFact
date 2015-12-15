@@ -5,7 +5,9 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 
 @Table(name="cunetas_por_cobrar_pago")
@@ -48,4 +50,5 @@ public class CuentaPorPagarPagos  extends Model implements Serializable {
     public void setMonto(BigDecimal mono) {
         this.monto = mono;
     }
+
 }

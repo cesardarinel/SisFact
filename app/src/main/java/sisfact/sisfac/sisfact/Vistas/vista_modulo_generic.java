@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -29,7 +31,7 @@ import sisfact.sisfac.sisfact.R;
 import sisfact.sisfac.sisfact.Vistas.AdaptadorGenerico.Action;
 import sisfact.sisfac.sisfact.Vistas.AdaptadorGenerico.FactoryAdaptadorGenerico;
 
-public class vista_modulo_generic extends AppCompatActivity implements AdapterView.OnItemClickListener ,AdapterView.OnKeyListener, View.OnClickListener, Action {
+public class vista_modulo_generic extends AppCompatActivity implements AdapterView.OnItemClickListener ,AdapterView.OnKeyListener, View.OnClickListener, Action, CompoundButton.OnCheckedChangeListener {
 
     protected String titulo;
     protected ListView listado;
@@ -46,7 +48,9 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
     protected SimpleDateFormat dateFormatter;
     protected Date fechaInicio;
     protected Date fechaFin;
-    protected  Boolean habilitarFecha = false;
+    protected Boolean habilitarFecha = false;
+    protected CheckBox cuentasPagadas;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
@@ -90,12 +94,17 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
         spinner.setAdapter(stringArrayAdapter);
         listado.setOnItemClickListener(this);
 
+        cuentasPagadas = (CheckBox)findViewById(R.id.mostrar_cuentas_sinpagar);
+        cuentasPagadas.setChecked(false);
+        cuentasPagadas.setOnCheckedChangeListener(this);
         habilitarFecha = tipoVista.getBoolean("fecha");
+
         if (habilitarFecha){
             desdeDate.setVisibility(View.VISIBLE);
             hastaDate.setVisibility(View.VISIBLE);
             findViewById(R.id.textView3).setVisibility(View.VISIBLE);
             findViewById(R.id.textView4).setVisibility(View.VISIBLE);
+            cuentasPagadas.setVisibility(View.VISIBLE);
         }
 
         actualizarCampos();
@@ -207,7 +216,8 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
             }
         }
     }
-        @Override
+
+    @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
         actualizarCampos();
         return false;
@@ -216,15 +226,27 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
     @Override
     public Boolean CompraraObjeto(Object obj) {
         Date refDate =  new Date();
+        Boolean esPagado = false;
         if (getTitle().equals("Cuenta Por Cobrar")){
             CuentasPorCobrar cuentasPorCobrar= (CuentasPorCobrar) obj;
             refDate = cuentasPorCobrar.getFechaCreada();
+            if (cuentasPagadas.isChecked()){
+                esPagado = cuentasPorCobrar.EstaPagado();
+            }
         }
         else if (getTitle().equals("Cuenta Por Pagar")){
             CuentasPorPagar cuentasPorPagar = (CuentasPorPagar)obj;
             refDate = cuentasPorPagar.getFechaCreada();
+            if (cuentasPagadas.isChecked()){
+                esPagado = cuentasPorPagar.EstaPagado();
+            }
         }
-        System.out.println("\n\n\n\nfecha inicio: " +fechaInicio +"\n fecha final " + fechaFin + "\n fecha ref " + refDate);
-        return (refDate.after(fechaInicio) && refDate.before(fechaFin));
+        System.out.println("el check box es " +cuentasPagadas.isChecked() + "  es pagada " + esPagado);
+        return (refDate.after(fechaInicio) && refDate.before(fechaFin)) && !esPagado;
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        actualizarCampos();
     }
 }

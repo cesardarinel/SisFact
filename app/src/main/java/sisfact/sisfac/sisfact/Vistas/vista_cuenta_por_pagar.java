@@ -225,6 +225,7 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
                 for (CuentasPorCobrarPago p : cuentasPorCobrarPagos) {
                     pagadoVal = pagadoVal.add(p.getMonto());
                 }
+                adeudadoVal = cuentaCargadaCobrar.getMonto();
             }
         }
         else if(cuentaCargadaPago != null) {
@@ -232,6 +233,7 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
             for (CuentaPorPagarPagos p : cuentaCargadaPagos) {
                 pagadoVal = pagadoVal.add(p.getMonto());
             }
+            adeudadoVal = cuentaCargadaPago.getMonto();
         }
         adeudadoVal = adeudadoVal.subtract(pagadoVal);
         adeudado.setText(adeudadoVal.toString());
@@ -351,7 +353,6 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
             }
 
         }
-
         else {
             if (cuentaCargadaPago == null ) {
                 menuCuenta.findItem(R.id.editar).setVisible(false);
@@ -707,6 +708,7 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
 
             alert.setPositiveButton("Agregar", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
+                    if (adeudadoVal.compareTo(BigDecimal.ZERO) == 0) return;
                     Float monto = Float.valueOf(edittext.getText().toString());
                     if (esCuentaPorCobrar) {
                         cuentasPorCobrarPago.setMonto(new BigDecimal(monto));
@@ -719,6 +721,7 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
                     }
                     //precio
                     ActualizarMonto();
+
                 }
             });
 
