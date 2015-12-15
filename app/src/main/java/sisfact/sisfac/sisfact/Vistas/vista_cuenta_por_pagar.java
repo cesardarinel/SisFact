@@ -145,9 +145,9 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
 
 
             } catch (Exception e) {
-                e.printStackTrace();
-                finish();
-                return;
+//                e.printStackTrace();
+//                finish();
+//                return;
             }
         }
         else {
