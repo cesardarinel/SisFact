@@ -65,7 +65,7 @@ public class CuentasPorPagar extends Model implements Serializable {
         if (getId() != null) return getId();
         return internalId;
     }
-    
+
     public void setInternalId(Long internalId) {
         this.internalId = internalId;
     }

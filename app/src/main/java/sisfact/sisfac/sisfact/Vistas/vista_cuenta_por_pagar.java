@@ -130,7 +130,7 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
                 else{
                     cuentaCargadaPago = new Select().from(CuentasPorPagar.class).where("id = ? ", parametros.getString("id")).executeSingle();
                     cuentaCargadaPagos = new Select().from(CuentaPorPagarPagos.class).where("cuenta_por_pagar = ? ", cuentaCargadaPago.getId()).execute();
-                    monto.setText(cuentaCargadaPago.getMonto().toString());
+                    monto.setText(String.format("%.2f", cuentaCargadaPago.getMonto().floatValue()));
                     numeroContacto.setText(cuentaCargadaPago.getContacto().getTelefono());
                     numeroContacto.setEnabled(false);
                     descripcion.setText(cuentaCargadaPago.getDescripcion());
@@ -180,7 +180,7 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
             if (cuentaCargadaCobrar != null){
                 for(CuentasPorCobrarPago item :cuentasPorCobrarPagos){
                     agregarFilaATabla(
-                            item.getMonto().toString(),
+                            String.format("%.2f",item.getMonto().floatValue()),
                             dateFormatter.format(item.getFechaPago()),
                             item.getId()
                     );
@@ -190,7 +190,7 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
         else if (cuentaCargadaPagos != null ){
             for (CuentaPorPagarPagos item :cuentaCargadaPagos){
                 agregarFilaATabla(
-                        item.getMonto().toString(),
+                        String.format("%.2f",item.getMonto().floatValue()),
                         dateFormatter.format(item.getFechaPago()),
                         item.getId()
                 );
@@ -236,8 +236,8 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
             adeudadoVal = cuentaCargadaPago.getMonto();
         }
         adeudadoVal = adeudadoVal.subtract(pagadoVal);
-        adeudado.setText(adeudadoVal.toString());
-        pagado.setText(pagadoVal.toString());
+        adeudado.setText(String.format("%.2f",adeudadoVal.floatValue()));
+        pagado.setText(String.format("%.2f", pagadoVal.floatValue()));
     }
     public void agregarFilaATabla(String monto,String sFecha,final Long id){
         TextView pago = new TextView(this);
@@ -698,8 +698,8 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
             edittext.setOnKeyListener(new LimtarDeudaEvento());
             AlertDialog.Builder alert = new AlertDialog.Builder(context);
 
-            if(esCuentaPorCobrar) edittext.setText(cuentasPorCobrarPago.getMonto().toString());
-            else edittext.setText(cuentaPorPagarPagos.getMonto().toString());
+            if(esCuentaPorCobrar) edittext.setText(String.format("%.2f",cuentasPorCobrarPago.getMonto().floatValue()));
+            else edittext.setText(String.format(".%2f",cuentaPorPagarPagos.getMonto().floatValue()));
 
             alert.setMessage("Monto a Cambiar");
             alert.setTitle("Monto");
@@ -713,11 +713,11 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
                     if (esCuentaPorCobrar) {
                         cuentasPorCobrarPago.setMonto(new BigDecimal(monto));
                         cuentasPorCobrarPago.save();
-                        ((TextView) tableRow.getChildAt(0)).setText(cuentasPorCobrarPago.getMonto().toString());
+                        ((TextView) tableRow.getChildAt(0)).setText(String.format("%.2f",cuentasPorCobrarPago.getMonto().floatValue()));
                     } else {
                         cuentaPorPagarPagos.setMonto(new BigDecimal(monto));
                         cuentaPorPagarPagos.save();
-                        ((TextView) tableRow.getChildAt(0)).setText(cuentaPorPagarPagos.getMonto().toString());
+                        ((TextView) tableRow.getChildAt(0)).setText(String.format("%.2f",cuentaPorPagarPagos.getMonto().floatValue()));
                     }
                     //precio
                     ActualizarMonto();
