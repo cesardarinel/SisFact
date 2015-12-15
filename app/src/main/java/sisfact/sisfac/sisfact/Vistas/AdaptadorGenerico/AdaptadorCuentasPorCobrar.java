@@ -69,10 +69,10 @@ public class AdaptadorCuentasPorCobrar extends FactoryAdaptadorGenerico {
             }
             if (esValido) {
                 ItemLista itemLista = new ItemLista();
-                itemLista.setId(cuentasPorPagar.getFactura().getContacto().getInternalId().toString());
-                itemLista.setInfo(cuentasPorPagar.getFactura().getContacto().getNombre());
-                itemLista.setTexto1(cuentasPorPagar.getFactura().getContacto().getApellido());
-                itemLista.setTexto2(cuentasPorPagar.getFactura().getContacto().getTelefono());
+                itemLista.setId(cuentasPorPagar.getInternalId().toString());
+                itemLista.setTexto1("Factura: " + cuentasPorPagar.getFactura().getInternalId());
+                itemLista.setTexto2("Monto: " + cuentasPorPagar.getMonto());
+
                 getObjetosListado().add(itemLista);
             }
         }

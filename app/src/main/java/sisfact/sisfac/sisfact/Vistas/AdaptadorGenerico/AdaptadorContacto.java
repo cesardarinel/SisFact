@@ -51,9 +51,9 @@ public class AdaptadorContacto extends FactoryAdaptadorGenerico {
             if (esValido){
                 ItemLista itemLista =  new ItemLista();
                 itemLista.setId(contactos.getInternalId().toString());
-                itemLista.setInfo(contactos.getNombre());
-                itemLista.setTexto1(contactos.getApellido());
-                itemLista.setTexto2(contactos.getTelefono());
+                itemLista.setTexto1(contactos.getNombre() + " " + contactos.getApellido());
+                itemLista.setTexto2(contactos.getTelefono() != "" ? "Tel: " + contactos.getTelefono() + " " : "");
+                itemLista.setInfo(contactos.getCelular() != "" ? "Cel: " + contactos.getCelular() + " ": "");
                 getObjetosListado().add(itemLista);
             }
         }

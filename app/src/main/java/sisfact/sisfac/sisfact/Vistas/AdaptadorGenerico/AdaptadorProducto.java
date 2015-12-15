@@ -52,9 +52,9 @@ public class AdaptadorProducto extends FactoryAdaptadorGenerico {
             if (esValido){
                 ItemLista itemLista =  new ItemLista();
                 itemLista.setId(productos.getInternalId().toString());
-                itemLista.setInfo(productos.getTipo());
                 itemLista.setTexto1(productos.getNombre());
-                itemLista.setTexto2(null);
+                itemLista.setTexto2(productos.getMarca().getNombre());
+                itemLista.setInfo(productos.getTipo());
                 getObjetosListado().add(itemLista);
             }
         }

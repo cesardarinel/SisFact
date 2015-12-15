@@ -1,42 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TextView
-        android:id="@+id/id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:text="ID"
-        />
-    <TextView
-        android:id="@+id/info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="200dp"
-        android:text="Small Text"
-        android:layout_marginTop="-5dp"
-        android:textSize="16dp"
+    android:layout_height="match_parent"
+    android:weightSum="1">
 
-        android:textStyle="italic"
-        />
-    <TextView
-        android:id="@+id/texto1"
-        android:layout_width="wrap_content"
+    <TwoLineListItem
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:text="ID" />
+    </TwoLineListItem>
+    <TwoLineListItem
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/texto1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Small Text"
+            android:textSize="20dp"
+            android:textStyle="italic"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+    </TwoLineListItem>
+    <TwoLineListItem
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Small Text"
-        android:textSize="20dp"
-        android:textStyle="italic"
-
-        />
-    <TextView
-        android:id="@+id/texto2"
-        android:layout_width="fill_parent"
+        android:layout_weight="0.03">
+        <TextView
+            android:id="@+id/texto2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Small Text"
+            android:textSize="16dp"
+            android:textStyle="italic"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+    </TwoLineListItem>
+    <TwoLineListItem
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Small Text"
-        android:textSize="10dp"
-        android:layout_marginLeft="20dp"
-        android:textStyle="italic"
-        />
+        android:layout_weight="0.03">
+        <TextView
+            android:id="@+id/info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Small Text"
+            android:textSize="16dp"
+            android:textStyle="italic"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true" />
+    </TwoLineListItem>
 </LinearLayout>
