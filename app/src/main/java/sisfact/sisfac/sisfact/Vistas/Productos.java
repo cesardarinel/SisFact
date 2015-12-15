@@ -846,7 +846,7 @@ public class Productos extends AppCompatActivity implements AdapterView.OnItemSe
         menuProductos = menu;
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_producto_editar , menu);
-        menuProductos.findItem(R.id.nuevo).setVisible(false);
+//        menuProductos.findItem(R.id.nuevo).setVisible(false);
 
         if (idProducto == null) {
             menuProductos.findItem(R.id.editar).setVisible(false);

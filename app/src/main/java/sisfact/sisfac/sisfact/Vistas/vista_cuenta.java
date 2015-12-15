@@ -53,7 +53,10 @@ public class vista_cuenta extends AppCompatActivity   implements View.OnClickLis
              FactoryAdaptadorGenerico factoryAdaptadorGenerico = FactoryAdaptadorGenerico.getAdaptador(FactoryAdaptadorGenerico.Adaptador.CuentasPorCobrar);
              List<CuentasPorCobrar> cuentasPorCobrars= new Select().from(CuentasPorCobrar.class).execute();
              factoryAdaptadorGenerico.setObjectosAFiltrar(cuentasPorCobrars);
-             for(CuentasPorCobrar item : cuentasPorCobrars) item.setInternalId(item.getId());
+             for(CuentasPorCobrar item : cuentasPorCobrars) {
+                 item.setInternalId(item.getId());
+                 item.getFactura().setInternalId(item.getFactura().getId());
+             }
              nuevaActividad.putExtra("Actividad", "Cuentas Por Pagar");
              nuevaActividad.putExtra("Datos",factoryAdaptadorGenerico);
              nuevaActividad.putExtra("fecha",true);
@@ -71,7 +74,7 @@ public class vista_cuenta extends AppCompatActivity   implements View.OnClickLis
             }
             factoryAdaptadorGenerico.setObjectosAFiltrar(cuentasPorPagarList);
 
-            nuevaActividad.putExtra("Datos",factoryAdaptadorGenerico);
+            nuevaActividad.putExtra("Datos", factoryAdaptadorGenerico);
             nuevaActividad.putExtra("fecha",true);
             startActivity(nuevaActividad);
         }
