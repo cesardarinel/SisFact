@@ -1,29 +1,54 @@
 package sisfact.sisfac.sisfact.Vistas;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import sisfact.sisfac.sisfact.R;
 
-public class vista_factura extends AppCompatActivity implements View.OnClickListener,AdapterView.OnItemSelectedListener {
+public class vista_factura extends AppCompatActivity implements View.OnClickListener,AdapterView.OnItemSelectedListener{
 
     public Button agregar;
     public Spinner spin;
-    public List<String> listaTipo = new ArrayList<String>();
+    public TableLayout tblayout;
+    public Bundle extras;
+
+
+    //Este objeto nos ayuda a crear la vista de cantidad
+    private AlertDialog.Builder alerta;
+    private LayoutInflater li;
+    private View vistadialog;
+    final Context dialog = this;
+    public ArrayList<String> productos;
+    public HashMap<String,BigDecimal> productoMap;
 
     /**
-     *
      * @param savedInstanceState
      */
     @Override
@@ -32,34 +57,34 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_vista_factura);
 
         agregar = (Button) findViewById(R.id.button_agregar_lineas);
-        spin = (Spinner) findViewById(R.id.spinner_tipo_producto);
-
         agregar.setOnClickListener(this);
-        spin.setOnItemSelectedListener(this);
+        //txtedit = (EditText) findViewById(R.id.cantidadArticulo_txt_cantidad);
+        //Tabla para mostrar lineas
+        tblayout = (TableLayout) findViewById(R.id.data_table);
+        tblayout.setStretchAllColumns(true);
+        tblayout.setShrinkAllColumns(true);
 
-        //agregando valores a la lista de Productos
-        listaTipo.add("--Ninguno--");
-        listaTipo.add("Camisa");
-        listaTipo.add("Pantalon");
-        listaTipo.add("Ropa Interior");
-        listaTipo.add("Zapatos");
+        productoMap = new HashMap<>();
+        productos = new ArrayList<>();
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,listaTipo);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spin.setAdapter(dataAdapter);
-
+        //extras = getIntent().getExtras();
     }
 
     /**
-     *
      * @param v
      */
     @Override
-    public void onClick(View v){
-        if (v.getId()==R.id.button_agregar_lineas){
-            Intent  nuevaActividad = new Intent(this, vista_factura_lineas.class);
-            nuevaActividad.putExtra("spinItem",spin.getSelectedItem().toString());
-            startActivity(nuevaActividad);
+    public void onClick(View v) {
+        if (v.getId() == R.id.button_agregar_lineas) {
+            Intent nuevaActividad = new Intent(this, vista_factura_lineas.class);
+            //nuevaActividad.putExtra("spinItem",spin.getSelectedItem().toString());
+            nuevaActividad.putExtra("productoslist", productos);
+            nuevaActividad.putExtra("productosMapa", productoMap);
+
+            setResult(RESULT_OK,nuevaActividad);
+            startActivityForResult(nuevaActividad, 1);
+
+
         }
 
     }
@@ -73,6 +98,148 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(data != null) {
+            extras = data.getExtras();
+        }
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                if(extras != null){
+                    //Titulo de la tabla
+                    String estado = extras.getString("estado");
+                    ArrayList<String> items = extras.getStringArrayList("listalineas");
+                    HashMap<String,BigDecimal> mapa = (HashMap<String,BigDecimal>) data.getSerializableExtra("mapaProductos");
+
+                    if(!productos.isEmpty() && !productoMap.isEmpty()){
+                        for(int i=0;i < items.size();i++){
+                            for(int j=0;j<productos.size();j++){
+                                if(items.get(i).equals(productos.get(j))){
+                                    continue;
+                                }else {
+                                    productos.add(items.get(i));
+                                }
+                            }
+                        }
+
+                    }else {
+                        productos = items;
+                        productoMap = mapa;
+
+                    }
+
+
+
+                    //Se crea la tabla
+                    if(estado.equals("lleno")){
+                        creandoTabla();
+                    }
+
+                    for (int i = 0; i < productos.size(); i++) {
+                        TableRow row = new TableRow(this);
+
+                        String temp = productos.get(i);
+                        BigDecimal cant = productoMap.get(productos.get(i));
+
+                        TextView nombre = new TextView(this);
+                        nombre.setText(temp);
+                        row.addView(nombre);
+
+                        TextView pre = new TextView(this);
+                        pre.setText(cant.toString());
+                        pre.setGravity(Gravity.RIGHT);
+                        row.addView(pre);
+
+                        TextView cantidad = new TextView(this);
+                        cantidad.setGravity(Gravity.RIGHT);
+
+                        Button edit = new Button(this);
+                        edit.setOnClickListener(ventanaCantidad(cantidad));
+                        edit.setText("Edit");
+
+                        row.addView(cantidad);
+                        row.addView(edit);
+
+                        tblayout.addView(row);
+                    }
+                }
+            }
+        }
+    }
+
+    public View.OnClickListener ventanaCantidad(final TextView cantidad){
+
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final EditText edit = new EditText(dialog);
+                li = LayoutInflater.from(dialog);
+                vistadialog = li.inflate(R.layout.activity_cantidad__articulo, null);
+                alerta = new AlertDialog.Builder(dialog);
+                alerta.setView(edit);
+                alerta.setTitle("Cantidad de articulos");
+                alerta.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface vistaOpcion, int id) {
+                        if (edit != null) {
+                            cantidad.setText(edit.getText());
+                        }
+                    }
+
+                });
+
+                AlertDialog altd = alerta.create();
+                altd.show();
+
+
+            }
+
+        };
+
+
+    }
+
+    public void creandoTabla(){
+        final TableRow titulo = new TableRow(this);
+        titulo.setGravity(Gravity.CENTER_HORIZONTAL);
+
+
+        //titulo de la tabla
+        TextView titulofila = new TextView(this);
+        titulofila.setText("Lineas de Factura");
+        titulofila.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
+        titulofila.setGravity(Gravity.CENTER);
+        titulofila.setTypeface(Typeface.SERIF, Typeface.BOLD);
+
+        TableRow.LayoutParams params = new TableRow.LayoutParams();
+        params.span = 6;
+
+        titulo.addView(titulofila, params);
+
+        //Titulos de columnas
+        TableRow titulocolumnas = new TableRow(this);
+
+        TextView columnas = new TextView(this);
+        columnas.setText("Producto");
+        columnas.setGravity(Gravity.LEFT);
+
+        TextView columnas1 = new TextView(this);
+        columnas1.setText("Precio");
+        columnas1.setGravity(Gravity.CENTER);
+
+        TextView columnas2 = new TextView(this);
+        columnas2.setText("Cantidad");
+        columnas2.setGravity(Gravity.RIGHT);
+
+        titulocolumnas.addView(columnas);
+        titulocolumnas.addView(columnas1);
+        titulocolumnas.addView(columnas2);
+
+        tblayout.addView(titulo);
+        tblayout.addView(titulocolumnas);
 
     }
 }

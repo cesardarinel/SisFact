@@ -36,23 +36,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/plantilla_factura_contacto" />
 
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner_tipo_producto"
-        android:layout_gravity="center_horizontal" />
-
     <Button
         android:layout_width="329dp"
         android:layout_height="wrap_content"
         android:text="Agregar/Remover Productos"
         android:id="@+id/button_agregar_lineas" />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
+    <TableLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/button"
-        android:layout_gravity="right" />
+        android:id="@+id/data_table"></TableLayout>
 </LinearLayout>
