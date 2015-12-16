@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.text.format.DateUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -77,8 +78,10 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
         desdeDate = (EditText) findViewById(R.id.vista_generica_desdeDate);
         desdeDate.setInputType(InputType.TYPE_NULL);
 
-        fechaInicio = new Date(newCalendar.get(Calendar.YEAR) - 1900, 0, 1);
-        desdeDate.setText(dateFormatter.format(new Date(newCalendar.get(Calendar.YEAR) - 1900, 0, 1)));
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.WEEK_OF_MONTH,-1);
+        fechaInicio = calendar.getTime();
+        desdeDate.setText(dateFormatter.format(fechaInicio));
         desdeDate.setOnClickListener(this);
 
         fechaFin = new Date();
@@ -86,8 +89,7 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
         hastaDate.setInputType(InputType.TYPE_NULL);
         hastaDate.setText(dateFormatter.format(new Date()));
         hastaDate.setOnClickListener(this);
-
-        desdeFechaDialog = createDatePickerDialog(desdeDate,newCalendar.get(Calendar.YEAR) - 1900,0,1);
+        desdeFechaDialog = createDatePickerDialog(desdeDate,calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
         hastaFechaDialog = createDatePickerDialog(hastaDate);
         spinner = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter<String> stringArrayAdapter = factoryAdaptadorGenerico.getCamposBuscablesAdator(this);
@@ -242,7 +244,11 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
             }
         }
         System.out.println("el check box es " +cuentasPagadas.isChecked() + "  es pagada " + esPagado);
-        return (refDate.after(fechaInicio) && refDate.before(fechaFin)) && !esPagado;
+        return (
+                (refDate.after(fechaInicio) && refDate.before(fechaFin) ||
+                        refDate.equals(fechaFin) || refDate.equals(fechaFin)
+                )
+                ) && !esPagado;
     }
 
     @Override
