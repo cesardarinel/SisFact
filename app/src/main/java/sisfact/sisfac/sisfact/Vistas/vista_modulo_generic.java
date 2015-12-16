@@ -246,7 +246,7 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
         System.out.println("el check box es " +cuentasPagadas.isChecked() + "  es pagada " + esPagado);
         return (
                 (refDate.after(fechaInicio) && refDate.before(fechaFin) ||
-                        refDate.equals(fechaFin) || refDate.equals(fechaFin)
+                        refDate.equals(fechaInicio) || refDate.equals(fechaFin)
                 )
                 ) && !esPagado;
     }
