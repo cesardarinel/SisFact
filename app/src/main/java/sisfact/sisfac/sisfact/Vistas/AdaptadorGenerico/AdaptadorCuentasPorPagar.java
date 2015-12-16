@@ -6,7 +6,9 @@ import android.content.Intent;
 
 import com.activeandroid.query.Select;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import entidades.Contactos;
 import entidades.CuentaPorPagarPagos;
@@ -46,6 +48,7 @@ public class AdaptadorCuentasPorPagar extends  FactoryAdaptadorGenerico{
     @Override
     public ListaAdaptador getCamposaFiltrar(Context con,String Campo,String Valor) {
         objetosListado = new ArrayList<>();
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy", new Locale("es","ES"));
 
         for (Object obj : getObjectosAFiltrar()) {
             CuentasPorPagar cuentasPorPagar = (CuentasPorPagar) obj;
@@ -74,6 +77,7 @@ public class AdaptadorCuentasPorPagar extends  FactoryAdaptadorGenerico{
                 itemLista.setId(cuentasPorPagar.getInternalId().toString());
                 itemLista.setTexto1(cuentasPorPagar.getContacto().getNombre() + " " + cuentasPorPagar.getContacto().getApellido());
                 itemLista.setTexto2("Monto: " + cuentasPorPagar.getMonto());
+                itemLista.setInfo("Fecha Creación: " + dateFormatter.format(cuentasPorPagar.getFechaCreada()));
                 getObjetosListado().add(itemLista);
             }
         }

@@ -1,5 +1,6 @@
 package sisfact.sisfac.sisfact.Vistas;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -282,6 +283,7 @@ public class Contacto extends AppCompatActivity implements View.OnClickListener{
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 contactoCargado.delete();
+                setResult(Activity.RESULT_OK, new Intent());
                 finish();
             }
         });
