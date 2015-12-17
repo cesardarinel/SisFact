@@ -36,6 +36,12 @@
         android:layout_height="wrap_content"
         android:id="@+id/plantilla_factura_contacto" />
 
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner_tipo_producto"
+        android:layout_gravity="center_horizontal" />
+
     <Button
         android:layout_width="329dp"
         android:layout_height="wrap_content"
