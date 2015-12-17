@@ -381,9 +381,16 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
         dialog.setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String query = "DELETE FROM cunetas_por_cobrar_pago WHERE cuenta_por_pagar = " + cuentaCargadaPago.getId();
-                ActiveAndroid.getDatabase().execSQL(query);
-                cuentaCargadaPago.delete();
+                if(esCuentaPorCobrar){
+                    String query = "DELETE FROM cunetas_por_cobrar_pago WHERE cuentas_por_cobrar = " + cuentaCargadaPago.getId();
+                    ActiveAndroid.getDatabase().execSQL(query);
+                    cuentaCargadaCobrar.delete();
+                }
+                else{
+                    String query = "DELETE FROM cunetas_por_pagar_pago WHERE cuenta_por_pagar = " + cuentaCargadaPago.getId();
+                    ActiveAndroid.getDatabase().execSQL(query);
+                    cuentaCargadaPago.delete();
+                }
                 setResult(Activity.RESULT_OK, new Intent());
                 finish();
             }

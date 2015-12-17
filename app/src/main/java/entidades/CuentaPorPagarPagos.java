@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 
-@Table(name="cunetas_por_cobrar_pago")
+@Table(name="cunetas_por_pagar_pago")
 public class CuentaPorPagarPagos  extends Model implements Serializable {
 
     public CuentasPorPagar getCuentasPorPagar() {
