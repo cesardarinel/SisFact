@@ -37,9 +37,9 @@ public class vista_factura_lineas extends ListActivity implements View.OnClickLi
 
     //Lista que se llena con valores de la base de datos;
     List<String> listaProductos= new ArrayList<String>();
+    ArrayList<Long> Idproductos = new ArrayList<Long>();
     List<String> listaTipo = new ArrayList<String>();
-    ArrayList<String> lineas = new ArrayList<String>();
-    HashMap<String,BigDecimal> mapaProductos = new HashMap<>();
+    HashMap<Long,Productos> productosMapa = new HashMap<>();
     TableLayout table;
     Spinner spin;
 
@@ -96,50 +96,36 @@ public class vista_factura_lineas extends ListActivity implements View.OnClickLi
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
-        if(data != null){
-            extras = data.getExtras();
-        }
-    }
-
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_guardar_lineas:
                 Intent actividadactual = new Intent(this, vista_factura.class);
-                ArrayList<String> l = getlistaseleccionada();
-                actividadactual.putExtra("listalineas", l);
-                actividadactual.putExtra("mapaProductos", mapaProductos);
-                if (!l.isEmpty() && !mapaProductos.isEmpty()) {
-                    if(extras != null){
-                        if (extras.getStringArrayList("productoslist") == l) {
-                            actividadactual.putExtra("estado", "igual");
-                        } else if (extras.getStringArrayList("productoslist").size() < l.size()){
-                            actividadactual.putExtra("estado", "nuevo");
-                        }
-
-                    }else {
-                        actividadactual.putExtra("estado", "lleno");
-                    }
-
-                } else if (l.isEmpty() && mapaProductos.isEmpty()) {
-                    actividadactual.putExtra("estado", "vacio");
-                }
+                productosMapa = getlistaseleccionada();
+                actividadactual.putExtra("productosMapa", productosMapa);
+                actividadactual.putExtra("estado", "lleno");
+                extras = getIntent().getExtras();
                 setResult(RESULT_OK,actividadactual);
                 finish();
         }
     }
 
-    public ArrayList<String> getlistaseleccionada(){
+    public HashMap<Long,Productos> getlistaseleccionada(){
         ListView listView = getListView();
         SparseBooleanArray listchecked = listView.getCheckedItemPositions();
+        List<Productos> templist =  getProductos(tipo);
+        HashMap<Long,Productos> temp = new HashMap<Long,Productos>();
+        HashMap<Long,Productos> mapa =new HashMap<>();
+        for(Productos p: templist){
+            temp.put(p.getId(),p);
+        }
         for(int i=0; i < listView.getCount();i++){
             if(listchecked.get(i) == true){
-                lineas.add(listaProductos.get(i));
+                //lineas.add(listaProductos.get(i));
+                mapa.put(Idproductos.get(i),temp.get(Idproductos.get(i)));
             }
         }
-        return lineas;
+
+        return mapa;
     }
 
     @Override
@@ -149,13 +135,16 @@ public class vista_factura_lineas extends ListActivity implements View.OnClickLi
         Toast.makeText(parent.getContext(), "Selected: " + item1, Toast.LENGTH_LONG).show();
 
         ListView listView = getListView();
+
         ArrayAdapter<String> adap = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_checked, listaProductos);
+
+       //adap = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_checked, list );//listaProductos);
         listView.setAdapter(adap);
         adap.clear();
         tipo = spin.getSelectedItem().toString();
         llenarlistproductos();
         //llenarMapaProductos();
-        //  adap.addAll(listaProductos);
+        //adap.addAll(listaProductos);
         adap.notifyDataSetChanged();
     }
 
@@ -172,12 +161,34 @@ public class vista_factura_lineas extends ListActivity implements View.OnClickLi
                 .execute();
     }
 
+    public Productos getProducto(Long Id){
+        return new Select()
+                .from(Productos.class)
+                .where("Id = ?",Id)
+                .executeSingle();
+    }
+
     public void llenarlistproductos(){
+        Intent actual = getIntent();
+        extras = actual.getExtras();
+        HashMap<Long,Productos> mapa = (HashMap<Long,Productos>) actual.getSerializableExtra("mapaMandar");
         List<Productos> templist = getProductos(tipo);
         if(!templist.isEmpty()) {
             for (Productos p : templist) {
-                listaProductos.add(p.getNombre());
-                mapaProductos.put(p.getNombre(),p.getPrecio());
+                if(extras != null){
+                    if(!mapa.isEmpty()) {
+                        if(mapa.containsKey(p.getId())){
+                            continue;
+                        }else {
+                            listaProductos.add(p.getNombre());
+                            Idproductos.add(p.getId());
+                        }
+                    }
+
+                } else {
+                    listaProductos.add(p.getNombre());
+                    Idproductos.add(p.getId());
+                }
             }
         }
 

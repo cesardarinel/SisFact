@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import entidades.*;
+import entidades.Productos;
 import sisfact.sisfac.sisfact.R;
 
 public class vista_factura extends AppCompatActivity implements View.OnClickListener,AdapterView.OnItemSelectedListener{
@@ -46,7 +48,11 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
     private View vistadialog;
     final Context dialog = this;
     public ArrayList<String> productos;
-    public HashMap<String,BigDecimal> productoMap;
+    public HashMap<Long,Productos> productoMap;
+    public HashMap<Long,Productos> mapaMandar;
+    public TextView eltotal;
+    public BigDecimal total;
+    public Double valor;
 
     /**
      * @param savedInstanceState
@@ -65,9 +71,16 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
         tblayout.setShrinkAllColumns(true);
 
         productoMap = new HashMap<>();
+        mapaMandar = new HashMap<>();
         productos = new ArrayList<>();
 
-        //extras = getIntent().getExtras();
+        //Se crea la tabla para poder visualizar la lineas;
+        creandoTabla();
+
+        eltotal = (TextView) findViewById(R.id.vista_factura_txt_total);
+        total = BigDecimal.valueOf(0);
+        valor = 0.0;
+
     }
 
     /**
@@ -78,11 +91,12 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
         if (v.getId() == R.id.button_agregar_lineas) {
             Intent nuevaActividad = new Intent(this, vista_factura_lineas.class);
             //nuevaActividad.putExtra("spinItem",spin.getSelectedItem().toString());
-            nuevaActividad.putExtra("productoslist", productos);
-            nuevaActividad.putExtra("productosMapa", productoMap);
 
-            setResult(RESULT_OK,nuevaActividad);
-            startActivityForResult(nuevaActividad, 1);
+            //nuevaActividad.putExtra("productoslist", productos);
+            if(!mapaMandar.isEmpty()){
+                nuevaActividad.putExtra("mapaMandar", mapaMandar);
+            }
+            startActivityForResult(nuevaActividad,1);
 
 
         }
@@ -104,6 +118,7 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if(data != null) {
             extras = data.getExtras();
         }
@@ -111,39 +126,30 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
             if (resultCode == RESULT_OK) {
                 if(extras != null){
                     //Titulo de la tabla
+
                     String estado = extras.getString("estado");
                     ArrayList<String> items = extras.getStringArrayList("listalineas");
-                    HashMap<String,BigDecimal> mapa = (HashMap<String,BigDecimal>) data.getSerializableExtra("mapaProductos");
+                    HashMap<Long,Productos> mapa = (HashMap<Long,Productos>) data.getSerializableExtra("productosMapa");
+                    HashMap<Long,Productos> tempmap = new HashMap<Long,Productos>();
 
-                    if(!productos.isEmpty() && !productoMap.isEmpty()){
-                        for(int i=0;i < items.size();i++){
-                            for(int j=0;j<productos.size();j++){
-                                if(items.get(i).equals(productos.get(j))){
-                                    continue;
-                                }else {
-                                    productos.add(items.get(i));
-                                }
-                            }
+                    for(Long l: mapa.keySet()){
+                        if(productoMap.containsKey(l)){
+                            continue;
+                        }else {
+                            productoMap.put(l,mapa.get(l));
                         }
-
-                    }else {
-                        productos = items;
-                        productoMap = mapa;
-
                     }
 
+                    tempmap.putAll(productoMap);
+                    mapaMandar.putAll(productoMap);
+                    productoMap.clear();
 
-
-                    //Se crea la tabla
-                    if(estado.equals("lleno")){
-                        creandoTabla();
-                    }
-
-                    for (int i = 0; i < productos.size(); i++) {
+                    //for (int i = 0; i < productos.size(); i++) {
+                    for(Productos p: tempmap.values()){
                         TableRow row = new TableRow(this);
 
-                        String temp = productos.get(i);
-                        BigDecimal cant = productoMap.get(productos.get(i));
+                        String temp = p.getNombre();
+                        BigDecimal cant = p.getPrecio();
 
                         TextView nombre = new TextView(this);
                         nombre.setText(temp);
@@ -158,8 +164,9 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
                         cantidad.setGravity(Gravity.RIGHT);
 
                         Button edit = new Button(this);
-                        edit.setOnClickListener(ventanaCantidad(cantidad));
-                        edit.setText("Edit");
+                        edit.setOnClickListener(ventanaCantidad(cantidad, cant));
+                        edit.setText("Editar");
+                        edit.setMaxWidth(1);
 
                         row.addView(cantidad);
                         row.addView(edit);
@@ -171,13 +178,14 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    public View.OnClickListener ventanaCantidad(final TextView cantidad){
-
+    public View.OnClickListener ventanaCantidad(final TextView cantidad,final BigDecimal cant){
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final EditText edit = new EditText(dialog);
+
                 li = LayoutInflater.from(dialog);
+
                 vistadialog = li.inflate(R.layout.activity_cantidad__articulo, null);
                 alerta = new AlertDialog.Builder(dialog);
                 alerta.setView(edit);
@@ -186,6 +194,9 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
                     public void onClick(DialogInterface vistaOpcion, int id) {
                         if (edit != null) {
                             cantidad.setText(edit.getText());
+                            total = getTotal();
+                            //total.add(cant.multiply(BigDecimal.valueOf(Double.valueOf(String.valueOf(edit.getText().toString())))));
+                            eltotal.setText("Total: " + String.valueOf(total));
                         }
                     }
 
@@ -194,7 +205,6 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
                 AlertDialog altd = alerta.create();
                 altd.show();
 
-
             }
 
         };
@@ -202,10 +212,10 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
 
     }
 
+
     public void creandoTabla(){
         final TableRow titulo = new TableRow(this);
         titulo.setGravity(Gravity.CENTER_HORIZONTAL);
-
 
         //titulo de la tabla
         TextView titulofila = new TextView(this);
@@ -227,7 +237,7 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
         columnas.setGravity(Gravity.LEFT);
 
         TextView columnas1 = new TextView(this);
-        columnas1.setText("Precio");
+        columnas1.setText("Costo");
         columnas1.setGravity(Gravity.CENTER);
 
         TextView columnas2 = new TextView(this);
@@ -241,5 +251,29 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
         tblayout.addView(titulo);
         tblayout.addView(titulocolumnas);
 
+    }
+
+    public BigDecimal getTotal(){
+        BigDecimal t = BigDecimal.ZERO;
+        Double d = 0.0;
+
+        for(int i = 2;i < tblayout.getChildCount(); i++){
+            TableRow row = (TableRow) tblayout.getChildAt(i);
+            TextView colm1 = (TextView) row.getChildAt(1);
+            TextView colm2 = (TextView) row.getChildAt(2);
+            if(colm1.getText().toString().equals("")){
+                colm1.setText("0");
+            }
+            if(colm2.getText().toString().equals("")){
+                colm2.setText("0");
+            }
+            if(colm1 != null && colm2 != null) {
+                d = (Double.valueOf(colm1.getText().toString()) * Double.valueOf(colm2.getText().toString()));
+            }else {
+
+            }
+            t = t.add(BigDecimal.valueOf(d));
+        }
+        return t;
     }
 }
