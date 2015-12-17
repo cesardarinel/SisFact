@@ -94,5 +94,9 @@
             android:name=".Vistas.Cantidad_Articulo"
             android:label="@string/title_activity_cantidad__articulo" >
         </activity>
+        <activity
+            android:name=".Vistas.Cantidad_Articulo"
+            android:label="@string/title_activity_cantidad__articulo" >
+        </activity>
     </application>
 </manifest>
