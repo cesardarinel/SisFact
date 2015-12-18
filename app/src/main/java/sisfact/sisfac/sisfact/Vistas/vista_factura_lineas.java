@@ -121,7 +121,9 @@ public class vista_factura_lineas extends ListActivity implements View.OnClickLi
         for(int i=0; i < listView.getCount();i++){
             if(listchecked.get(i) == true){
                 //lineas.add(listaProductos.get(i));
-                mapa.put(Idproductos.get(i),temp.get(Idproductos.get(i)));
+                Productos prod = temp.get(Idproductos.get(i));
+                prod.setInternalId(prod.getId());
+                mapa.put(Idproductos.get(i),prod);
             }
         }
 
@@ -136,15 +138,12 @@ public class vista_factura_lineas extends ListActivity implements View.OnClickLi
 
         ListView listView = getListView();
 
-        ArrayAdapter<String> adap = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_checked, listaProductos);
+        ArrayAdapter<String> adap = new ArrayAdapter<>(this,android.R.layout.simple_list_item_checked, listaProductos);
 
-       //adap = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_checked, list );//listaProductos);
         listView.setAdapter(adap);
         adap.clear();
         tipo = spin.getSelectedItem().toString();
         llenarlistproductos();
-        //llenarMapaProductos();
-        //adap.addAll(listaProductos);
         adap.notifyDataSetChanged();
     }
 
@@ -157,7 +156,7 @@ public class vista_factura_lineas extends ListActivity implements View.OnClickLi
     public List<Productos> getProductos(String tipo) {
         return new Select()
                 .from(Productos.class)
-                .where("tipo = ?",tipo)
+                .where("tipo = ? and cantidad > 0",tipo)
                 .execute();
     }
 
@@ -169,29 +168,27 @@ public class vista_factura_lineas extends ListActivity implements View.OnClickLi
     }
 
     public void llenarlistproductos(){
-        Intent actual = getIntent();
+        Intent actualextras = getIntent();
         extras = actual.getExtras();
         HashMap<Long,Productos> mapa = (HashMap<Long,Productos>) actual.getSerializableExtra("mapaMandar");
         List<Productos> templist = getProductos(tipo);
-        if(!templist.isEmpty()) {
-            for (Productos p : templist) {
-                if(extras != null){
-                    if(!mapa.isEmpty()) {
-                        if(mapa.containsKey(p.getId())){
-                            continue;
-                        }else {
-                            listaProductos.add(p.getNombre());
-                            Idproductos.add(p.getId());
-                        }
+        for (Productos p : templist) {
+            if(extras != null){
+                if(!mapa.isEmpty()) {
+                    if(mapa.containsKey(p.getId())){
+                        continue;
+                    }else {
+                        listaProductos.add(p.getNombre() + "\nCantidad: " + p.getCantidad() );
+                        Idproductos.add(p.getId());
                     }
-
-                } else {
-                    listaProductos.add(p.getNombre());
-                    Idproductos.add(p.getId());
                 }
+
+            }
+            else {
+                listaProductos.add(p.getNombre() + "\nCantidad: " + p.getCantidad());
+                Idproductos.add(p.getId());
             }
         }
-
     }
 
 }

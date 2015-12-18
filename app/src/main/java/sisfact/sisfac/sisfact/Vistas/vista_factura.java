@@ -201,13 +201,14 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
         TextView cantidad = new TextView(this);
         cantidad.setText(Cantidad.toString());
         ImageView edit = new ImageView(this);
-        EditarCantidadProductos editarCantidadProductos = new EditarCantidadProductos();
-        editarCantidadProductos.setTableRow(row);
-        editarCantidadProductos.setIdProducto(p.getId());
-        edit.setOnClickListener(editarCantidadProductos);
-        edit.setImageResource(R.drawable.ic_menu_edit);
         row.addView(cantidad);
         row.addView(edit);
+        EditarCantidadProductos editarCantidadProductos = new EditarCantidadProductos();
+        editarCantidadProductos.setTableRow(row);
+        editarCantidadProductos.setIdProducto(p.getInternalId());
+        edit.setOnClickListener(editarCantidadProductos);
+        edit.setImageResource(R.drawable.ic_menu_edit);
+
         tblayout.addView(row);
     }
     @Override
@@ -225,10 +226,13 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
                 return true;
             case R.id.Guardar:
                 Intent rIntent = new Intent();
-                Contactos contacto = new Select()
-                        .from(Contactos.class)
-                        .where("telefono = ? OR celular = ?", completarContactos.getText().toString(),
-                                completarContactos.getText().toString()).executeSingle();
+                Contactos contacto= null;
+                if (!completarContactos.getText().toString().isEmpty()){
+                    contacto = new Select()
+                            .from(Contactos.class)
+                            .where("telefono = ? OR celular = ? ", completarContactos.getText().toString(),
+                                    completarContactos.getText().toString()).executeSingle();
+                }
                 if(esValidoFactura(contacto,fechaParaGuardar)) {
                     Facturas fact;
 
@@ -240,7 +244,9 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
                     fact.save();
                     Boolean esValido = true;
                     int i= 0;
+                    Boolean alMenos1 = false;
                     for (Long prodid :mapaMandar.keySet()){
+                        alMenos1 = true;
                         int cantidad;
                         try{
                         cantidad = Integer.valueOf(
@@ -257,17 +263,22 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
                             return true;
                         }
                         productos.setCantidad(productos.getCantidad() - cantidad);
+                        productos.save();
                         FacturaProductos facturaProductos = new FacturaProductos();
                         facturaProductos.setProducto(productos);
                         facturaProductos.setCantidad(cantidad);
                         facturaProductos.setFactura(fact);
                         facturaProductos.save();
                     }
+                    if (!alMenos1){
+                        showError("debe haber almenos una linea");
+                        return true;
+                    }
                     fact.save();
-                    rIntent.putExtra("id",fact.getId());
+                    rIntent.putExtra("id", fact.getId());
+                    setResult(RESULT_OK, rIntent);
                     finish();
                 }
-                setResult(RESULT_OK,rIntent);
                 return true;
             default:
                 return false;
@@ -280,6 +291,7 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
         }
         if (date == null){
             textoFecha.setError("La fecha no es validas");
+            return false;
         }
         return true;
     }
@@ -412,7 +424,9 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
                         showError("No hay tantos productos solo tiene "+productos.getCantidad()+" de "+cantidad);
                     }
                     else {
-                        ((TextView) getTableRow().getChildAt(2)).setText(productos.getCantidad());
+                        (
+                            (TextView) (tableRow).getChildAt(2)
+                        ).setText(cantidad.toString());
                     }
                 }
 
