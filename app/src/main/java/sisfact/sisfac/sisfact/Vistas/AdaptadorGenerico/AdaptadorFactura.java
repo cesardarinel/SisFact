@@ -18,7 +18,7 @@ public class AdaptadorFactura extends  FactoryAdaptadorGenerico{
     public AdaptadorFactura(){
         titulo = "Facturas";
         camposBuscables = new ArrayList<>();
-        camposBuscables.add("Nombre");
+        camposBuscables.add("Id");
         camposBuscables.add("Fecha");
         camposBuscables.add("Contacto");
     }
@@ -31,11 +31,11 @@ public class AdaptadorFactura extends  FactoryAdaptadorGenerico{
            Facturas facturas = (Facturas) obj;
             boolean esValido = true;
             switch (Campo){
-                case "Nombre":
+                case "Id":
                     if (!facturas.getInternalId().toString().toLowerCase().contains(Valor.toLowerCase())) esValido = false;
                     break;
                 case "Fecha":
-                    if (!facturas.getFecha().toString().toLowerCase().contains(Valor.toLowerCase())) esValido = false;
+                    if (!(dateFormatter.format(facturas.getFecha())).contains(Valor)) esValido = false;
                     break;
                 case "Contacto":
                     if (!facturas.getContacto().getNombre().toLowerCase().contains(Valor.toLowerCase())) esValido = false;
@@ -44,9 +44,10 @@ public class AdaptadorFactura extends  FactoryAdaptadorGenerico{
             if (esValido){
                 ItemLista itemLista =  new ItemLista();
                 itemLista.setId(facturas.getInternalId().toString());
-                itemLista.setInfo(facturas.getContacto().getNombre());
-                itemLista.setTexto1(facturas.getFecha().toString());
-                itemLista.setTexto2(null);
+                itemLista.setTexto1(facturas.getContacto().getNombre() + " " + facturas.getContacto().getApellido());
+                itemLista.setTexto2(dateFormatter.format(facturas.getFecha()));
+                //itemLista.setInfo(facturas);
+
                 getObjetosListado().add(itemLista);
             }
         }

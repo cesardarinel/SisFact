@@ -48,39 +48,37 @@ public class AdaptadorCuentasPorCobrar extends FactoryAdaptadorGenerico {
     @Override
     public ListaAdaptador getCamposaFiltrar(Context con,String Campo,String Valor) {
         objetosListado = new ArrayList<>();
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy", new Locale("es","ES"));
-
         for (Object obj : getObjectosAFiltrar()) {
-            CuentasPorCobrar cuentasPorPagar = (CuentasPorCobrar) obj;
+            CuentasPorCobrar cuentasPorCobrar = (CuentasPorCobrar) obj;
             boolean esValido = true;
             switch (Campo) {
                 case "Todos: Nombre":
-                    if (!cuentasPorPagar.getFactura().getContacto().getNombre().toLowerCase().contains(Valor.toLowerCase())) esValido = false;
+                    if (!cuentasPorCobrar.getFactura().getContacto().getNombre().toLowerCase().contains(Valor.toLowerCase())) esValido = false;
                     break;
                 case "Cliente: Nombre":
-                    if (!cuentasPorPagar.getFactura().getContacto().getNombre().toLowerCase().contains(Valor.toLowerCase()) && cuentasPorPagar.getFactura().getContacto().isEsCliente())
+                    if (!cuentasPorCobrar.getFactura().getContacto().getNombre().toLowerCase().contains(Valor.toLowerCase()) && cuentasPorCobrar.getFactura().getContacto().isEsCliente())
                         esValido = false;
                     break;
                 case "Suplidor: Nombre":
-                    if (!cuentasPorPagar.getFactura().getContacto().getNombre().toLowerCase().contains(Valor.toLowerCase()) && cuentasPorPagar.getFactura().getContacto().isEsSuplidor())
+                    if (!cuentasPorCobrar.getFactura().getContacto().getNombre().toLowerCase().contains(Valor.toLowerCase()) && cuentasPorCobrar.getFactura().getContacto().isEsSuplidor())
                         esValido = false;
                     break;
                 case "Telefono":
-                    if (!cuentasPorPagar.getFactura().getContacto().getTelefono().contains(Valor)) esValido = false;
+                    if (!cuentasPorCobrar.getFactura().getContacto().getTelefono().contains(Valor)) esValido = false;
                     break;
                 case "Celular":
-                    if (!cuentasPorPagar.getFactura().getContacto().getCelular().contains(Valor)) esValido = false;
+                    if (!cuentasPorCobrar.getFactura().getContacto().getCelular().contains(Valor)) esValido = false;
                     break;
                 case "Direccion":
-                    if (!cuentasPorPagar.getFactura().getContacto().getDireccion().contains(Valor)) esValido = false;
+                    if (!cuentasPorCobrar.getFactura().getContacto().getDireccion().contains(Valor)) esValido = false;
                     break;
             }
             if (esValido) {
                 ItemLista itemLista = new ItemLista();
-                itemLista.setId(cuentasPorPagar.getInternalId().toString());
-                itemLista.setTexto1("Factura: " + cuentasPorPagar.getFactura().getInternalId());
-                itemLista.setTexto2("Monto: " + cuentasPorPagar.getMonto());
-                itemLista.setInfo("Fecha Creación: " + dateFormatter.format(cuentasPorPagar.getFechaCreada()));
+                itemLista.setId(cuentasPorCobrar.getInternalId().toString());
+                itemLista.setTexto1("Factura: " + cuentasPorCobrar.getFactura().getInternalId());
+                itemLista.setTexto2("Monto: " + cuentasPorCobrar.getMonto());
+                itemLista.setInfo("Fecha Creación: " + dateFormatter.format(cuentasPorCobrar.getFechaCreada()));
                 getObjetosListado().add(itemLista);
             }
         }

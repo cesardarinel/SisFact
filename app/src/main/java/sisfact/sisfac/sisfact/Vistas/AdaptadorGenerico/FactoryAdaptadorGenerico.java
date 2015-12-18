@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.widget.ArrayAdapter;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import entidades.ItemLista;
 import sisfact.sisfac.sisfact.Vistas.ListaAdaptador;
@@ -20,6 +22,7 @@ public class FactoryAdaptadorGenerico implements Serializable{
         CuentasPorCobrar,
         CuentasPorPagar
     }
+    protected SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy", new Locale("es","ES"));
 
     public String getTitulo() {
         return titulo;

@@ -50,7 +50,6 @@ public class AdaptadorCuentasPorPagar extends  FactoryAdaptadorGenerico{
     @Override
     public ListaAdaptador getCamposaFiltrar(Context con,String Campo,String Valor) {
         objetosListado = new ArrayList<>();
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy", new Locale("es","ES"));
 
         for (Object obj : getObjectosAFiltrar()) {
             CuentasPorPagar cuentasPorPagar = (CuentasPorPagar) obj;

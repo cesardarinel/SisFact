@@ -168,7 +168,7 @@ public class vista_factura_lineas extends ListActivity implements View.OnClickLi
     }
 
     public void llenarlistproductos(){
-        Intent actualextras = getIntent();
+        Intent actual = getIntent();
         extras = actual.getExtras();
         HashMap<Long,Productos> mapa = (HashMap<Long,Productos>) actual.getSerializableExtra("mapaMandar");
         List<Productos> templist = getProductos(tipo);

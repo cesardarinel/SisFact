@@ -4,6 +4,7 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class FacturaProductos extends Model implements Serializable{
 
@@ -23,7 +24,7 @@ public class FacturaProductos extends Model implements Serializable{
     protected boolean esPorciento;
 
     @Column(name = "precio_historico")
-    protected float precioHistorico;
+    protected BigDecimal precioHistorico;
 
     public Facturas getFactura() {
         return factura;
@@ -65,11 +66,11 @@ public class FacturaProductos extends Model implements Serializable{
         this.esPorciento = esPorciento;
     }
 
-    public float getPrecioHistorico() {
+    public BigDecimal getPrecioHistorico() {
         return precioHistorico;
     }
 
-    public void setPrecioHistorico(float precioHistorico) {
+    public void setPrecioHistorico(BigDecimal precioHistorico) {
         this.precioHistorico = precioHistorico;
     }
 }

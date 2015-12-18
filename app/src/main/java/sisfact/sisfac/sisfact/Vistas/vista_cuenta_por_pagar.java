@@ -44,6 +44,7 @@ import entidades.CuentaPorPagarPagos;
 import entidades.CuentasPorCobrar;
 import entidades.CuentasPorCobrarPago;
 import entidades.CuentasPorPagar;
+import entidades.FacturaProductos;
 import entidades.Facturas;
 import sisfact.sisfac.sisfact.R;
 
@@ -73,7 +74,7 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
     private TableRow.LayoutParams parametroFila;
     private Menu menuCuenta;
     protected DatePickerDialog fechaCreacionDialog;
-
+    protected BigDecimal montoCuentaPorCobrar = BigDecimal.ZERO;
     private String modo;
     Calendar newCalendar;
     protected Boolean esCuentaPorCobrar = false;
@@ -123,13 +124,18 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
                 if(esCuentaPorCobrar){
                     cuentaCargadaCobrar = new Select().from(CuentasPorCobrar.class).where("id = ? ", parametros.getString("id")).executeSingle();
                     cuentasPorCobrarPagos = new Select().from(CuentasPorCobrarPago.class).where("cuentas_por_cobrar = ? ", cuentaCargadaCobrar.getId()).execute();
-                    monto.setText(cuentaCargadaCobrar.getMonto().toString());
+
+
+
                     descripcion.setText(cuentaCargadaCobrar.getDescripcion());
                     fechaCreacion.setText(dateFormatter.format(cuentaCargadaCobrar.getFechaCreada()));
                     newCalendar.setTime(cuentaCargadaCobrar.getFechaCreada());
                     fechaCreacionDialog =  createDatePickerDialog(fechaCreacion, newCalendar.get(Calendar.YEAR),newCalendar.get(Calendar.MONTH),newCalendar.get(Calendar.DAY_OF_MONTH));
                     monto.setEnabled(false);
-
+                    montoCuentaPorCobrar = BigDecimal.ZERO;
+                    monto.setText(String.format("%.2f", cuentaCargadaCobrar.getMonto().floatValue()));
+                    adeudadoVal = cuentaCargadaCobrar.getMonto();
+                    numeroContacto.setText(cuentaCargadaCobrar.getFactura().getId().toString());
                 }
                 else{
                     cuentaCargadaPago = new Select().from(CuentasPorPagar.class).where("id = ? ", parametros.getString("id")).executeSingle();
@@ -141,19 +147,15 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
                     fechaCreacion.setText(dateFormatter.format(cuentaCargadaPago.getFechaCreada()));
                     newCalendar.setTime(cuentaCargadaPago.getFechaCreada());
                     fechaCreacionDialog =  createDatePickerDialog(fechaCreacion, newCalendar.get(Calendar.YEAR),newCalendar.get(Calendar.MONTH),newCalendar.get(Calendar.DAY_OF_MONTH));
-
+                    adeudadoVal = (cuentaCargadaPago.getMonto());
                 }
-
-                monto.setEnabled(false);
-                fechaCreacion.setEnabled(false);
-                adeudadoVal = (cuentaCargadaPago.getMonto());
                 modo = "detalles";
 
 
             } catch (Exception e) {
-//                e.printStackTrace();
-//                finish();
-//                return;
+                e.printStackTrace();
+                finish();
+                return;
             }
         }
         else {
@@ -321,8 +323,7 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
         fechaCreacion.setText(dateFormatter.format(cuentaPorPagar.getFechaCreada()));
     }
     private void setValoresComponentes(CuentasPorCobrar cuentaPorPagar) {
-        numeroContacto.setText(cuentaCargadaPago.getContacto().getTelefono().toString());
-        monto.setText(cuentaCargadaPago.getMonto().toString());
+        numeroContacto.setText(cuentaPorPagar.getFactura().getInternalId().toString());
         descripcion.setText(cuentaPorPagar.getDescripcion());
         fechaCreacion.setText(dateFormatter.format(cuentaPorPagar.getFechaCreada()));
     }
@@ -420,22 +421,28 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
         boolean esValido = false;
 
         if (esCuentaPorCobrar){
+
             Facturas facturas = new Select()
                     .from(Facturas.class)
                     .where("id = ? ",numeroContacto.getText().toString()).executeSingle();
 
-            esValido = (numeroContacto.getText().toString().trim() != "")
-                    && (monto.getText().toString().trim() != "")
-                    && (fechaCreacion.getText().toString().trim() != "")
+            if (facturas == null){
+                numeroContacto.setError("numero de factura es invalida");
+            }
+            esValido = (!numeroContacto.getText().toString().trim().isEmpty())
+                    && (!fechaCreacion.getText().toString().trim().isEmpty())
                     && (facturas != null);
 
             if (esValido) {
                 CuentasPorCobrar cuenta = cuentaCargadaCobrar != null ? cuentaCargadaCobrar : new CuentasPorCobrar();
                 cuenta.setFactura(facturas);
-                cuenta.setMonto(BigDecimal.valueOf(Float.valueOf(monto.getText().toString())));
                 cuenta.setDescripcion(descripcion.getText().toString());
                 String[] dateParts = fechaCreacion.getText().toString().split("/");
                 cuenta.setFechaCreada(java.sql.Date.valueOf(dateParts[2] + "-" + dateParts[1] + "-" + dateParts[0]));
+                List<FacturaProductos> facturaProductosList = new Select().from(FacturaProductos.class).where("factura = ?",facturas.getId()).execute();
+                BigDecimal total = BigDecimal.ZERO;
+                for (FacturaProductos item : facturaProductosList) total.add(item.getPrecioHistorico());
+                cuenta.setMonto(total);
                 cuenta.save();
                 modo = "detalles";
                 idIntent = cuenta.getId();
@@ -447,6 +454,9 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
         }
         else{
             //esValido = true;
+            if (numeroContacto.getText().toString().trim().isEmpty()){
+                numeroContacto.setError("no puede estar vacio");
+            }
             Contactos contacto = new Select()
                     .from(Contactos.class)
                     .where("telefono = ? OR celular = ?", numeroContacto.getText().toString(),
@@ -533,6 +543,8 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
                 monto.setEnabled(false);
                 descripcion.setEnabled(false);
                 fechaCreacion.setEnabled(false);
+                numeroContacto.setError(null);
+                monto.setError(null);
                 if (menuCuenta != null) {
                     menuCuenta.findItem(R.id.editar).setVisible(true);
                 }
@@ -553,6 +565,10 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
                 descripcion.setEnabled(true);
                 fechaCreacion.setEnabled(true);
                 break;
+        }
+        if (esCuentaPorCobrar){
+            monto.setEnabled(false);
+            numeroContacto.setEnabled(false);
         }
     }
 
@@ -648,8 +664,9 @@ public class vista_cuenta_por_pagar extends AppCompatActivity implements View.On
                     Float monto = Float.valueOf(edittext.getText().toString().trim().length() > 0 ? edittext.getText().toString().trim() : "0");
                     if (esCuentaPorCobrar) {
                         CuentasPorCobrarPago cuentasPorCobrarPago = new CuentasPorCobrarPago();
+                        cuentasPorCobrarPago.setCuentasPorCobrar(cuentaCargadaCobrar);
                         cuentasPorCobrarPago.setFechaPago(new Date());
-                        cuentasPorCobrarPago.setMonto(new BigDecimal(monto));
+                        cuentasPorCobrarPago.setMonto(new BigDecimal(edittext.getText().toString()));
                         cuentasPorCobrarPago.save();
 
                         cuentasPorCobrarPagos.add(cuentasPorCobrarPago);

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -39,6 +40,7 @@ import java.util.List;
 import java.util.Locale;
 
 import entidades.Contactos;
+import entidades.CuentasPorCobrar;
 import entidades.FacturaProductos;
 import entidades.Facturas;
 import entidades.Productos;
@@ -104,6 +106,7 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
         //Se crea la tabla para poder visualizar la lineas;
         creandoTabla();
         textoFecha.setOnClickListener(this);
+        textoFecha.setInputType(InputType.TYPE_NULL);
         eltotal = (TextView) findViewById(R.id.vista_factura_txt_total);
         total = BigDecimal.ZERO;
         textoFecha.setText(dateFormatter.format(calendar.getTime()));
@@ -113,6 +116,13 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
         }
         catch (Exception e){}
         if (facturaCargada!=null){
+            calendar.setTime(facturaCargada.getFecha());
+            fechaDialogo = createDatePickerDialog(
+                    textoFecha,
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
+            );
             List<FacturaProductos> facturaProductoses = new Select().from(FacturaProductos.class).where("factura = ?",facturaCargada.getId()).execute();
             for (FacturaProductos item : facturaProductoses){
                 agregarFilaTabla(item.getProducto(),item.getCantidad());
@@ -244,9 +254,8 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
                     fact.save();
                     Boolean esValido = true;
                     int i= 0;
-                    Boolean alMenos1 = false;
+                    BigDecimal total = BigDecimal.ZERO;
                     for (Long prodid :mapaMandar.keySet()){
-                        alMenos1 = true;
                         int cantidad;
                         try{
                         cantidad = Integer.valueOf(
@@ -265,16 +274,24 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
                         productos.setCantidad(productos.getCantidad() - cantidad);
                         productos.save();
                         FacturaProductos facturaProductos = new FacturaProductos();
+
                         facturaProductos.setProducto(productos);
                         facturaProductos.setCantidad(cantidad);
+                        facturaProductos.setPrecioHistorico(productos.getPrecio());
+                        total = total.add(productos.getPrecio());
                         facturaProductos.setFactura(fact);
                         facturaProductos.save();
                     }
-                    if (!alMenos1){
+                    if (total.compareTo(BigDecimal.ZERO) == 0){
                         showError("debe haber almenos una linea");
                         return true;
                     }
                     fact.save();
+                    CuentasPorCobrar cuentasPorCobrar = new CuentasPorCobrar();
+                    cuentasPorCobrar.setFactura(fact);
+                    cuentasPorCobrar.setMonto(total);
+                    cuentasPorCobrar.setFechaCreada(new Date());
+                    cuentasPorCobrar.save();
                     rIntent.putExtra("id", fact.getId());
                     setResult(RESULT_OK, rIntent);
                     finish();
