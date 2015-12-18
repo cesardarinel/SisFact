@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.InputType;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -73,8 +75,11 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vista_factura);
+        setTitle("Factura");
         dateFormatter = new SimpleDateFormat("dd/MM/yyyy", new Locale("es","ES"));
         completarContactos = (AutoCompleteTextView) findViewById(R.id.plantilla_factura_contacto);
+        completarContactos.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+
         ArrayList<String> campoSugerencias = new ArrayList<>();
         List<Contactos> contactosList =  new Select().from(entidades.Contactos.class).execute();
         for(entidades.Contactos con : contactosList) {
@@ -113,6 +118,7 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
         try{
             Long id = Long.valueOf(getIntent().getExtras().getString("id"));
             facturaCargada = new Select().from(Facturas.class).where("id = ?",id).executeSingle();
+
         }
         catch (Exception e){}
         if (facturaCargada!=null){
@@ -127,6 +133,13 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
             for (FacturaProductos item : facturaProductoses){
                 agregarFilaTabla(item.getProducto(),item.getCantidad());
             }
+            if (!facturaCargada.getContacto().getTelefono().isEmpty()) {
+                completarContactos.setText(facturaCargada.getContacto().getTelefono());
+            } else {
+                completarContactos.setText(facturaCargada.getContacto().getCelular());
+            }
+            textoFecha.setEnabled(false);
+            completarContactos.setEnabled(false);
         }
     }
 
@@ -198,19 +211,28 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
     protected void agregarFilaTabla(Productos p){
         agregarFilaTabla(p,0);
     }
+
     protected void agregarFilaTabla(Productos p,Integer Cantidad){
+        TableRow.LayoutParams parametroFila = new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        parametroFila.weight = 1f;
         TableRow row = new TableRow(this);
         String temp = p.getNombre();
         BigDecimal cant = p.getPrecio();
         TextView nombre = new TextView(this);
         nombre.setText(temp);
+        nombre.setLayoutParams(parametroFila);
         row.addView(nombre);
+
         TextView pre = new TextView(this);
         pre.setText(String.format("%.2f", cant.floatValue()));
+        pre.setLayoutParams(parametroFila);
         row.addView(pre);
+
         TextView cantidad = new TextView(this);
         cantidad.setText(Cantidad.toString());
+        cantidad.setLayoutParams(parametroFila);
         ImageView edit = new ImageView(this);
+        edit.setLayoutParams(parametroFila);
         row.addView(cantidad);
         row.addView(edit);
         EditarCantidadProductos editarCantidadProductos = new EditarCantidadProductos();
@@ -362,7 +384,8 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
     public void creandoTabla(){
         final TableRow titulo = new TableRow(this);
         titulo.setGravity(Gravity.CENTER_HORIZONTAL);
-
+        TableRow.LayoutParams parametroFila = new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        parametroFila.weight = 1f;
         //titulo de la tabla
         TextView titulofila = new TextView(this);
         titulofila.setText("Lineas de Factura");
@@ -378,19 +401,27 @@ public class vista_factura extends AppCompatActivity implements View.OnClickList
 
         TextView columnas = new TextView(this);
         columnas.setText("Producto");
-        columnas.setGravity(Gravity.LEFT);
+        columnas.setLayoutParams(parametroFila);
+        //columnas.setGravity(Gravity.LEFT);
 
         TextView columnas1 = new TextView(this);
         columnas1.setText("Costo");
-        columnas1.setGravity(Gravity.CENTER);
+        columnas1.setLayoutParams(parametroFila);
+        //columnas1.setGravity(Gravity.CENTER);
 
         TextView columnas2 = new TextView(this);
         columnas2.setText("Cantidad");
-        columnas2.setGravity(Gravity.RIGHT);
+        columnas2.setLayoutParams(parametroFila);
+        //columnas2.setGravity(Gravity.RIGHT);
+
+        TextView columnas3 = new  TextView(this);
+        columnas3.setText("");
+        columnas3.setLayoutParams(parametroFila);
 
         titulocolumnas.addView(columnas);
         titulocolumnas.addView(columnas1);
         titulocolumnas.addView(columnas2);
+        titulocolumnas.addView(columnas3);
 
         tblayout.addView(titulo);
         tblayout.addView(titulocolumnas);
