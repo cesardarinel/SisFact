@@ -28,7 +28,9 @@ public class AdaptadorCuentasPorPagar extends  FactoryAdaptadorGenerico{
         camposBuscables.add("Suplidor: Nombre");
 
         camposBuscables.add("Telefono");
-        camposBuscables.add("Direccion");
+        camposBuscables.add("Celular");
+
+        //camposBuscables.add("Direccion");
     }
 
     @Override
@@ -52,21 +54,26 @@ public class AdaptadorCuentasPorPagar extends  FactoryAdaptadorGenerico{
 
         for (Object obj : getObjectosAFiltrar()) {
             CuentasPorPagar cuentasPorPagar = (CuentasPorPagar) obj;
+            if (cuentasPorPagar == null)
+                continue;
             boolean esValido = true;
             switch (Campo) {
                 case "Todos: Nombre":
-                    if (!cuentasPorPagar.getContacto().getNombre().contains(Valor)) esValido = false;
+                    if (!cuentasPorPagar.getContacto().getNombre().toLowerCase().contains(Valor.toLowerCase())) esValido = false;
                     break;
                 case "Cliente: Nombre":
-                    if (!cuentasPorPagar.getContacto().getNombre().contains(Valor) && cuentasPorPagar.getContacto().isEsCliente())
+                    if (!cuentasPorPagar.getContacto().getNombre().toLowerCase().contains(Valor.toLowerCase()) && cuentasPorPagar.getContacto().isEsCliente())
                         esValido = false;
                     break;
                 case "Suplidor: Nombre":
-                    if (!cuentasPorPagar.getContacto().getNombre().contains(Valor) && cuentasPorPagar.getContacto().isEsSuplidor())
+                    if (!cuentasPorPagar.getContacto().getNombre().toLowerCase().contains(Valor.toLowerCase()) && cuentasPorPagar.getContacto().isEsSuplidor())
                         esValido = false;
                     break;
                 case "Telefono":
                     if (!cuentasPorPagar.getContacto().getTelefono().contains(Valor)) esValido = false;
+                    break;
+                case "Celular":
+                    if (!cuentasPorPagar.getContacto().getCelular().contains(Valor)) esValido = false;
                     break;
                 case "Direccion":
                     if (!cuentasPorPagar.getContacto().getDireccion().contains(Valor)) esValido = false;

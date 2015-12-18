@@ -5,6 +5,16 @@ import java.io.Serializable;
 public class ItemLista implements Serializable {
     protected String id;
     protected String info;
+
+    public String getInfo2() {
+        return info2;
+    }
+
+    public void setInfo2(String info2) {
+        this.info2 = info2;
+    }
+
+    protected String info2;
     protected String texto1;
     protected String texto2;
 
@@ -15,6 +25,14 @@ public class ItemLista implements Serializable {
         this.setInfo(Info);
         this.setTexto1(Texto1);
         this.setTexto2(texto2);
+    }
+
+    public ItemLista(String ID, String Info, String Texto1, String texto2, String info2) {
+        this.setId(ID);
+        this.setInfo(Info);
+        this.setTexto1(Texto1);
+        this.setTexto2(texto2);
+        this.setInfo2(info2);
     }
 
     public String getId() {

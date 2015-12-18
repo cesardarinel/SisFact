@@ -32,13 +32,13 @@ public class AdaptadorFactura extends  FactoryAdaptadorGenerico{
             boolean esValido = true;
             switch (Campo){
                 case "Nombre":
-                    if (!facturas.getInternalId().toString().contains(Valor)) esValido = false;
+                    if (!facturas.getInternalId().toString().toLowerCase().contains(Valor.toLowerCase())) esValido = false;
                     break;
                 case "Fecha":
-                    if (!facturas.getFecha().toString().contains(Valor)) esValido = false;
+                    if (!facturas.getFecha().toString().toLowerCase().contains(Valor.toLowerCase())) esValido = false;
                     break;
                 case "Contacto":
-                    if (!facturas.getContacto().getNombre().contains(Valor)) esValido = false;
+                    if (!facturas.getContacto().getNombre().toLowerCase().contains(Valor.toLowerCase())) esValido = false;
                     break;
             }
             if (esValido){

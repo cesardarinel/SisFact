@@ -263,6 +263,7 @@ public class Contacto extends AppCompatActivity implements View.OnClickListener{
                 menuContactos.findItem(R.id.eliminar).setVisible(true);
                 intent.putExtra("id", contactoTemporal.getId());
             }
+            Toast.makeText(this, "Guardado con Exito", Toast.LENGTH_SHORT).show();
             contactoCargado = contactoTemporal;
             modo = "detalles";
             cambiarEstadoComponentes();

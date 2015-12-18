@@ -21,7 +21,8 @@ public class AdaptadorContacto extends FactoryAdaptadorGenerico {
         camposBuscables.add("Suplidor: Nombre");
 
         camposBuscables.add("Telefono");
-        camposBuscables.add("Direccion");
+        camposBuscables.add("Celular");
+        //camposBuscables.add("Direccion");
     }
 
     @Override
@@ -42,6 +43,9 @@ public class AdaptadorContacto extends FactoryAdaptadorGenerico {
                     if (!contactos.getNombre().contains(Valor) && contactos.isEsSuplidor()) esValido = false;
                     break;
                 case "Telefono":
+                    if (!contactos.getTelefono().contains(Valor)) esValido = false;
+                    break;
+                case "Celular":
                     if (!contactos.getTelefono().contains(Valor)) esValido = false;
                     break;
                 case "Direccion":

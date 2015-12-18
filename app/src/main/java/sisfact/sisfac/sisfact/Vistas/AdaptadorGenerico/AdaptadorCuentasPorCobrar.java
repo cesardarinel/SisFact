@@ -25,7 +25,9 @@ public class AdaptadorCuentasPorCobrar extends FactoryAdaptadorGenerico {
         camposBuscables.add("Suplidor: Nombre");
 
         camposBuscables.add("Telefono");
-        camposBuscables.add("Direccion");
+        camposBuscables.add("Celular");
+
+        //camposBuscables.add("Direccion");
     }
 
     @Override
@@ -53,18 +55,21 @@ public class AdaptadorCuentasPorCobrar extends FactoryAdaptadorGenerico {
             boolean esValido = true;
             switch (Campo) {
                 case "Todos: Nombre":
-                    if (!cuentasPorPagar.getFactura().getContacto().getNombre().contains(Valor)) esValido = false;
+                    if (!cuentasPorPagar.getFactura().getContacto().getNombre().toLowerCase().contains(Valor.toLowerCase())) esValido = false;
                     break;
                 case "Cliente: Nombre":
-                    if (!cuentasPorPagar.getFactura().getContacto().getNombre().contains(Valor) && cuentasPorPagar.getFactura().getContacto().isEsCliente())
+                    if (!cuentasPorPagar.getFactura().getContacto().getNombre().toLowerCase().contains(Valor.toLowerCase()) && cuentasPorPagar.getFactura().getContacto().isEsCliente())
                         esValido = false;
                     break;
                 case "Suplidor: Nombre":
-                    if (!cuentasPorPagar.getFactura().getContacto().getNombre().contains(Valor) && cuentasPorPagar.getFactura().getContacto().isEsSuplidor())
+                    if (!cuentasPorPagar.getFactura().getContacto().getNombre().toLowerCase().contains(Valor.toLowerCase()) && cuentasPorPagar.getFactura().getContacto().isEsSuplidor())
                         esValido = false;
                     break;
                 case "Telefono":
                     if (!cuentasPorPagar.getFactura().getContacto().getTelefono().contains(Valor)) esValido = false;
+                    break;
+                case "Celular":
+                    if (!cuentasPorPagar.getFactura().getContacto().getCelular().contains(Valor)) esValido = false;
                     break;
                 case "Direccion":
                     if (!cuentasPorPagar.getFactura().getContacto().getDireccion().contains(Valor)) esValido = false;

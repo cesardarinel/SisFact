@@ -49,6 +49,9 @@ public class ListaAdaptador extends ArrayAdapter<ItemLista> {
         TextView Desc = (TextView) item.findViewById(R.id.info);
         Desc.setText(datos.get(position).getInfo());
 
+        TextView info2 = (TextView) item.findViewById(R.id.info2);
+        info2.setText(datos.get(position).getInfo2());
+
         // Devolvemos la vista para que se muestre en el ListView.
         return item;
     }

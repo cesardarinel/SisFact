@@ -19,8 +19,7 @@ public class AdaptadorProducto extends FactoryAdaptadorGenerico {
         camposBuscables.add("Nombre");
         camposBuscables.add("Marca");
         camposBuscables.add("Tipo");
-
-        camposBuscables.add("Session");
+        camposBuscables.add("Sección");
         camposBuscables.add("Suplidor");
     }
 
@@ -34,19 +33,19 @@ public class AdaptadorProducto extends FactoryAdaptadorGenerico {
             if (productos == null) continue;
             switch (Campo){
                 case "Nombre":
-                    if (!productos.getNombre().contains(Valor)) esValido = false;
+                    if (!productos.getNombre().toLowerCase().contains(Valor.toLowerCase())) esValido = false;
                     break;
                 case "Marca":
-                    if (!productos.getNombre().contains(Valor)) esValido = false;
+                    if (!productos.getMarca().toString().toLowerCase().contains(Valor.toLowerCase())) esValido = false;
                     break;
                 case "Tipo":
-                    if (!productos.getTipo().contains(Valor)) esValido = false;
+                    if (!productos.getTipo().toLowerCase().contains(Valor.toLowerCase())) esValido = false;
                     break;
                 case "Session":
-                    if (!productos.getSeccion().getSeccion().contains(Valor)) esValido = false;
+                    if (!productos.getSeccion().getSeccion().toLowerCase().contains(Valor.toLowerCase())) esValido = false;
                     break;
                 case "Suplidor":
-                    if (!productos.getContacto().getNombre().contains(Valor)) esValido = false;
+                    if (!productos.getContacto().getNombre().toLowerCase().contains(Valor.toLowerCase())) esValido = false;
                     break;
             }
             if (esValido){
@@ -55,6 +54,7 @@ public class AdaptadorProducto extends FactoryAdaptadorGenerico {
                 itemLista.setTexto1(productos.getNombre());
                 itemLista.setTexto2(productos.getMarca().getNombre());
                 itemLista.setInfo(productos.getTipo());
+                itemLista.setInfo2("Cantidad: " + productos.getCantidad());
                 getObjetosListado().add(itemLista);
             }
         }
