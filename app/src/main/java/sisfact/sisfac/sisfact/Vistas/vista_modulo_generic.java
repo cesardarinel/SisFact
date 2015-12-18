@@ -120,6 +120,7 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
 
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Calendar newDate = Calendar.getInstance();
+
                 newDate.set(year, monthOfYear, dayOfMonth);
                 e.setText(dateFormatter.format(newDate.getTime()));
                 if (e.getId() == R.id.vista_generica_desdeDate){
@@ -148,7 +149,6 @@ public class vista_modulo_generic extends AppCompatActivity implements AdapterVi
         if (listaAdaptador !=  null)  listado.setAdapter(listaAdaptador);
     }
     private DatePickerDialog createDatePickerDialog(final EditText e){
-
         return createDatePickerDialog(e,newCalendar.get(Calendar.YEAR),newCalendar.get(Calendar.MONTH),newCalendar.get(Calendar.DAY_OF_MONTH));
     }
 

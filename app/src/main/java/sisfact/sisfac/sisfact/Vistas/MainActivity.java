@@ -75,7 +75,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         FactoryAdaptadorGenerico fact;
         switch (v.getId()) {
             case R.id.factura:
-                nuevaActividad = new Intent(this, vista_factura.class);
+                nuevaActividad = new Intent(this, vista_modulo_generic.class);
+                FactoryAdaptadorGenerico factoryAdaptadorGenerico = FactoryAdaptadorGenerico.getAdaptador(FactoryAdaptadorGenerico.Adaptador.Factura);
+                List<Facturas> facturasList = new Select().from(Facturas.class).execute();
+                for (Facturas facturas : facturasList) facturas.setInternalId(facturas.getId());
+                factoryAdaptadorGenerico.setObjectosAFiltrar(facturasList);
+                nuevaActividad.putExtra("Datos",factoryAdaptadorGenerico);
                 startActivity(nuevaActividad);
                 break;
 
@@ -107,15 +112,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.reporte:
-
                 nuevaActividad = new Intent(this, vista_reporte.class);
                 nuevaActividad.putExtra("Actividad", "reporte");
                 startActivity(nuevaActividad);
                 break;
+
             case R.id.ver_todos_los_productos:
                 nuevaActividad = new Intent(this,vista_ver_productos.class);
                 startActivity(nuevaActividad);
                 break;
+
             default:
                 break;
         }

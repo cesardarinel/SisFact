@@ -34,18 +34,15 @@
     <AutoCompleteTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/plantilla_factura_contacto" />
+        android:id="@+id/plantilla_factura_contacto"
+        android:completionThreshold="1"
+        />
 
-    <Button
-        android:layout_width="329dp"
-        android:layout_height="wrap_content"
-        android:text="Agregar/Remover Productos"
-        android:id="@+id/button_agregar_lineas" />
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/data_table"></TableLayout>
+        android:id="@+id/data_table"/>
 
     <TextView
         android:layout_width="wrap_content"

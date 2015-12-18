@@ -10,7 +10,7 @@ public class FacturaProductos extends Model implements Serializable{
     @Column(name = "factura")
     protected Facturas factura;
 
-    @Column(name = "vista_producto")
+    @Column(name = "producto")
     protected Productos producto;
 
     @Column(name = "cantidad")
